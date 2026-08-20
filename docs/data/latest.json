@@ -2,11 +2,11 @@
   "meta": {
     "model": "MPHI v1.0",
     "title": "Painel Rio Negro — MPHI",
-    "updated_at": "2026-08-19T17:06:40-04:00",
+    "updated_at": "2026-08-20T08:38:15-04:00",
     "timezone": "America/Manaus",
     "source_status": "ok",
     "source_note": "Atualização automática concluída a partir do Porto de Manaus.",
-    "last_score_date": "2026-08-19"
+    "last_score_date": "2026-08-20"
   },
   "seasonal": {
     "08": {
@@ -23,41 +23,41 @@
     "median": 27.94
   },
   "current": {
-    "date": "2026-08-19",
-    "level": 25.79,
-    "delta_cm": -10.0,
+    "date": "2026-08-20",
+    "level": 25.67,
+    "delta_cm": -12.0,
     "phase": "Vazante",
     "peak": 28.51,
     "peak_date": "2026-06-28",
-    "drawdown": 2.72,
+    "drawdown": 2.84,
     "avg3": -10.67,
-    "avg7": -10.0,
-    "avg15": -9.07,
-    "avg30": -7.4,
-    "accel_7_15": -0.93,
+    "avg7": -10.57,
+    "avg15": -9.47,
+    "avg30": -7.67,
+    "accel_7_15": -1.1,
     "base_score": 3,
-    "persistence_days": 4,
+    "persistence_days": 5,
     "persistence_points": 0,
     "score": 3,
     "status": "ATENÇÃO"
   },
   "projections": {
     "7": {
-      "soft": 25.27,
-      "central": 25.12,
-      "stress": 25.04,
+      "soft": 25.13,
+      "central": 24.97,
+      "stress": 24.92,
       "confidence": "Média"
     },
     "15": {
-      "soft": 24.68,
-      "central": 24.36,
-      "stress": 24.19,
+      "soft": 24.52,
+      "central": 24.17,
+      "stress": 24.07,
       "confidence": "Média-baixa"
     },
     "30": {
-      "soft": 23.57,
-      "central": 22.93,
-      "stress": 22.59,
+      "soft": 23.37,
+      "central": 22.66,
+      "stress": 22.47,
       "confidence": "Baixa"
     }
   },
@@ -540,6 +540,12 @@
       "date": "2026-08-19",
       "level": 25.79,
       "delta_cm": -10.0,
+      "source": "Porto de Manaus"
+    },
+    {
+      "date": "2026-08-20",
+      "level": 25.67,
+      "delta_cm": -12.0,
       "source": "Porto de Manaus"
     }
   ],
