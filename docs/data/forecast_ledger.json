@@ -13,9 +13,27 @@
       "phase": "Vazante",
       "persistence_days": 4,
       "projections": {
-        "7": {"target_date": "2026-08-26", "soft": 25.27, "central": 25.12, "stress": 25.04, "confidence": "Média"},
-        "15": {"target_date": "2026-09-03", "soft": 24.68, "central": 24.36, "stress": 24.19, "confidence": "Média-baixa"},
-        "30": {"target_date": "2026-09-18", "soft": 23.57, "central": 22.93, "stress": 22.59, "confidence": "Baixa"}
+        "7": {
+          "target_date": "2026-08-26",
+          "soft": 25.27,
+          "central": 25.12,
+          "stress": 25.04,
+          "confidence": "Média"
+        },
+        "15": {
+          "target_date": "2026-09-03",
+          "soft": 24.68,
+          "central": 24.36,
+          "stress": 24.19,
+          "confidence": "Média-baixa"
+        },
+        "30": {
+          "target_date": "2026-09-18",
+          "soft": 23.57,
+          "central": 22.93,
+          "stress": 22.59,
+          "confidence": "Baixa"
+        }
       }
     },
     {
@@ -29,9 +47,27 @@
       "phase": "Vazante",
       "persistence_days": 4,
       "projections": {
-        "7": {"target_date": "2026-08-27", "soft": 25.13, "central": 24.97, "stress": 24.92, "confidence": "Média"},
-        "15": {"target_date": "2026-09-04", "soft": 24.52, "central": 24.17, "stress": 24.07, "confidence": "Média-baixa"},
-        "30": {"target_date": "2026-09-19", "soft": 23.37, "central": 22.66, "stress": 22.47, "confidence": "Baixa"}
+        "7": {
+          "target_date": "2026-08-27",
+          "soft": 25.13,
+          "central": 24.97,
+          "stress": 24.92,
+          "confidence": "Média"
+        },
+        "15": {
+          "target_date": "2026-09-04",
+          "soft": 24.52,
+          "central": 24.17,
+          "stress": 24.07,
+          "confidence": "Média-baixa"
+        },
+        "30": {
+          "target_date": "2026-09-19",
+          "soft": 23.37,
+          "central": 22.66,
+          "stress": 22.47,
+          "confidence": "Baixa"
+        }
       }
     }
   ]
