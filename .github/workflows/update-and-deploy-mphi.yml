@@ -1,11 +1,12 @@
-# MPHI Pages ativo — disparo inicial de publicação
+# MPHI Pages — atualização diária resiliente
 name: Atualizar e publicar MPHI
 
 on:
   push:
     branches: ["fileOrganizer"]
   schedule:
-    - cron: '5 12 * * *'  # 08:05 America/Manaus (UTC-4)
+    - cron: '50 11 * * *'  # 07:50 America/Manaus (UTC-4) — janela principal
+    - cron: '20 12 * * *'  # 08:20 America/Manaus (UTC-4) — contingência
   workflow_dispatch:
 
 permissions:
