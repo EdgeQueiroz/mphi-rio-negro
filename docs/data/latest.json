@@ -2,7 +2,7 @@
   "meta": {
     "model": "MPHI v1.0",
     "title": "Painel Rio Negro — MPHI",
-    "updated_at": "2026-08-20T08:38:15-04:00",
+    "updated_at": "2026-08-20T08:40:48-04:00",
     "timezone": "America/Manaus",
     "source_status": "ok",
     "source_note": "Atualização automática concluída a partir do Porto de Manaus.",
@@ -28,7 +28,7 @@
     "delta_cm": -12.0,
     "phase": "Vazante",
     "peak": 28.51,
-    "peak_date": "2026-06-28",
+    "peak_date": "2026-06-21",
     "drawdown": 2.84,
     "avg3": -10.67,
     "avg7": -10.57,
@@ -36,7 +36,7 @@
     "avg30": -7.67,
     "accel_7_15": -1.1,
     "base_score": 3,
-    "persistence_days": 5,
+    "persistence_days": 4,
     "persistence_points": 0,
     "score": 3,
     "status": "ATENÇÃO"
