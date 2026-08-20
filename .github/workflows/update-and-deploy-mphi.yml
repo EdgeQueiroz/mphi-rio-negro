@@ -1,12 +1,15 @@
-# MPHI Pages — atualização diária resiliente
 name: Atualizar e publicar MPHI
 
 on:
   push:
     branches: ["fileOrganizer"]
+    paths-ignore:
+      - "docs/data/latest.json"
+      - "docs/data/forecast_ledger.json"
+      - "docs/data/validation.json"
   schedule:
-    - cron: '50 11 * * *'  # 07:50 America/Manaus (UTC-4) — janela principal
-    - cron: '20 12 * * *'  # 08:20 America/Manaus (UTC-4) — contingência
+    - cron: '50 11 * * *'
+    - cron: '20 12 * * *'
   workflow_dispatch:
 
 permissions:
@@ -27,36 +30,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Instalar dependências
         run: pip install -r requirements.txt
-
-      - name: Atualizar dados MPHI
+      - name: Atualizar dados e validar previsões MPHI
         id: update
         run: python scripts/update_mphi.py
         continue-on-error: true
-
       - name: Registrar atualização no repositório
         run: |
           git config user.name "MPHI Bot"
           git config user.email "mphi-bot@users.noreply.github.com"
-          git add docs/data/latest.json
-          git diff --cached --quiet || git commit -m "Atualiza MPHI $(date -u +%F)"
+          git add docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json
+          git diff --cached --quiet || git commit -m "Atualiza MPHI e validacao $(date -u +%F)"
           git push
-
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
-
       - name: Preparar site
         uses: actions/upload-pages-artifact@v3
         with:
           path: './docs'
-
       - name: Publicar GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
