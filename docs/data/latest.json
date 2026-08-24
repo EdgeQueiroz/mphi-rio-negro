@@ -2,11 +2,11 @@
   "meta": {
     "model": "MPHI v1.0",
     "title": "Painel Rio Negro — MPHI",
-    "updated_at": "2026-08-23T09:06:57-04:00",
+    "updated_at": "2026-08-24T08:17:29-04:00",
     "timezone": "America/Manaus",
     "source_status": "ok",
     "source_note": "Atualização automática concluída a partir do Porto de Manaus.",
-    "last_score_date": "2026-08-21"
+    "last_score_date": "2026-08-24"
   },
   "seasonal": {
     "08": {
@@ -23,41 +23,41 @@
     "median": 27.94
   },
   "current": {
-    "date": "2026-08-21",
-    "level": 25.56,
-    "delta_cm": -11.0,
+    "date": "2026-08-24",
+    "level": 25.19,
+    "delta_cm": -13.0,
     "phase": "Vazante",
     "peak": 28.51,
     "peak_date": "2026-06-21",
-    "drawdown": 2.95,
-    "avg3": -11.0,
-    "avg7": -11.0,
-    "avg15": -9.8,
-    "avg30": -7.9,
-    "accel_7_15": -1.2,
-    "base_score": 3,
-    "persistence_days": 5,
+    "drawdown": 3.32,
+    "avg3": -12.0,
+    "avg7": -11.29,
+    "avg15": -10.13,
+    "avg30": -8.2,
+    "accel_7_15": -1.16,
+    "base_score": 4,
+    "persistence_days": 1,
     "persistence_points": 0,
-    "score": 3,
+    "score": 4,
     "status": "ATENÇÃO"
   },
   "projections": {
     "7": {
-      "soft": 25.01,
-      "central": 24.83,
-      "stress": 24.79,
+      "soft": 24.62,
+      "central": 24.44,
+      "stress": 24.35,
       "confidence": "Média"
     },
     "15": {
-      "soft": 24.38,
-      "central": 24.0,
-      "stress": 23.91,
+      "soft": 23.96,
+      "central": 23.58,
+      "stress": 23.39,
       "confidence": "Média-baixa"
     },
     "30": {
-      "soft": 23.19,
-      "central": 22.44,
-      "stress": 22.26,
+      "soft": 22.73,
+      "central": 21.98,
+      "stress": 21.59,
       "confidence": "Baixa"
     }
   },
@@ -552,6 +552,12 @@
       "date": "2026-08-21",
       "level": 25.56,
       "delta_cm": -11.0,
+      "source": "Porto de Manaus"
+    },
+    {
+      "date": "2026-08-24",
+      "level": 25.19,
+      "delta_cm": -13.0,
       "source": "Porto de Manaus"
     }
   ],
