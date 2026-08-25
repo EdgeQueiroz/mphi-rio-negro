@@ -1,14 +1,14 @@
 {
   "schema": "mphi-validation-v1",
-  "updated_at": "2026-08-24T09:25:11-04:00",
+  "updated_at": "2026-08-25T08:17:53-04:00",
   "current_model_version": "MPHI v1.0",
-  "forecast_count": 4,
+  "forecast_count": 5,
   "matured_records": 0,
   "next_due": "2026-08-26",
   "pending": {
-    "7": 4,
-    "15": 4,
-    "30": 4
+    "7": 5,
+    "15": 5,
+    "30": 5
   },
   "by_horizon": {
     "7": {
