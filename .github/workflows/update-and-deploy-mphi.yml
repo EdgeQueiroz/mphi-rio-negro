@@ -8,8 +8,8 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
   schedule:
-    - cron: '50 11 * * *'
-    - cron: '20 12 * * *'
+    - cron: '50 11 * * 1-5'
+    - cron: '20 12 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -38,7 +38,42 @@ jobs:
         run: pip install -r requirements.txt
       - name: Atualizar dados e validar previsões MPHI
         id: update
-        run: python scripts/update_mphi.py
+        run: |
+          python - <<'PY'
+          import sys
+          from datetime import datetime, timedelta
+
+          sys.path.insert(0, 'scripts')
+          import update_mphi
+
+          def persistence_days_operational(valid, d):
+              count = 0
+              later_date = None
+              for i in range(len(valid) - 1, -1, -1):
+                  current_date = datetime.fromisoformat(valid[i]['date']).date()
+
+                  if later_date is not None:
+                      gap = (later_date - current_date).days
+                      if gap < 1:
+                          break
+                      if gap > 1:
+                          probe = current_date + timedelta(days=1)
+                          while probe < later_date:
+                              if probe.weekday() < 5:
+                                  return count
+                              probe += timedelta(days=1)
+
+                  if update_mphi.base_score_for_prefix(valid, i, d) < 3:
+                      break
+
+                  count += 1
+                  later_date = current_date
+
+              return count
+
+          update_mphi.persistence_days = persistence_days_operational
+          update_mphi.main()
+          PY
         continue-on-error: true
       - name: Registrar atualização no repositório
         run: |
