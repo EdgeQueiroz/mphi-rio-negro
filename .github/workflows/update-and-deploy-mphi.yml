@@ -8,7 +8,8 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
   schedule:
-    - cron: '0 12 * * 1-5'  # 08:00 America/Manaus (UTC-4)
+    - cron: '*/15 12-13 * * 1-5'  # 08:00–09:45 America/Manaus, a cada 15 min
+    - cron: '0 14 * * 1-5'         # 10:00 America/Manaus — última tentativa
   workflow_dispatch:
 
 permissions:
@@ -29,14 +30,36 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Instalar dependências
         run: pip install -r requirements.txt
+
+      - name: Verificar se a medição de hoje já foi capturada
+        id: precheck
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone, timedelta
+
+          tz = timezone(timedelta(hours=-4))
+          today = datetime.now(tz).date().isoformat()
+          with open('docs/data/latest.json', encoding='utf-8') as f:
+              current = json.load(f).get('current', {}).get('date')
+
+          already = str(current == today).lower()
+          print(f'Medição atual: {current} | hoje: {today} | já capturada: {already}')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
+              out.write(f'already_today={already}\n')
+          PY
+
       - name: Atualizar dados e validar previsões MPHI
         id: update
+        if: steps.precheck.outputs.already_today != 'true'
         run: |
           python - <<'PY'
           import sys
@@ -74,19 +97,62 @@ jobs:
           update_mphi.main()
           PY
         continue-on-error: true
+
+      - name: Descartar tentativa se o Porto ainda não publicou hoje
+        if: steps.precheck.outputs.already_today != 'true'
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from datetime import datetime, timezone, timedelta
+
+          tz = timezone(timedelta(hours=-4))
+          today = datetime.now(tz).date().isoformat()
+          with open('docs/data/latest.json', encoding='utf-8') as f:
+              current = json.load(f).get('current', {}).get('date')
+
+          if current != today:
+              print(f'Porto ainda sem medição de {today}; mantendo arquivos publicados sem alteração.')
+              subprocess.run([
+                  'git', 'checkout', '--',
+                  'docs/data/latest.json',
+                  'docs/data/forecast_ledger.json',
+                  'docs/data/validation.json'
+              ], check=True)
+          else:
+              print(f'Medição de {today} capturada com sucesso.')
+          PY
+
+      - name: Detectar nova medição
+        id: changes
+        run: |
+          if git diff --quiet -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Nenhuma nova medição para publicar."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Nova medição detectada."
+          fi
+
       - name: Registrar atualização no repositório
+        if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name "MPHI Bot"
           git config user.email "mphi-bot@users.noreply.github.com"
           git add docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json
-          git diff --cached --quiet || git commit -m "Atualiza MPHI e validacao $(date -u +%F)"
+          git commit -m "Atualiza MPHI e validacao $(date -u +%F)"
           git push
+
       - name: Configurar GitHub Pages
+        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
         uses: actions/configure-pages@v5
+
       - name: Preparar site
+        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './docs'
+
       - name: Publicar GitHub Pages
+        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
