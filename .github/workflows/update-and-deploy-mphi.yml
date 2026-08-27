@@ -8,9 +8,7 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
   schedule:
-    - cron: '50 12 * * 1-5'  # 08:50 America/Manaus — primeira tentativa após janela típica do Porto
-    - cron: '20 13 * * 1-5'  # 09:20 America/Manaus — tentativa principal
-    - cron: '50 13 * * 1-5'  # 09:50 America/Manaus — contingência
+    - cron: '0 12 * * 1-5'  # 08:00 America/Manaus (UTC-4)
   workflow_dispatch:
 
 permissions:
