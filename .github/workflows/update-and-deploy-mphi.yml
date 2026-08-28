@@ -8,8 +8,8 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
   schedule:
-    - cron: '*/15 12-13 * * 1-5'  # 08:00–09:45 America/Manaus, a cada 15 min
-    - cron: '0 14 * * 1-5'         # 10:00 America/Manaus — última tentativa
+    - cron: '*/15 12-15 * * 1-5'  # 08:00–11:45 America/Manaus, a cada 15 min
+    - cron: '0 16 * * 1-5'         # 12:00 America/Manaus — última tentativa
   workflow_dispatch:
 
 permissions:
