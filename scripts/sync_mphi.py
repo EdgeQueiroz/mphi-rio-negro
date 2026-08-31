@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from datetime import datetime, timezone, timedelta
-import json
 import re
 import sys
 
@@ -23,14 +22,11 @@ MONTH_RE = re.compile(
 
 
 def table_period(table):
-    """Descobre o mês/ano associado à tabela usando o rótulo imediatamente anterior."""
     for text in table.find_all_previous(string=True, limit=120):
         normalized = ' '.join(str(text).split())
         match = MONTH_RE.search(normalized)
         if match:
-            month = MONTHS[match.group(1).lower()]
-            year = int(match.group(2))
-            return year, month
+            return int(match.group(2)), MONTHS[match.group(1).lower()]
     return None
 
 
@@ -69,8 +65,7 @@ def extract_current_month(html, now):
         text = ' '.join(table.stripped_strings)
         if 'Cota' not in text or 'Dia' not in text:
             continue
-        period = table_period(table)
-        if period != (now.year, now.month):
+        if table_period(table) != (now.year, now.month):
             continue
         rows = parse_table_rows(table, now.year, now.month)
         if rows:
@@ -79,13 +74,13 @@ def extract_current_month(html, now):
     if not candidates:
         raise RuntimeError(f'Tabela do mês corrente não encontrada: {now.year:04d}-{now.month:02d}')
 
-    # Se o site repetir a tabela, usa a versão com mais dias publicados.
     return max(candidates, key=len)
 
 
 def sync_month(d, source_rows, now):
     by_date = {row['date']: row for row in d.get('series', [])}
     changed = False
+
     for row in source_rows:
         existing = by_date.get(row['date'])
         if existing is None:
@@ -99,7 +94,6 @@ def sync_month(d, source_rows, now):
 
     series = sorted(by_date.values(), key=lambda x: x['date'])
 
-    # QA somente sobre o mês corrente, para não bloquear por anomalias históricas antigas já conhecidas.
     month_prefix = f'{now.year:04d}-{now.month:02d}-'
     observed = [x for x in series if x.get('level') is not None]
     for prev, cur in zip(observed, observed[1:]):
@@ -108,7 +102,10 @@ def sync_month(d, source_rows, now):
         prev_date = datetime.fromisoformat(prev['date']).date()
         cur_date = datetime.fromisoformat(cur['date']).date()
         if (cur_date - prev_date).days == 1 and abs(cur['level'] - prev['level']) > 1.0:
-            raise RuntimeError(f'Salto anômalo no Porto: {prev["date"]} {prev["level"]} -> {cur["date"]} {cur["level"]} m')
+            raise RuntimeError(
+                f'Salto anômalo no Porto: {prev["date"]} {prev["level"]} -> '
+                f'{cur["date"]} {cur["level"]} m'
+            )
 
     d['series'] = series
     return changed
@@ -127,9 +124,14 @@ def main():
         response = requests.get(core.URL, timeout=30, headers={'User-Agent': 'MPHI-Uiara/1.1-sync'})
         response.raise_for_status()
         source_rows = extract_current_month(response.text, now)
-        sync_month(d, source_rows, now)
-
         latest_source_date = source_rows[-1]['date']
+        changed = sync_month(d, source_rows, now)
+
+        # Sem dado novo, correção ou lacuna recuperada: encerra sem tocar nos arquivos.
+        if not changed and d.get('current', {}).get('date') == latest_source_date:
+            print(f'Sem alteração: Porto e MPHI já estão em {latest_source_date}.')
+            return
+
         core.recalc(d)
         if d['current']['date'] != latest_source_date:
             raise RuntimeError(
@@ -141,7 +143,7 @@ def main():
             'com sincronização e recuperação do mês corrente.'
         )
 
-        # Somente a previsão realmente emitida hoje é congelada. Dias recuperados não ganham previsão retroativa.
+        # Só a previsão realmente emitida na data mais recente é congelada; não há previsão retroativa.
         core.freeze_forecast(d, ledger)
         validation = core.build_validation(d, ledger)
 
@@ -153,13 +155,8 @@ def main():
             f'última medição {latest_source_date} = {d["current"]["level"]:.2f} m.'
         )
     except Exception as exc:
-        d['meta']['source_status'] = 'stale'
-        d['meta']['source_note'] = 'FONTE NÃO ATUALIZADA: ' + str(exc)
-        d['meta']['updated_at'] = datetime.now(TZ).isoformat(timespec='seconds')
-        core.write_json(core.DATA, d)
-        if ledger.get('entries'):
-            core.write_json(core.VALIDATION, core.build_validation(d, ledger))
-        print(exc, file=sys.stderr)
+        # Falha de fonte/parsing não altera a última publicação válida.
+        print(f'Falha de sincronização; último estado válido preservado: {exc}', file=sys.stderr)
         sys.exit(2)
 
 
