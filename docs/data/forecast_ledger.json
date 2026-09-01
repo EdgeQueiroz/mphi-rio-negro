@@ -91,7 +91,7 @@
         "15": {
           "target_date": "2026-09-05",
           "soft": 24.38,
-          "central": 24.0,
+          "central": 24,
           "stress": 23.91,
           "confidence": "Média-baixa"
         },
@@ -227,7 +227,7 @@
         "15": {
           "target_date": "2026-09-11",
           "soft": 23.44,
-          "central": 23.0,
+          "central": 23,
           "stress": 22.79,
           "confidence": "Média-baixa"
         },
@@ -253,7 +253,7 @@
       "projections": {
         "7": {
           "target_date": "2026-09-04",
-          "soft": 24.0,
+          "soft": 24,
           "central": 23.78,
           "stress": 23.67,
           "confidence": "Média"
@@ -304,6 +304,40 @@
           "soft": 21.3,
           "central": 20.42,
           "stress": 19.79,
+          "confidence": "Baixa"
+        }
+      }
+    },
+    {
+      "forecast_id": "2026-09-01|MPHI v1.0",
+      "forecast_date": "2026-09-01",
+      "created_at": "2026-09-01T09:51:59.789-04:00",
+      "model_version": "MPHI v1.0",
+      "observed_level_at_issue": 24.09,
+      "score": 7,
+      "status": "ALTO",
+      "phase": "Vazante",
+      "persistence_days": 16,
+      "projections": {
+        "7": {
+          "target_date": "2026-09-08",
+          "soft": 23.35,
+          "central": 23.16,
+          "stress": 23.11,
+          "confidence": "Média"
+        },
+        "15": {
+          "target_date": "2026-09-16",
+          "soft": 22.5,
+          "central": 22.09,
+          "stress": 21.99,
+          "confidence": "Média-baixa"
+        },
+        "30": {
+          "target_date": "2026-10-01",
+          "soft": 20.91,
+          "central": 20.09,
+          "stress": 19.89,
           "confidence": "Baixa"
         }
       }
