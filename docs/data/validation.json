@@ -1,22 +1,22 @@
 {
   "schema": "mphi-validation-v1",
-  "updated_at": "2026-08-31T14:04:43-04:00",
+  "updated_at": "2026-09-01T09:51:59.789-04:00",
   "current_model_version": "MPHI v1.0",
-  "forecast_count": 9,
-  "matured_records": 4,
-  "next_due": "2026-09-01",
+  "forecast_count": 10,
+  "matured_records": 5,
+  "next_due": "2026-09-02",
   "pending": {
     "7": 5,
-    "15": 9,
-    "30": 9
+    "15": 10,
+    "30": 10
   },
   "by_horizon": {
     "7": {
-      "n": 4,
-      "mae_m": 0.2,
-      "bias_m": -0.2,
-      "rmse_m": 0.202,
-      "envelope_coverage_pct": 0.0
+      "n": 5,
+      "mae_m": 0.202,
+      "bias_m": -0.202,
+      "rmse_m": 0.204,
+      "envelope_coverage_pct": 0
     },
     "15": {
       "n": 0,
@@ -36,11 +36,11 @@
   "by_version": {
     "MPHI v1.0": {
       "7": {
-        "n": 4,
-        "mae_m": 0.2,
-        "bias_m": -0.2,
-        "rmse_m": 0.202,
-        "envelope_coverage_pct": 0.0
+        "n": 5,
+        "mae_m": 0.202,
+        "bias_m": -0.202,
+        "rmse_m": 0.204,
+        "envelope_coverage_pct": 0
       },
       "15": {
         "n": 0,
@@ -141,9 +141,39 @@
       "signed_error_m": -0.25,
       "absolute_error_m": 0.25,
       "inside_envelope": false
+    },
+    {
+      "validation_id": "2026-08-25|MPHI v1.0|7",
+      "forecast_id": "2026-08-25|MPHI v1.0",
+      "forecast_date": "2026-08-25",
+      "target_date": "2026-09-01",
+      "horizon_days": 7,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 24.3,
+      "forecast_soft_m": 24.48,
+      "forecast_stress_m": 24.23,
+      "observed_m": 24.09,
+      "signed_error_m": -0.21,
+      "absolute_error_m": 0.21,
+      "inside_envelope": false
     }
   ],
   "latest_records": [
+    {
+      "validation_id": "2026-08-25|MPHI v1.0|7",
+      "forecast_id": "2026-08-25|MPHI v1.0",
+      "forecast_date": "2026-08-25",
+      "target_date": "2026-09-01",
+      "horizon_days": 7,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 24.3,
+      "forecast_soft_m": 24.48,
+      "forecast_stress_m": 24.23,
+      "observed_m": 24.09,
+      "signed_error_m": -0.21,
+      "absolute_error_m": 0.21,
+      "inside_envelope": false
+    },
     {
       "validation_id": "2026-08-24|MPHI v1.0|7",
       "forecast_id": "2026-08-24|MPHI v1.0",
