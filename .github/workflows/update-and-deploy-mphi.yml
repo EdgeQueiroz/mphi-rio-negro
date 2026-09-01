@@ -8,9 +8,7 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
   schedule:
-    - cron: '0 12 * * *'              # 08:00 America/Manaus — tentativa oficial diária
-    - cron: '7,22,37,52 12-15 * * *' # 08:07–11:52 — retentativas fora dos minutos mais congestionados
-    - cron: '7 16,18,20 * * *'       # 12:07, 14:07 e 16:07 — watchdogs tardios
+    - cron: '17,43 12-21 * * *' # 08:17–17:43 America/Manaus; evita o topo da hora e cobre a publicação tardia do Porto
   workflow_dispatch:
 
 permissions:
@@ -19,12 +17,14 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: "mphi-sync-${{ github.ref }}"
+  # Mantém apenas a tentativa mais recente; não deixa a fila de Pages coalescer as coletas agendadas.
+  cancel-in-progress: true
 
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -44,7 +44,6 @@ jobs:
       - name: Sincronizar Porto e recalcular MPHI
         id: update
         run: python scripts/sync_mphi.py
-        continue-on-error: true
 
       - name: Detectar alteração válida
         id: changes
