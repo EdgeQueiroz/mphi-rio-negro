@@ -68,10 +68,12 @@ function render(){
 
 function renderValidation(){
   const panel=document.querySelector('.panel.validation');
-  const grid=panel?.querySelector('.validation-grid');
-  if(!panel||!grid)return;
+  const projectionGrid=panel?.querySelector('#projectionValidationGrid');
+  const alertGrid=panel?.querySelector('#alertValidationGrid');
+  if(!panel||!projectionGrid||!alertGrid)return;
   if(!validationData){
-    grid.innerHTML='<div><span>Validação</span><b>indisponível</b></div>';
+    projectionGrid.innerHTML='<div><span>Validação</span><b>indisponível</b><small>dados de controle não carregados</small></div>';
+    alertGrid.innerHTML='<div><span>Alertas</span><b>em coleta</b><small>aguardando base independente</small></div>';
     return;
   }
   const h7=validationData.by_horizon?.['7']||{n:0};
@@ -82,32 +84,33 @@ function renderValidation(){
   const lead=validationData.alert_validation?.lead_time?.value_days;
   const falseAlerts=validationData.alert_validation?.false_alerts?.count;
   const missedAlerts=validationData.alert_validation?.missed_alerts?.count;
-  grid.innerHTML=`
-    <div><span>Previsões congeladas</span><b>${validationData.forecast_count??0}</b><small>${validationData.current_model_version||''}</small></div>
-    <div><span>Próxima aferição</span><b>${fmtDate(validationData.next_due)}</b><small>primeiro vencimento pendente</small></div>
-    <div><span>MAE · 7 dias</span><b>${metric(h7)}</b><small>${h7.n||0} amostras maduras</small></div>
-    <div><span>MAE · 15 dias</span><b>${metric(h15)}</b><small>${h15.n||0} amostras maduras</small></div>
-    <div><span>MAE · 30 dias</span><b>${metric(h30)}</b><small>${h30.n||0} amostras maduras</small></div>
-    <div><span>Dentro do envelope · 7d</span><b>${coverage(h7)}</b><small>suave ↔ estresse</small></div>
-    <div><span>Lead time</span><b>${lead==null?'em coleta':fmt(lead,0)+' dias'}</b><small>evento observado independente</small></div>
-    <div><span>Falsos alertas</span><b>${falseAlerts==null?'em coleta':falseAlerts}</b><small>sem inferência circular</small></div>
-    <div><span>Alertas perdidos</span><b>${missedAlerts==null?'em coleta':missedAlerts}</b><small>sem inferência circular</small></div>
-    <div><span>Aferições concluídas</span><b>${validationData.matured_records??0}</b><small>7d + 15d + 30d</small></div>`;
+
+  projectionGrid.innerHTML=`
+    <div><span>Previsões preservadas</span><b>${validationData.forecast_count??0}</b><small>${validationData.current_model_version||''}</small></div>
+    <div><span>Aferições concluídas</span><b>${validationData.matured_records??0}</b><small>comparações de 7, 15 e 30 dias</small></div>
+    <div><span>Próxima comparação</span><b>${fmtDate(validationData.next_due)}</b><small>primeira projeção pendente</small></div>
+    <div><span>Erro médio · 7 dias</span><b>${metric(h7)}</b><small>MAE · ${h7.n||0} comparações</small></div>
+    <div><span>Erro médio · 15 dias</span><b>${metric(h15)}</b><small>MAE · ${h15.n||0} comparações</small></div>
+    <div><span>Erro médio · 30 dias</span><b>${metric(h30)}</b><small>MAE · ${h30.n||0} comparações</small></div>
+    <div><span>Dentro do envelope · 7 dias</span><b>${coverage(h7)}</b><small>entre os cenários suave e estresse</small></div>`;
+
+  alertGrid.innerHTML=`
+    <div><span>Antecedência</span><b>${lead==null?'em coleta':fmt(lead,0)+' dias'}</b><small>lead time do sinal</small></div>
+    <div><span>Falsos alertas</span><b>${falseAlerts==null?'em coleta':falseAlerts}</b><small>sinal sem evento observado</small></div>
+    <div><span>Alertas perdidos</span><b>${missedAlerts==null?'em coleta':missedAlerts}</b><small>evento sem sinal prévio</small></div>`;
 
   let history=panel.querySelector('.validation-history');
   if(!history){
     history=document.createElement('div');
     history.className='validation-history';
-    panel.appendChild(history);
+    panel.insertBefore(history,panel.querySelector('.validation-section.alerts'));
   }
   const records=validationData.latest_records||[];
   if(!records.length){
-    history.innerHTML=`<div class="validation-history-head"><b>Histórico auditável</b><span>aguardando primeira previsão vencer</span></div><p class="validation-empty">As previsões já estão congeladas. A primeira aferição automática está prevista para <b>${fmtDate(validationData.next_due)}</b>.</p>`;
+    history.innerHTML=`<div class="validation-history-head"><b>Histórico auditável</b><span>aguardando a primeira data-alvo</span></div><p class="validation-empty">As projeções já estão preservadas. A primeira comparação automática está prevista para <b>${fmtDate(validationData.next_due)}</b>.</p>`;
   }else{
-    history.innerHTML=`<div class="validation-history-head"><b>Histórico auditável</b><span>últimas aferições</span></div><div class="validation-list">${records.map(r=>`<div class="validation-row"><span>${fmtDate(r.forecast_date)} → ${r.horizon_days}d</span><span>prev. <b>${fmt(r.forecast_central_m)} m</b></span><span>obs. <b>${fmt(r.observed_m)} m</b></span><span>erro <b>${fmt(r.absolute_error_m,3)} m</b></span><span class="${r.inside_envelope?'inside':'outside'}">${r.inside_envelope?'dentro':'fora'} do envelope</span></div>`).join('')}</div>`;
+    history.innerHTML=`<div class="validation-history-head"><b>Histórico auditável</b><span>comparações mais recentes</span></div><div class="validation-list">${records.map(r=>`<div class="validation-row"><span>${fmtDate(r.forecast_date)} → ${r.horizon_days}d</span><span>projeção <b>${fmt(r.forecast_central_m)} m</b></span><span>observado <b>${fmt(r.observed_m)} m</b></span><span>erro <b>${fmt(r.absolute_error_m,3)} m</b></span><span class="${r.inside_envelope?'inside':'outside'}">${r.inside_envelope?'dentro':'fora'} do envelope</span></div>`).join('')}</div>`;
   }
-  const note=panel.querySelector('.footnote');
-  if(note)note.textContent='Previsões são congeladas na emissão. A validação usa somente observações futuras; mudanças de versão permanecem separadas.';
 }
 
 function drawChart(){
