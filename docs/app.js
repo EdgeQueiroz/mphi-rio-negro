@@ -26,6 +26,7 @@ async function load(){
 
 function render(){
   const c=model.current;
+  const manual=model.meta.source_status==='manual';
   document.getElementById('level').textContent=fmt(c.level);
   document.getElementById('delta24').textContent=(c.delta_cm>0?'+':'')+fmt(c.delta_cm,0)+' cm';
   document.getElementById('phase').textContent=c.phase;
@@ -33,7 +34,10 @@ function render(){
   document.getElementById('peakDate').textContent=fmtDate(c.peak_date);
   document.getElementById('drawdown').textContent=fmt(c.drawdown)+' m';
   document.getElementById('persistDays').textContent=c.persistence_days;
-  document.getElementById('updatedAt').textContent='Atualizado em '+new Date(model.meta.updated_at).toLocaleString('pt-BR',{timeZone:'America/Manaus',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('currentLabel').textContent=manual?'COTA LOCAL (MANUAL)':'ÚLTIMA MEDIÇÃO OFICIAL';
+  document.getElementById('observationInfo').textContent=manual?'Valor local aplicado neste navegador; não substitui a medição oficial.':'Última medição oficial disponível: '+fmtDate(c.date)+' · Porto de Manaus';
+  document.getElementById('updatedAt').textContent='Painel atualizado em '+new Date(model.meta.updated_at).toLocaleString('pt-BR',{timeZone:'America/Manaus',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('projectionBase').textContent='Baseada na última medição oficial disponível em '+fmtDate(c.date)+'.';
   const badge=document.getElementById('statusBadge');
   badge.textContent=c.status;
   badge.className='status '+(c.status==='NORMAL'?'normal':c.status==='ALTO'?'high':'attention');
