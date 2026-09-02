@@ -2,11 +2,11 @@
   "meta": {
     "model": "MPHI v1.0",
     "title": "Painel Rio Negro — MPHI",
-    "updated_at": "2026-09-01T09:51:59.789-04:00",
+    "updated_at": "2026-09-02T09:02:11-04:00",
     "timezone": "America/Manaus",
     "source_status": "ok",
     "source_note": "Atualização automática concluída a partir do Porto de Manaus, com sincronização e recuperação do mês corrente.",
-    "last_score_date": "2026-09-01"
+    "last_score_date": "2026-09-02"
   },
   "seasonal": {
     "08": {
@@ -23,41 +23,41 @@
     "median": 27.94
   },
   "current": {
-    "date": "2026-09-01",
-    "level": 24.09,
-    "delta_cm": -10,
+    "date": "2026-09-02",
+    "level": 23.94,
+    "delta_cm": -15.0,
     "phase": "Vazante",
     "peak": 28.51,
     "peak_date": "2026-06-21",
-    "drawdown": 4.42,
-    "avg3": -14,
-    "avg7": -14,
-    "avg15": -12.67,
-    "avg30": -10.6,
-    "accel_7_15": -1.33,
+    "drawdown": 4.57,
+    "avg3": -13.67,
+    "avg7": -14.14,
+    "avg15": -13.0,
+    "avg30": -10.83,
+    "accel_7_15": -1.14,
     "base_score": 5,
-    "persistence_days": 16,
+    "persistence_days": 17,
     "persistence_points": 2,
     "score": 7,
     "status": "ALTO"
   },
   "projections": {
     "7": {
-      "soft": 23.35,
-      "central": 23.16,
-      "stress": 23.11,
+      "soft": 23.18,
+      "central": 22.99,
+      "stress": 22.95,
       "confidence": "Média"
     },
     "15": {
-      "soft": 22.5,
-      "central": 22.09,
-      "stress": 21.99,
+      "soft": 22.32,
+      "central": 21.9,
+      "stress": 21.82,
       "confidence": "Média-baixa"
     },
     "30": {
-      "soft": 20.91,
-      "central": 20.09,
-      "stress": 19.89,
+      "soft": 20.69,
+      "central": 19.87,
+      "stress": 19.7,
       "confidence": "Baixa"
     }
   },
@@ -617,7 +617,13 @@
     {
       "date": "2026-09-01",
       "level": 24.09,
-      "delta_cm": -10,
+      "delta_cm": -10.0,
+      "source": "Porto de Manaus"
+    },
+    {
+      "date": "2026-09-02",
+      "level": 23.94,
+      "delta_cm": -15.0,
       "source": "Porto de Manaus"
     }
   ],
