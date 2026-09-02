@@ -18,13 +18,13 @@ permissions:
 
 concurrency:
   group: "mphi-sync-${{ github.ref }}"
-  # Mantém apenas a tentativa mais recente; não deixa a fila de Pages coalescer as coletas agendadas.
-  cancel-in-progress: true
+  # Preserva a transação coleta -> commit -> publicação; nunca cancela no meio.
+  cancel-in-progress: false
 
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -32,6 +32,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Reexecuções também usam o estado mais recente, incluindo o ledger.
+          ref: fileOrganizer
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -41,9 +44,26 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
+      - name: Preservar referência do ledger
+        run: cp docs/data/forecast_ledger.json "$RUNNER_TEMP/forecast-ledger-before.json"
+
       - name: Sincronizar Porto e recalcular MPHI
         id: update
         run: python scripts/sync_mphi.py
+
+      - name: Verificar ledger append-only
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          before = json.loads((Path(os.environ["RUNNER_TEMP"]) / "forecast-ledger-before.json").read_text())["entries"]
+          after = json.loads(Path("docs/data/forecast_ledger.json").read_text())["entries"]
+          if after[:len(before)] != before or len(after) not in (len(before), len(before) + 1):
+              raise SystemExit("Ledger inválido: previsão anterior alterada ou emissão retroativa em lote.")
+          if len({e["forecast_id"] for e in after}) != len(after):
+              raise SystemExit("Ledger inválido: forecast_id duplicado.")
+          print(f"Ledger preservado: {len(before)} previsões anteriores; {len(after) - len(before)} nova.")
+          PY
 
       - name: Detectar alteração válida
         id: changes
@@ -63,19 +83,55 @@ jobs:
           git config user.email "mphi-bot@users.noreply.github.com"
           git add docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json
           git commit -m "Atualiza MPHI e validacao $(date -u +%F)"
-          git push
+          git push origin HEAD:fileOrganizer
 
+      # Republicar também sem mudança de dados recupera falhas após o commit.
       - name: Configurar GitHub Pages
-        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
         uses: actions/configure-pages@v5
 
       - name: Preparar site
-        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './docs'
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Publicar GitHub Pages
-        if: github.event_name != 'schedule' || steps.changes.outputs.changed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Confirmar dados publicados
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python - <<'PY'
+          import json, os, time
+          from pathlib import Path
+          import requests
+          names = ("latest.json", "forecast_ledger.json", "validation.json")
+          expected = {name: json.loads((Path("docs/data") / name).read_text()) for name in names}
+          base = os.environ["PAGE_URL"].rstrip("/") + "/data/"
+          for attempt in range(1, 9):
+              try:
+                  for name in names:
+                      response = requests.get(
+                          base + name,
+                          params={"verify": f'{os.environ["GITHUB_RUN_ID"]}-{os.environ["GITHUB_RUN_ATTEMPT"]}-{attempt}'},
+                          headers={"Cache-Control": "no-cache"}, timeout=10,
+                      )
+                      response.raise_for_status()
+                      if response.json() != expected[name]:
+                          raise ValueError(f"{name}: publicação ainda difere do artefato")
+                  current = expected["latest.json"]["current"]
+                  message = f'Publicação verificada: {current["date"]} = {current["level"]:.2f} m; ledger e validação conferidos.'
+                  print(message)
+                  with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+                      summary.write(message + "\n")
+                  break
+              except (requests.RequestException, ValueError) as exc:
+                  if attempt == 8:
+                      raise SystemExit(f"Falha na verificação pública: {exc}")
+                  print(f"Aguardando propagação do Pages ({attempt}/8): {exc}")
+                  time.sleep(5)
+          PY
