@@ -8,7 +8,8 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
   schedule:
-    - cron: '17,43 12-21 * * *' # 08:17–17:43 America/Manaus; evita o topo da hora e cobre a publicação tardia do Porto
+    - cron: '50 11 * * *' # 07:50 America/Manaus, todos os dias
+    - cron: '20 12 * * *' # 08:20 America/Manaus, todos os dias
   workflow_dispatch:
 
 permissions:
