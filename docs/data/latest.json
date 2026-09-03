@@ -2,11 +2,11 @@
   "meta": {
     "model": "MPHI v1.0",
     "title": "Painel Rio Negro — MPHI",
-    "updated_at": "2026-09-02T09:02:11-04:00",
+    "updated_at": "2026-09-03T09:08:21-04:00",
     "timezone": "America/Manaus",
     "source_status": "ok",
     "source_note": "Atualização automática concluída a partir do Porto de Manaus, com sincronização e recuperação do mês corrente.",
-    "last_score_date": "2026-09-02"
+    "last_score_date": "2026-09-03"
   },
   "seasonal": {
     "08": {
@@ -23,41 +23,41 @@
     "median": 27.94
   },
   "current": {
-    "date": "2026-09-02",
-    "level": 23.94,
-    "delta_cm": -15.0,
+    "date": "2026-09-03",
+    "level": 23.8,
+    "delta_cm": -14.0,
     "phase": "Vazante",
     "peak": 28.51,
     "peak_date": "2026-06-21",
-    "drawdown": 4.57,
-    "avg3": -13.67,
+    "drawdown": 4.71,
+    "avg3": -13.0,
     "avg7": -14.14,
-    "avg15": -13.0,
-    "avg30": -10.83,
-    "accel_7_15": -1.14,
+    "avg15": -13.27,
+    "avg30": -11.17,
+    "accel_7_15": -0.87,
     "base_score": 5,
-    "persistence_days": 17,
+    "persistence_days": 18,
     "persistence_points": 2,
     "score": 7,
     "status": "ALTO"
   },
   "projections": {
     "7": {
-      "soft": 23.18,
-      "central": 22.99,
-      "stress": 22.95,
+      "soft": 23.02,
+      "central": 22.84,
+      "stress": 22.81,
       "confidence": "Média"
     },
     "15": {
-      "soft": 22.32,
-      "central": 21.9,
-      "stress": 21.82,
+      "soft": 22.12,
+      "central": 21.74,
+      "stress": 21.68,
       "confidence": "Média-baixa"
     },
     "30": {
-      "soft": 20.69,
-      "central": 19.87,
-      "stress": 19.7,
+      "soft": 20.45,
+      "central": 19.69,
+      "stress": 19.56,
       "confidence": "Baixa"
     }
   },
@@ -624,6 +624,12 @@
       "date": "2026-09-02",
       "level": 23.94,
       "delta_cm": -15.0,
+      "source": "Porto de Manaus"
+    },
+    {
+      "date": "2026-09-03",
+      "level": 23.8,
+      "delta_cm": -14.0,
       "source": "Porto de Manaus"
     }
   ],
