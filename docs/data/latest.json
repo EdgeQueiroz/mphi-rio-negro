@@ -2,11 +2,11 @@
   "meta": {
     "model": "MPHI v1.0",
     "title": "Painel Rio Negro — MPHI",
-    "updated_at": "2026-09-03T09:08:21-04:00",
+    "updated_at": "2026-09-04T11:07:20-04:00",
     "timezone": "America/Manaus",
     "source_status": "ok",
     "source_note": "Atualização automática concluída a partir do Porto de Manaus, com sincronização e recuperação do mês corrente.",
-    "last_score_date": "2026-09-03"
+    "last_score_date": "2026-09-04"
   },
   "seasonal": {
     "08": {
@@ -23,41 +23,41 @@
     "median": 27.94
   },
   "current": {
-    "date": "2026-09-03",
-    "level": 23.8,
-    "delta_cm": -14.0,
+    "date": "2026-09-04",
+    "level": 23.65,
+    "delta_cm": -15.0,
     "phase": "Vazante",
     "peak": 28.51,
     "peak_date": "2026-06-21",
-    "drawdown": 4.71,
-    "avg3": -13.0,
-    "avg7": -14.14,
-    "avg15": -13.27,
-    "avg30": -11.17,
-    "accel_7_15": -0.87,
+    "drawdown": 4.86,
+    "avg3": -14.67,
+    "avg7": -14.29,
+    "avg15": -13.47,
+    "avg30": -11.47,
+    "accel_7_15": -0.82,
     "base_score": 5,
-    "persistence_days": 18,
+    "persistence_days": 19,
     "persistence_points": 2,
     "score": 7,
     "status": "ALTO"
   },
   "projections": {
     "7": {
-      "soft": 23.02,
-      "central": 22.84,
-      "stress": 22.81,
+      "soft": 22.85,
+      "central": 22.68,
+      "stress": 22.62,
       "confidence": "Média"
     },
     "15": {
-      "soft": 22.12,
-      "central": 21.74,
-      "stress": 21.68,
+      "soft": 21.93,
+      "central": 21.57,
+      "stress": 21.45,
       "confidence": "Média-baixa"
     },
     "30": {
-      "soft": 20.45,
-      "central": 19.69,
-      "stress": 19.56,
+      "soft": 20.21,
+      "central": 19.49,
+      "stress": 19.25,
       "confidence": "Baixa"
     }
   },
@@ -630,6 +630,12 @@
       "date": "2026-09-03",
       "level": 23.8,
       "delta_cm": -14.0,
+      "source": "Porto de Manaus"
+    },
+    {
+      "date": "2026-09-04",
+      "level": 23.65,
+      "delta_cm": -15.0,
       "source": "Porto de Manaus"
     }
   ],
