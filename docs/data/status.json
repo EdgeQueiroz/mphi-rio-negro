@@ -3,7 +3,7 @@
   "timezone": "America/Manaus",
   "scheduled_time": "08:00",
   "retry_interval_minutes": 15,
-  "checked_at": "2026-09-06T11:24:30-04:00",
+  "checked_at": "2026-09-06T13:41:01-04:00",
   "state": "waiting",
   "observation_date": "2026-09-04",
   "data_updated_at": "2026-09-04T11:07:20-04:00",
