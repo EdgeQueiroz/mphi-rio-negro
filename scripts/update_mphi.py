@@ -257,40 +257,9 @@ def build_validation(d, ledger):
 
 
 def main():
-    d = read_json(DATA, {})
-    ledger = read_json(LEDGER, {
-        'schema': 'mphi-forecast-ledger-v1',
-        'policy': 'append-only: campos de previsão são congelados na emissão e não devem ser reescritos',
-        'entries': []
-    })
-    try:
-        response = requests.get(URL, timeout=30, headers={'User-Agent': 'MPHI-Uiara/1.0'})
-        response.raise_for_status()
-        date, level, delta = extract_latest(response.text)
-        prev = next((x for x in reversed(d['series']) if x.get('level') is not None), None)
-        if prev and date > prev['date'] and abs(level - prev['level']) > 1.0:
-            raise RuntimeError(f'Salto anômalo: {prev["level"]} -> {level} m')
-        found = next((x for x in d['series'] if x['date'] == date), None)
-        if found:
-            found.update(level=level, delta_cm=delta, source='Porto de Manaus')
-        else:
-            d['series'].append({'date': date, 'level': level, 'delta_cm': delta, 'source': 'Porto de Manaus'})
-        recalc(d)
-        d['meta']['source_note'] = 'Atualização automática concluída a partir do Porto de Manaus.'
-        freeze_forecast(d, ledger)
-        validation = build_validation(d, ledger)
-        write_json(DATA, d)
-        write_json(LEDGER, ledger)
-        write_json(VALIDATION, validation)
-    except Exception as e:
-        d['meta']['source_status'] = 'stale'
-        d['meta']['source_note'] = 'FONTE NÃO ATUALIZADA: ' + str(e)
-        d['meta']['updated_at'] = datetime.now(TZ).isoformat(timespec='seconds')
-        write_json(DATA, d)
-        if ledger.get('entries'):
-            write_json(VALIDATION, build_validation(d, ledger))
-        print(e, file=sys.stderr)
-        sys.exit(2)
+    # A single ingestion path preserves collection metadata and ledger invariants.
+    from sync_mphi import main as sync_main
+    sync_main()
 
 
 if __name__ == '__main__':

@@ -7,9 +7,11 @@ on:
       - "docs/data/latest.json"
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
+      - "docs/data/status.json"
   schedule:
-    - cron: '50 11 * * *' # 07:50 America/Manaus, todos os dias
-    - cron: '20 12 * * *' # 08:20 America/Manaus, todos os dias
+    - cron: '0 12 * * *' # 08:00 America/Manaus (UTC-4), todos os dias
+    - cron: '7,22,37,52 12-23,0-3 * * *' # Novas consultas até 23:52 de Manaus
+    # GitHub pode atrasar execuções; horários reais são registrados em status.json.
   workflow_dispatch:
 
 permissions:
@@ -48,8 +50,12 @@ jobs:
       - name: Preservar referência do ledger
         run: cp docs/data/forecast_ledger.json "$RUNNER_TEMP/forecast-ledger-before.json"
 
+      - name: Verificar contratos da coleta
+        run: python -m unittest discover -s tests -v
+
       - name: Sincronizar Porto e recalcular MPHI
         id: update
+        continue-on-error: true
         run: python scripts/sync_mphi.py
 
       - name: Verificar ledger append-only
@@ -69,7 +75,7 @@ jobs:
       - name: Detectar alteração válida
         id: changes
         run: |
-          if git diff --quiet -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json; then
+          if git diff --quiet -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/status.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Nenhum dado novo ou lacuna recuperada."
           else
@@ -82,7 +88,7 @@ jobs:
         run: |
           git config user.name "MPHI Bot"
           git config user.email "mphi-bot@users.noreply.github.com"
-          git add docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json
+          git add docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/status.json
           git commit -m "Atualiza MPHI e validacao $(date -u +%F)"
           git push origin HEAD:fileOrganizer
 
@@ -110,7 +116,7 @@ jobs:
           import json, os, time
           from pathlib import Path
           import requests
-          names = ("latest.json", "forecast_ledger.json", "validation.json")
+          names = ("latest.json", "forecast_ledger.json", "validation.json", "status.json")
           expected = {name: json.loads((Path("docs/data") / name).read_text()) for name in names}
           base = os.environ["PAGE_URL"].rstrip("/") + "/data/"
           for attempt in range(1, 9):
@@ -136,3 +142,9 @@ jobs:
                   print(f"Aguardando propagação do Pages ({attempt}/8): {exc}")
                   time.sleep(5)
           PY
+
+      - name: Sinalizar falha de coleta após preservar a publicação
+        if: steps.update.outcome == 'failure'
+        run: |
+          echo "A fonte falhou. O painel preservou os dados e publicou o estado de erro."
+          exit 1
