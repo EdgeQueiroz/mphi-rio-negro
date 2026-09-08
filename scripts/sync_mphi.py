@@ -155,6 +155,7 @@ def sync_month(d, source_rows, now):
 def main():
     now = datetime.now(TZ)
     d = core.read_json(core.DATA, {})
+    previous_current = dict(d.get('current', {}))
     ledger = core.read_json(core.LEDGER, {
         'schema': 'mphi-forecast-ledger-v1',
         'policy': 'append-only: campos de previsão são congelados na emissão e não devem ser reescritos',
@@ -177,6 +178,19 @@ def main():
             return
 
         core.recalc(d)
+        if previous_current.get('date') and previous_current['date'] < d['current']['date']:
+            days = (datetime.fromisoformat(d['current']['date']) - datetime.fromisoformat(previous_current['date'])).days
+            change_cm = round((d['current']['level'] - previous_current['level']) * 100, 2)
+            d['meta']['change_since_previous_publication'] = {
+                'from_date': previous_current['date'],
+                'to_date': d['current']['date'],
+                'from_level_m': previous_current['level'],
+                'to_level_m': d['current']['level'],
+                'elapsed_days': days,
+                'change_cm': change_cm,
+                'average_cm_per_day': round(change_cm / days, 2),
+                'note': 'Diferença entre cotas publicadas; a média do intervalo não cria medições diárias.',
+            }
         if d['current']['date'] != latest_source_date:
             raise RuntimeError(
                 f'Inconsistência após sincronização: fonte={latest_source_date}, MPHI={d["current"]["date"]}'

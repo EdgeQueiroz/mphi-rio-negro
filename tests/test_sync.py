@@ -96,6 +96,26 @@ class SyncContracts(unittest.TestCase):
         self.assertEqual(json.loads(after['latest.json'])['current']['date'], new_date)
         self.assertEqual(json.loads(after['status.json'])['observation_date'], new_date)
 
+    def test_backfill_reports_total_change_without_overwriting_daily_delta(self):
+        rows = [copy.deepcopy(r) for r in SEED['series'] if r.get('level') is not None]
+        start = SEED['current']['date']
+        level = SEED['current']['level']
+        for days, drop, delta in [(1, .15, -15), (2, .30, -15), (3, .46, -16), (4, .63, -17)]:
+            rows.append({'date': core.add_days(start, days), 'level': round(level-drop, 2),
+                         'delta_cm': delta, 'source': 'Porto de Manaus'})
+        before, after = self.run_isolated(rows)
+        result = json.loads(after['latest.json'])
+        change = result['meta']['change_since_previous_publication']
+        self.assertEqual(change['change_cm'], -63)
+        self.assertEqual(change['elapsed_days'], 4)
+        self.assertEqual(change['average_cm_per_day'], -15.75)
+        self.assertEqual(result['current']['delta_cm'], -17)
+        self.assertEqual(result['current']['avg3'], -16)
+        old_entries = json.loads(before['forecast_ledger.json'])['entries']
+        new_entries = json.loads(after['forecast_ledger.json'])['entries']
+        self.assertEqual(new_entries[:len(old_entries)], old_entries)
+        self.assertEqual(len(new_entries), len(old_entries)+1)
+
     def test_forecast_is_not_rewritten(self):
         d = copy.deepcopy(SEED); ledger = {'entries': []}
         core.freeze_forecast(d, ledger); original = copy.deepcopy(ledger)

@@ -31,11 +31,16 @@ function renderFreshness(){
   $('checkedAt').textContent='Última consulta ao Porto: '+fmtTime(s?.checked_at);
   const today=localDate();
   const checkIsToday=s?.checked_at&&new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(s.checked_at))===today;
+  const now=new Date(), scheduled=new Date(today+'T08:00:00-04:00');
+  const checked=s?.checked_at?new Date(s.checked_at):null;
+  const overdue=now>=scheduled&&(!checked||checked<scheduled||now-checked>45*60000);
   let label,note,kind;
   if(s?.state==='error'){
     label='Falha na consulta ao Porto';note='Última medição válida preservada. Novas tentativas automáticas programadas.';kind='error';
   }else if(c.date===today){
     label='Medição de hoje disponível';note='Coletada em '+fmtTime(model.meta.updated_at);kind='ok';
+  }else if(overdue){
+    label='Consulta automática em atraso';note='Última consulta: '+fmtTime(s?.checked_at)+'. Não há confirmação de que o Porto continua sem dado novo.';kind='error';
   }else if(checkIsToday){
     label='Aguardando nova medição';note='Porto consultado hoje; última medição disponível em '+fmtDate(c.date)+'.';kind='waiting';
   }else{
@@ -49,7 +54,17 @@ function render(){
   const observed=model.series.filter(x=>Number.isFinite(x.level));
   const previous=observed.filter(x=>x.date<c.date).at(-1);
   const dayGap=previous?(Date.parse(c.date)-Date.parse(previous.date))/86400000:null;
-  $('deltaPeriod').textContent=dayGap===1?'variação diária informada pelo Porto':'variação informada pelo Porto; intervalo sem leitura diária contínua';
+  const calculated=previous?Math.round((c.level-previous.level)*10000)/100:null;
+  $('delta24').textContent=calculated==null?signed(c.delta_cm)+' cm':signed(calculated,Number.isInteger(calculated)?0:2)+' cm';
+  $('deltaPeriod').textContent=previous?`${fmtDate(previous.date)} → ${fmtDate(c.date)} · ${dayGap===1?'variação diária':'acumulado em '+dayGap+' dias'}`:'Variação informada pelo Porto; intervalo não confirmado';
+  let interval=$('intervalChange');
+  if(!interval){interval=document.createElement('p');interval.id='intervalChange';interval.className='interval-change';$('observationInfo').after(interval);}
+  const change=model.meta.change_since_previous_publication;
+  const validChange=change&&change.to_date===c.date&&change.elapsed_days>1;
+  const discrepancy=dayGap===1&&Number.isFinite(c.delta_cm)&&Math.abs(calculated-c.delta_cm)>.5;
+  interval.hidden=!validChange&&!discrepancy;
+  interval.textContent=validChange?`Desde a medição que estava no painel: ${signed(change.change_cm)} cm em ${change.elapsed_days} dias (${fmtDate(change.from_date)} → ${fmtDate(change.to_date)}). Média do intervalo: ${signed(change.average_cm_per_day,2)} cm/dia; não representa uma medição de cada dia.`:'';
+  if(discrepancy)interval.textContent+=' Diferença detectada: o Porto informa '+signed(c.delta_cm)+' cm; a diferença entre as cotas é '+signed(calculated,2)+' cm. O indicador acima usa as cotas.';
   $('phase').textContent=c.phase;$('peak').textContent=fmt(c.peak)+' m';$('peakDate').textContent=fmtDate(c.peak_date);
   $('drawdown').textContent=fmt(c.drawdown)+' m';$('persistDays').textContent=c.persistence_days;
   $('observationInfo').textContent='Medição de '+fmtDate(c.date)+' · Porto de Manaus';
