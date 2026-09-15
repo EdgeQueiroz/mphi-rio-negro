@@ -1,6 +1,11 @@
 name: MPHI - redundância matinal A
 
 on:
+  # Mantém um autoteste auditável quando este arquivo é alterado.
+  push:
+    branches: ["fileOrganizer"]
+    paths:
+      - ".github/workflows/mphi-morning-watchdog-a.yml"
   # 08:17, 09:17, 10:17, 11:17 e 13:17 em Manaus.
   schedule:
     - cron: '17 12-15,17 * * *'
