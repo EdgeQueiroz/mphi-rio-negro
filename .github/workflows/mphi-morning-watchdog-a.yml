@@ -1,0 +1,20 @@
+name: MPHI - redundância matinal A
+
+on:
+  # 08:17, 09:17, 10:17, 11:17 e 13:17 em Manaus.
+  schedule:
+    - cron: '17 12-15,17 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  executar-fluxo-principal:
+    uses: ./.github/workflows/update-and-deploy-mphi.yml
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
