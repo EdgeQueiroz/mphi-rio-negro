@@ -78,7 +78,9 @@ jobs:
       - name: Detectar alteração válida
         id: changes
         run: |
-          if git diff --quiet -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/status.json; then
+          # status.json registra cada consulta no artefato publicado, mas sozinho
+          # não deve gerar commits. O histórico só avança com dado hidrológico.
+          if git diff --quiet -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Nenhum dado novo ou lacuna recuperada."
           else
