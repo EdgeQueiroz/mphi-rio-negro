@@ -8,11 +8,14 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
       - "docs/data/status.json"
+  # Agenda principal: 08:05, 08:35, 09:05, 09:35 e 10:05 em Manaus.
+  # Minutos fora do topo da hora reduzem atrasos do agendador do GitHub.
   schedule:
-    - cron: '0 12 * * *' # 08:00 America/Manaus (UTC-4), todos os dias
-    - cron: '7,22,37,52 12-23,0-3 * * *' # Novas consultas até 23:52 de Manaus
-    # GitHub pode atrasar execuções; horários reais são registrados em status.json.
+    - cron: '5,35 12-13 * * *'
+    - cron: '5 14 * * *'
   workflow_dispatch:
+  # Permite que agendas independentes reutilizem exatamente o mesmo fluxo.
+  workflow_call:
 
 permissions:
   contents: write
