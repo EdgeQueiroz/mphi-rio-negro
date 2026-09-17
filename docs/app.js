@@ -5,7 +5,7 @@ const fmtTime=s=>s?new Date(s).toLocaleString('pt-BR',{timeZone:'America/Manaus'
 const localDate=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const signed=(n,d=0)=>n==null?'—':(n>0?'+':'')+fmt(n,d);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let model=null,validationData=null,collectionStatus=null,chartRange='all',loading=false;
+let model=null,validationData=null,collectionStatus=null,hydrologicData=null,chartRange='all',loading=false;
 const $=id=>document.getElementById(id);
 async function fetchJSON(path,required=true){
   const r=await fetch(path+'?v='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(15000)});
@@ -15,9 +15,9 @@ async function fetchJSON(path,required=true){
 async function load(){
   if(loading)return;loading=true;
   try{
-    const [next,validation,status]=await Promise.all([fetchJSON('data/latest.json'),fetchJSON('data/validation.json',false).catch(()=>null),fetchJSON('data/status.json',false).catch(()=>null)]);
+    const [next,validation,status,hydrologic]=await Promise.all([fetchJSON('data/latest.json'),fetchJSON('data/validation.json',false).catch(()=>null),fetchJSON('data/status.json',false).catch(()=>null),fetchJSON('data/hydrologic_latest.json',false).catch(()=>null)]);
     if(!next?.current?.date||!Number.isFinite(next.current.level)||!Array.isArray(next.series))throw new Error('Dados inválidos');
-    model=next;validationData=validation;collectionStatus=status;
+    model=next;validationData=validation;collectionStatus=status;hydrologicData=hydrologic;
     $('loadError').hidden=true;render();
   }catch(e){
     $('loadError').hidden=false;
@@ -85,14 +85,22 @@ function render(){
     const date=new Date(c.date+'T12:00:00Z');date.setUTCDate(date.getUTCDate()+Number(days));
     return `<article class="proj"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(date.toISOString().slice(0,10))}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cenário central</span><div class="scenario-pair"><div><span>Suave</span><b>${fmt(p.soft)} m</b></div><div><span>Estresse</span><b>${fmt(p.stress)} m</b></div></div><p class="confidence">Confiança indicativa: ${esc(p.confidence.toLowerCase())}</p></article>`;
   }).join('');
+  const hydrologicForecast=hydrologicData?.forecast?.forecast_date===c.date?hydrologicData.forecast:null;
   const shadowForecast=validationData?.shadow_models?.[0]?.latest_forecast;
+  const experimentalForecast=hydrologicForecast||shadowForecast;
   const shadowBlock=$('shadowProjectionBlock');
   const shadowRows=$('shadowProjectionRows');
   if(shadowBlock&&shadowRows){
-    const showShadow=shadowForecast?.forecast_date===c.date&&shadowForecast?.projections;
+    const showShadow=experimentalForecast?.forecast_date===c.date&&experimentalForecast?.projections;
     shadowBlock.hidden=!showShadow;
     if(showShadow){
-      shadowRows.innerHTML=Object.entries(shadowForecast.projections).map(([days,p])=>{
+      const description=shadowBlock.querySelector('.panel-description');
+      const note=shadowBlock.querySelector('.footnote');
+      if(hydrologicForecast){
+        description.textContent='Combina o histórico recente com sinais observados ao longo do Rio Negro e no Solimões.';
+        note.textContent='Mostrada em paralelo, sem substituir a projeção oficial. O modelo ainda está em calibração e será acompanhado diariamente.';
+      }
+      shadowRows.innerHTML=Object.entries(experimentalForecast.projections).map(([days,p])=>{
         const interval=p.interval80;
         const hasInterval=Number.isFinite(interval?.low)&&Number.isFinite(interval?.high);
         const range=hasInterval?`Faixa experimental de 80%: ${fmt(interval.low)}–${fmt(interval.high)} m`:'Faixa de 80%: em coleta';
@@ -119,7 +127,9 @@ function renderValidation(){
   const h15=validationData.by_horizon?.['15']||{n:0};
   const h30=validationData.by_horizon?.['30']||{n:0};
   const shadow=validationData.shadow_models?.[0];
-  const shadowCard=shadow?`<div><span>Projeção experimental</span><b>Em avaliação</b><small>${shadow.forecast_count||0} previsão preservada · ${shadow.matured_records||0} comparações concluídas</small></div>`:'';
+  const hydroCurrent=hydrologicData?.forecast?.forecast_date===model.current.date;
+  const hydroValidation=hydrologicData?.validation;
+  const shadowCard=hydroCurrent?`<div><span>Projeção experimental</span><b>Em calibração</b><small>${hydrologicData.forecast_count||0} previsões preservadas · ${hydrologicData.forecast.station_count||0} estações integradas · ${hydroValidation?.matured_records||0} comparações</small></div>`:shadow?`<div><span>Projeção experimental</span><b>Em avaliação</b><small>${shadow.forecast_count||0} previsões preservadas · ${shadow.matured_records||0} comparações concluídas</small></div>`:'';
   const metric=h=>h.n?`${fmt(h.mae_m*100,1)} cm`:'em coleta';
   const coverage=h=>h.n?`${fmt(h.envelope_coverage_pct,1)}%`:'em coleta';
   const lead=validationData.alert_validation?.lead_time?.value_days;

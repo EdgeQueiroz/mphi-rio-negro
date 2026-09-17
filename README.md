@@ -42,6 +42,12 @@ Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e sé
 
 O v1.0 permanece como previsão pública e baseline. Na ativação, o v1.1-shadow emite uma primeira previsão para a medição oficial corrente; depois disso, emite uma previsão paralela a cada nova medição, sem alterar entradas anteriores. As duas versões são mostradas lado a lado no painel. A correção usa a mediana dos erros assinados de previsões v1.0 já maduras na data da emissão. Com pelo menos 10 aferições no horizonte, também registra um intervalo experimental de 80%, explicitamente marcado como provisório até acumular validação prospectiva própria. O horizonte de 30 dias permanece sem correção enquanto não houver amostras maduras.
 
+### MPHI v2 hidrológico — alpha
+
+A primeira versão orientada pela bacia combina a projeção corrente com padrões semelhantes encontrados nas tendências diárias de cinco estações telemétricas: Curicuriari, Serrinha, Barcelos e Moura, no Rio Negro, e Manacapuru, no Solimões-Amazonas. São Gabriel da Cachoeira não integra esta versão porque a estação consultada não entregou série telemétrica recente na auditoria de implantação.
+
+O motor exige pelo menos quatro estações atualizadas, 30 dias por estação e 20 amostras históricas completas por horizonte. As previsões são registradas prospectivamente em `docs/data/hydrologic_ledger.json`, sem retroagir ou alterar entradas anteriores. O peso inicial dos sinais da bacia é limitado a 35% até existir validação prospectiva suficiente. A identificação de defasagens entre estações é exploratória e não é apresentada como causalidade comprovada.
+
 `docs/data/validation.json` compara cada projeção central com a cota observada na data-alvo e calcula, por horizonte e versão do modelo:
 
 - número de amostras maduras;

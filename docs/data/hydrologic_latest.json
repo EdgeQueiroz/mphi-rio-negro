@@ -1,0 +1,13 @@
+{
+  "schema": "mphi-hydrologic-latest-v1",
+  "status": "awaiting-first-run",
+  "forecast": null,
+  "forecast_count": 0,
+  "validation": {
+    "forecast_count": 0,
+    "matured_records": 0,
+    "next_due": null,
+    "pending": {"7": 0, "15": 0, "30": 0},
+    "by_horizon": {}
+  }
+}

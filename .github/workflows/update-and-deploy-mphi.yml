@@ -8,6 +8,9 @@ on:
       - "docs/data/forecast_ledger.json"
       - "docs/data/validation.json"
       - "docs/data/status.json"
+      - "docs/data/basin_signals.json"
+      - "docs/data/hydrologic_latest.json"
+      - "docs/data/hydrologic_ledger.json"
   # Agenda principal: 08:05, 08:35, 09:05, 09:35 e 10:05 em Manaus.
   # Minutos fora do topo da hora reduzem atrasos do agendador do GitHub.
   schedule:
@@ -51,7 +54,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Preservar referência do ledger
-        run: cp docs/data/forecast_ledger.json "$RUNNER_TEMP/forecast-ledger-before.json"
+        run: |
+          cp docs/data/forecast_ledger.json "$RUNNER_TEMP/forecast-ledger-before.json"
+          cp docs/data/hydrologic_ledger.json "$RUNNER_TEMP/hydrologic-ledger-before.json"
 
       - name: Verificar contratos da coleta
         run: python -m unittest discover -s tests -v
@@ -60,6 +65,11 @@ jobs:
         id: update
         continue-on-error: true
         run: python scripts/sync_mphi.py
+
+      - name: Atualizar modelo hidrológico experimental
+        id: hydrologic
+        continue-on-error: true
+        run: python scripts/hydrologic_v2.py
 
       - name: Verificar ledger append-only
         run: |
@@ -75,12 +85,26 @@ jobs:
           print(f"Ledger preservado: {len(before)} previsões anteriores; {len(after) - len(before)} nova(s).")
           PY
 
+      - name: Verificar ledger hidrológico append-only
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          before = json.loads((Path(os.environ["RUNNER_TEMP"]) / "hydrologic-ledger-before.json").read_text())["entries"]
+          after = json.loads(Path("docs/data/hydrologic_ledger.json").read_text())["entries"]
+          if after[:len(before)] != before or len(after) not in (len(before), len(before) + 1):
+              raise SystemExit("Ledger hidrológico inválido: previsão anterior alterada ou emissão retroativa.")
+          if len({e["forecast_id"] for e in after}) != len(after):
+              raise SystemExit("Ledger hidrológico inválido: forecast_id duplicado.")
+          print(f"Ledger hidrológico preservado: {len(before)} anteriores; {len(after) - len(before)} nova.")
+          PY
+
       - name: Detectar alteração válida
         id: changes
         run: |
           # status.json registra cada consulta no artefato publicado, mas sozinho
           # não deve gerar commits. O histórico só avança com dado hidrológico.
-          if git diff --quiet -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json; then
+          if git diff --quiet -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/basin_signals.json docs/data/hydrologic_latest.json docs/data/hydrologic_ledger.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Nenhum dado novo ou lacuna recuperada."
           else
@@ -93,7 +117,7 @@ jobs:
         run: |
           git config user.name "MPHI Bot"
           git config user.email "mphi-bot@users.noreply.github.com"
-          git add docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/status.json
+          git add docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/status.json docs/data/basin_signals.json docs/data/hydrologic_latest.json docs/data/hydrologic_ledger.json
           git commit -m "Atualiza MPHI e validacao $(date -u +%F)"
           git push origin HEAD:fileOrganizer
 
@@ -121,7 +145,10 @@ jobs:
           import json, os, time
           from pathlib import Path
           import requests
-          names = ("latest.json", "forecast_ledger.json", "validation.json", "status.json")
+          names = (
+              "latest.json", "forecast_ledger.json", "validation.json", "status.json",
+              "basin_signals.json", "hydrologic_latest.json", "hydrologic_ledger.json",
+          )
           expected = {name: json.loads((Path("docs/data") / name).read_text()) for name in names}
           base = os.environ["PAGE_URL"].rstrip("/") + "/data/"
           for attempt in range(1, 9):
@@ -153,3 +180,8 @@ jobs:
         run: |
           echo "A fonte falhou. O painel preservou os dados e publicou o estado de erro."
           exit 1
+
+      - name: Registrar indisponibilidade da fonte hidrológica
+        if: steps.hydrologic.outcome == 'failure'
+        run: |
+          echo "A fonte telemétrica da bacia falhou; a projeção oficial e o último estado hidrológico válido foram preservados." >> "$GITHUB_STEP_SUMMARY"
