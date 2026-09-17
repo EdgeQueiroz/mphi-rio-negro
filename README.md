@@ -40,7 +40,7 @@ Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e sé
 
 ### MPHI v1.1-shadow
 
-O v1.0 permanece como previsão pública e baseline. A partir da primeira medição após a implantação, o v1.1-shadow emite uma previsão paralela por horizonte, sem alterar entradas anteriores. A correção usa a mediana dos erros assinados de previsões v1.0 já maduras na data da emissão. Com pelo menos 10 aferições no horizonte, também registra um intervalo experimental de 80%, explicitamente marcado como provisório até acumular validação prospectiva própria. O horizonte de 30 dias permanece sem correção enquanto não houver amostras maduras.
+O v1.0 permanece como previsão pública e baseline. Na ativação, o v1.1-shadow emite uma primeira previsão para a medição oficial corrente; depois disso, emite uma previsão paralela a cada nova medição, sem alterar entradas anteriores. As duas versões são mostradas lado a lado no painel. A correção usa a mediana dos erros assinados de previsões v1.0 já maduras na data da emissão. Com pelo menos 10 aferições no horizonte, também registra um intervalo experimental de 80%, explicitamente marcado como provisório até acumular validação prospectiva própria. O horizonte de 30 dias permanece sem correção enquanto não houver amostras maduras.
 
 `docs/data/validation.json` compara cada projeção central com a cota observada na data-alvo e calcula, por horizonte e versão do modelo:
 

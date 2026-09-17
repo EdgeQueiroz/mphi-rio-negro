@@ -170,11 +170,22 @@ def main():
             raise RuntimeError('A fonte retornou uma medição anterior à última disponível no painel.')
         changed = sync_month(d, source_rows, now)
 
-        # Sem dado novo, correção ou lacuna recuperada: encerra sem tocar nos arquivos.
+        # Sem dado hidrológico novo, ainda pode faltar a primeira emissão do modelo sombra.
         if not changed and d.get('current', {}).get('date') == latest_source_date:
             state = 'current' if latest_source_date == now.date().isoformat() else 'waiting'
+            issued_at = now.isoformat(timespec='seconds')
+            shadow_added = core.freeze_shadow_forecast(d, ledger, created_at=issued_at)
+            if shadow_added:
+                validation = core.build_validation(d, ledger)
+                core.write_json(core.LEDGER, ledger)
+                core.write_json(core.VALIDATION, validation)
+                print(
+                    f'Primeira previsão {core.SHADOW_VERSION} emitida para {latest_source_date}; '
+                    'medição e previsões anteriores preservadas.'
+                )
+            else:
+                print(f'Sem alteração: Porto e MPHI já estão em {latest_source_date}.')
             collection_status(now, state, d)
-            print(f'Sem alteração: Porto e MPHI já estão em {latest_source_date}.')
             return
 
         core.recalc(d)

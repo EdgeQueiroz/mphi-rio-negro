@@ -85,6 +85,23 @@ function render(){
     const date=new Date(c.date+'T12:00:00Z');date.setUTCDate(date.getUTCDate()+Number(days));
     return `<article class="proj"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(date.toISOString().slice(0,10))}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cenário central</span><div class="scenario-pair"><div><span>Suave</span><b>${fmt(p.soft)} m</b></div><div><span>Estresse</span><b>${fmt(p.stress)} m</b></div></div><p class="confidence">Confiança indicativa: ${esc(p.confidence.toLowerCase())}</p></article>`;
   }).join('');
+  const shadowForecast=validationData?.shadow_models?.[0]?.latest_forecast;
+  const shadowBlock=$('shadowProjectionBlock');
+  const shadowRows=$('shadowProjectionRows');
+  if(shadowBlock&&shadowRows){
+    const showShadow=shadowForecast?.forecast_date===c.date&&shadowForecast?.projections;
+    shadowBlock.hidden=!showShadow;
+    if(showShadow){
+      shadowRows.innerHTML=Object.entries(shadowForecast.projections).map(([days,p])=>{
+        const interval=p.interval80;
+        const hasInterval=Number.isFinite(interval?.low)&&Number.isFinite(interval?.high);
+        const range=hasInterval?`Faixa experimental de 80%: ${fmt(interval.low)}–${fmt(interval.high)} m`:'Faixa de 80%: em coleta';
+        return `<article class="proj shadow-proj"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(p.target_date)}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cenário central corrigido</span><div class="scenario-pair"><div><span>Suave</span><b>${fmt(p.soft)} m</b></div><div><span>Estresse</span><b>${fmt(p.stress)} m</b></div></div><p class="confidence">${range}<br>Ajuste histórico: ${signed(p.bias_correction_m*100,1)} cm · ${p.calibration_n||0} aferições maduras</p></article>`;
+      }).join('');
+    }else{
+      shadowRows.innerHTML='';
+    }
+  }
   $('seasonCards').innerHTML=Object.entries(model.seasonal).map(([m,s])=>`<div class="season-card ${m===c.date.slice(5,7)?'current':''}"><b>${new Date('2026-'+m+'-15T12:00:00Z').toLocaleDateString('pt-BR',{month:'long'})}</b>${m===c.date.slice(5,7)?'<small>MÊS DA ÚLTIMA MEDIÇÃO</small>':''}<p>1º quartil · ${fmt(s.q1)} m<br>Mediana · ${fmt(s.median)} m</p></div>`).join('');
   renderFreshness();renderValidation();drawChart();
 }

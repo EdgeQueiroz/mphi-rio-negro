@@ -71,10 +71,17 @@ class SyncContracts(unittest.TestCase):
                     sync.main()
             return before, {name: path.read_bytes() for name, path in paths.items() if path.exists()}
 
-    def test_unchanged_source_preserves_data_timestamp_and_ledger(self):
+    def test_unchanged_source_bootstraps_shadow_without_touching_observation(self):
         rows = [copy.deepcopy(r) for r in SEED['series'] if r.get('level') is not None]
         before, after = self.run_isolated(rows)
-        for name in before: self.assertEqual(before[name], after[name])
+        self.assertEqual(before['latest.json'], after['latest.json'])
+        old_entries = json.loads(before['forecast_ledger.json'])['entries']
+        new_entries = json.loads(after['forecast_ledger.json'])['entries']
+        self.assertEqual(new_entries[:len(old_entries)], old_entries)
+        self.assertEqual(len(new_entries), len(old_entries) + 1)
+        self.assertEqual(new_entries[-1]['forecast_id'], f"{SEED['current']['date']}|{core.SHADOW_VERSION}")
+        validation = json.loads(after['validation.json'])
+        self.assertEqual(validation['shadow_models'][0]['latest_forecast']['forecast_date'], SEED['current']['date'])
         self.assertEqual(json.loads(after['status.json'])['data_updated_at'], SEED['meta']['updated_at'])
         self.assertIsNone(json.loads(after['status.json'])['source_published_at'])
 

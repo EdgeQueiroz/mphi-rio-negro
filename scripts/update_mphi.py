@@ -226,7 +226,7 @@ def shadow_projections(d, ledger):
     return result
 
 
-def freeze_shadow_forecast(d, ledger):
+def freeze_shadow_forecast(d, ledger, created_at=None):
     """Append one current-date challenger forecast; never backfill or mutate."""
     date = d['current']['date']
     forecast_id = f'{date}|{SHADOW_VERSION}'
@@ -238,7 +238,7 @@ def freeze_shadow_forecast(d, ledger):
     snapshot = {
         'forecast_id': forecast_id,
         'forecast_date': date,
-        'created_at': d['meta']['updated_at'],
+        'created_at': created_at or datetime.now(TZ).isoformat(timespec='seconds'),
         'model_version': SHADOW_VERSION,
         'model_status': 'shadow',
         'observed_level_at_issue': d['current']['level'],
@@ -366,6 +366,11 @@ def build_validation(d, ledger):
         if 'shadow' not in version.lower():
             continue
         version_records = [r for r in records if r['model_version'] == version]
+        version_entries = [
+            e for e in ledger.get('entries', [])
+            if e.get('model_version') == version
+        ]
+        latest_entry = max(version_entries, key=lambda e: e['forecast_date']) if version_entries else None
         due = next_due_by_version.get(version, [])
         shadow_models.append({
             'model_version': version,
@@ -375,6 +380,13 @@ def build_validation(d, ledger):
             'next_due': min(due) if due else None,
             'pending': pending_by_version.get(version, {'7': 0, '15': 0, '30': 0}),
             'by_horizon': by_version.get(version, {}),
+            'latest_forecast': {
+                'forecast_date': latest_entry['forecast_date'],
+                'created_at': latest_entry['created_at'],
+                'observed_level_at_issue': latest_entry['observed_level_at_issue'],
+                'calibration': latest_entry.get('calibration', {}),
+                'projections': latest_entry['projections'],
+            } if latest_entry else None,
         })
 
     current_due = next_due_by_version.get(current_version, [])
