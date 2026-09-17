@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
-from math import sqrt
+from math import ceil, sqrt
+from statistics import median
 import json, re, sys
 import requests
 from bs4 import BeautifulSoup
@@ -12,6 +13,10 @@ LEDGER = ROOT / 'docs' / 'data' / 'forecast_ledger.json'
 VALIDATION = ROOT / 'docs' / 'data' / 'validation.json'
 URL = 'https://portodemanaus.com.br/nivel-do-rio-negro/'
 TZ = timezone(timedelta(hours=-4))
+SHADOW_VERSION = 'MPHI v1.1-shadow'
+SHADOW_BASE_VERSION = 'MPHI v1.0'
+MIN_BIAS_RECORDS = 5
+MIN_INTERVAL_RECORDS = 10
 
 
 def avg(xs, n):
@@ -165,20 +170,130 @@ def freeze_forecast(d, ledger):
     return True
 
 
+
+def shadow_projections(d, ledger):
+    """Create a prospective bias-corrected challenger without rewriting v1.0."""
+    baseline_validation = build_validation(d, ledger)
+    baseline_records = [
+        r for r in baseline_validation['records']
+        if r['model_version'] == SHADOW_BASE_VERSION
+        and r['target_date'] <= d['current']['date']
+    ]
+    result = {}
+
+    for horizon, base in d['projections'].items():
+        errors = [
+            r['signed_error_m'] for r in baseline_records
+            if r['horizon_days'] == int(horizon)
+        ]
+        correction = round(float(median(errors)), 3) if len(errors) >= MIN_BIAS_RECORDS else 0.0
+        central = round(base['central'] + correction, 2)
+        projection = {
+            'soft': round(base['soft'] + correction, 2),
+            'central': central,
+            'stress': round(base['stress'] + correction, 2),
+            'confidence': 'Experimental',
+            'bias_correction_m': correction,
+            'calibration_n': len(errors),
+            'calibration_source': SHADOW_BASE_VERSION,
+        }
+
+        if len(errors) >= MIN_INTERVAL_RECORDS:
+            centered = sorted(abs(error - correction) for error in errors)
+            rank = min(len(centered) - 1, max(0, ceil(0.8 * (len(centered) + 1)) - 1))
+            empirical_radius = centered[rank]
+            scenario_radius = max(
+                abs(base['soft'] - base['central']),
+                abs(base['stress'] - base['central']),
+            )
+            radius = round(max(empirical_radius, scenario_radius), 2)
+            projection['interval80'] = {
+                'low': round(central - radius, 2),
+                'high': round(central + radius, 2),
+                'target_coverage_pct': 80,
+                'status': 'provisional',
+                'method': 'conformal_residual_with_scenario_floor',
+            }
+        else:
+            projection['interval80'] = {
+                'low': None,
+                'high': None,
+                'target_coverage_pct': 80,
+                'status': 'collecting',
+                'method': 'awaiting_minimum_matured_records',
+            }
+        result[horizon] = projection
+    return result
+
+
+def freeze_shadow_forecast(d, ledger):
+    """Append one current-date challenger forecast; never backfill or mutate."""
+    date = d['current']['date']
+    forecast_id = f'{date}|{SHADOW_VERSION}'
+    entries = ledger.setdefault('entries', [])
+    if any(e.get('forecast_id') == forecast_id for e in entries):
+        return False
+
+    projections = shadow_projections(d, ledger)
+    snapshot = {
+        'forecast_id': forecast_id,
+        'forecast_date': date,
+        'created_at': d['meta']['updated_at'],
+        'model_version': SHADOW_VERSION,
+        'model_status': 'shadow',
+        'observed_level_at_issue': d['current']['level'],
+        'score': d['current']['score'],
+        'status': d['current']['status'],
+        'phase': d['current']['phase'],
+        'persistence_days': d['current']['persistence_days'],
+        'calibration': {
+            'source_model': SHADOW_BASE_VERSION,
+            'method': 'rolling median of matured signed errors by horizon',
+            'as_of': date,
+            'uses_future_information': False,
+        },
+        'projections': {},
+    }
+    for horizon, p in projections.items():
+        snapshot['projections'][horizon] = {
+            **p,
+            'target_date': add_days(date, int(horizon)),
+        }
+    entries.append(snapshot)
+    entries.sort(key=lambda e: (e['forecast_date'], e['model_version']))
+    return True
+
+
 def summarize(records):
     if not records:
-        return {'n': 0, 'mae_m': None, 'bias_m': None, 'rmse_m': None, 'envelope_coverage_pct': None}
+        return {
+            'n': 0, 'mae_m': None, 'bias_m': None, 'rmse_m': None,
+            'envelope_coverage_pct': None, 'interval80_coverage_pct': None,
+            'interval80_mean_width_m': None,
+        }
     n = len(records)
     mae = sum(r['absolute_error_m'] for r in records) / n
     bias = sum(r['signed_error_m'] for r in records) / n
     rmse = sqrt(sum(r['signed_error_m'] ** 2 for r in records) / n)
     coverage = 100 * sum(1 for r in records if r['inside_envelope']) / n
+    interval_records = [r for r in records if r.get('inside_interval80') is not None]
+    interval_coverage = (
+        100 * sum(1 for r in interval_records if r['inside_interval80']) / len(interval_records)
+        if interval_records else None
+    )
+    interval_width = (
+        sum(r['forecast_interval80_high_m'] - r['forecast_interval80_low_m']
+            for r in interval_records) / len(interval_records)
+        if interval_records else None
+    )
     return {
         'n': n,
         'mae_m': round(mae, 3),
         'bias_m': round(bias, 3),
         'rmse_m': round(rmse, 3),
-        'envelope_coverage_pct': round(coverage, 1)
+        'envelope_coverage_pct': round(coverage, 1),
+        'interval80_coverage_pct': round(interval_coverage, 1) if interval_coverage is not None else None,
+        'interval80_mean_width_m': round(interval_width, 3) if interval_width is not None else None,
     }
 
 
@@ -186,73 +301,110 @@ def build_validation(d, ledger):
     observations = {x['date']: x['level'] for x in d['series'] if x.get('level') is not None}
     current_version = d['meta'].get('model', 'MPHI')
     records = []
-    pending = {'7': 0, '15': 0, '30': 0}
-    next_due = []
+    forecast_count_by_version = {}
+    pending_by_version = {}
+    next_due_by_version = {}
 
     for entry in ledger.get('entries', []):
+        version = entry.get('model_version', 'unknown')
+        forecast_count_by_version[version] = forecast_count_by_version.get(version, 0) + 1
+        pending_by_version.setdefault(version, {'7': 0, '15': 0, '30': 0})
+        next_due_by_version.setdefault(version, [])
         for horizon, p in entry.get('projections', {}).items():
             target = p['target_date']
             observed = observations.get(target)
             if observed is None:
-                pending[horizon] = pending.get(horizon, 0) + 1
+                pending_by_version[version][horizon] = pending_by_version[version].get(horizon, 0) + 1
                 if target >= d['current']['date']:
-                    next_due.append(target)
+                    next_due_by_version[version].append(target)
                 continue
             low = min(p['soft'], p['stress'])
             high = max(p['soft'], p['stress'])
             signed = round(observed - p['central'], 3)
-            records.append({
+            record = {
                 'validation_id': f"{entry['forecast_id']}|{horizon}",
                 'forecast_id': entry['forecast_id'],
                 'forecast_date': entry['forecast_date'],
                 'target_date': target,
                 'horizon_days': int(horizon),
-                'model_version': entry['model_version'],
+                'model_version': version,
                 'forecast_central_m': p['central'],
                 'forecast_soft_m': p['soft'],
                 'forecast_stress_m': p['stress'],
                 'observed_m': observed,
                 'signed_error_m': signed,
                 'absolute_error_m': round(abs(signed), 3),
-                'inside_envelope': low <= observed <= high
-            })
+                'inside_envelope': low <= observed <= high,
+            }
+            interval = p.get('interval80')
+            if (
+                isinstance(interval, dict)
+                and isinstance(interval.get('low'), (int, float))
+                and isinstance(interval.get('high'), (int, float))
+            ):
+                record['forecast_interval80_low_m'] = interval['low']
+                record['forecast_interval80_high_m'] = interval['high']
+                record['inside_interval80'] = interval['low'] <= observed <= interval['high']
+            records.append(record)
 
     current_records = [r for r in records if r['model_version'] == current_version]
     by_horizon = {
         h: summarize([r for r in current_records if r['horizon_days'] == int(h)])
         for h in ('7', '15', '30')
     }
+    versions = sorted(set(forecast_count_by_version) | {r['model_version'] for r in records})
     by_version = {}
-    for version in sorted({e.get('model_version') for e in ledger.get('entries', []) if e.get('model_version')}):
+    for version in versions:
         version_records = [r for r in records if r['model_version'] == version]
         by_version[version] = {
             h: summarize([r for r in version_records if r['horizon_days'] == int(h)])
             for h in ('7', '15', '30')
         }
 
+    shadow_models = []
+    for version in versions:
+        if 'shadow' not in version.lower():
+            continue
+        version_records = [r for r in records if r['model_version'] == version]
+        due = next_due_by_version.get(version, [])
+        shadow_models.append({
+            'model_version': version,
+            'status': 'shadow',
+            'forecast_count': forecast_count_by_version.get(version, 0),
+            'matured_records': len(version_records),
+            'next_due': min(due) if due else None,
+            'pending': pending_by_version.get(version, {'7': 0, '15': 0, '30': 0}),
+            'by_horizon': by_version.get(version, {}),
+        })
+
+    current_due = next_due_by_version.get(current_version, [])
     return {
-        'schema': 'mphi-validation-v1',
+        'schema': 'mphi-validation-v2',
         'updated_at': datetime.now(TZ).isoformat(timespec='seconds'),
         'current_model_version': current_version,
-        'forecast_count': sum(1 for e in ledger.get('entries', []) if e.get('model_version') == current_version),
+        'forecast_count': forecast_count_by_version.get(current_version, 0),
+        'forecast_count_by_version': forecast_count_by_version,
         'matured_records': len(current_records),
-        'next_due': min(next_due) if next_due else None,
-        'pending': pending,
+        'next_due': min(current_due) if current_due else None,
+        'pending': pending_by_version.get(current_version, {'7': 0, '15': 0, '30': 0}),
         'by_horizon': by_horizon,
         'by_version': by_version,
+        'shadow_models': shadow_models,
         'metric_definition': {
             'mae_m': 'erro absoluto médio entre cota observada e projeção central',
             'bias_m': 'observado menos previsto; positivo significa rio acima da projeção central',
             'rmse_m': 'raiz do erro quadrático médio',
-            'envelope_coverage_pct': 'percentual de observações entre os cenários suave e estresse'
+            'envelope_coverage_pct': 'percentual de observações entre os cenários suave e estresse',
+            'interval80_coverage_pct': 'cobertura prospectiva do intervalo experimental de 80%',
+            'interval80_mean_width_m': 'largura média do intervalo experimental de 80%',
         },
         'alert_validation': {
             'lead_time': {'status': 'em coleta', 'value_days': None, 'note': 'Aguardando evento observado independente do score para validação.'},
             'false_alerts': {'status': 'em coleta', 'count': None, 'note': 'Não calculado até existir critério observacional independente e janela completa.'},
-            'missed_alerts': {'status': 'em coleta', 'count': None, 'note': 'Não calculado até existir critério observacional independente e janela completa.'}
+            'missed_alerts': {'status': 'em coleta', 'count': None, 'note': 'Não calculado até existir critério observacional independente e janela completa.'},
         },
-        'records': sorted(records, key=lambda r: (r['target_date'], r['forecast_date'], r['horizon_days'])),
-        'latest_records': sorted(current_records, key=lambda r: (r['target_date'], r['forecast_date'], r['horizon_days']), reverse=True)[:10]
+        'records': sorted(records, key=lambda r: (r['target_date'], r['forecast_date'], r['horizon_days'], r['model_version'])),
+        'latest_records': sorted(current_records, key=lambda r: (r['target_date'], r['forecast_date'], r['horizon_days']), reverse=True)[:10],
     }
 
 

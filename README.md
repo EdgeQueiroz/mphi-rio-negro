@@ -8,7 +8,7 @@ O site é publicado pelo GitHub Pages a partir da pasta `docs/` e atualizado por
 
 ## Atualização diária
 
-O workflow `.github/workflows/update-and-deploy-mphi.yml` agenda a primeira coleta para **08:00 America/Manaus (12:00 UTC)**, todos os dias. Reconsulta nos minutos 07, 22, 37 e 52 de cada hora entre 08:07 e 23:52 de Manaus. A coleta independe de visitas ao site.
+O workflow principal e dois watchdogs independentes fazem tentativas diárias entre **08:05 e 14:49 America/Manaus**, em minutos diferentes da abertura da hora. A coleta independe de visitas ao site, do Codex e de computador local ligado.
 
 **Limite da infraestrutura:** o GitHub Actions pode atrasar ou descartar execuções agendadas. Esta configuração oferece tentativas recorrentes, não uma garantia de pontualidade às 08:00. A atualização também depende da disponibilidade do Porto e da publicação no Pages. O Porto expõe a data da medição, mas não a hora exata em que a publicou. Não se atribui uma hora fictícia à fonte.
 
@@ -37,6 +37,10 @@ Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e sé
 ## Validação contínua
 
 `docs/data/forecast_ledger.json` é o registro append-only das previsões. Uma previsão já emitida não é recalculada com informação futura.
+
+### MPHI v1.1-shadow
+
+O v1.0 permanece como previsão pública e baseline. A partir da primeira medição após a implantação, o v1.1-shadow emite uma previsão paralela por horizonte, sem alterar entradas anteriores. A correção usa a mediana dos erros assinados de previsões v1.0 já maduras na data da emissão. Com pelo menos 10 aferições no horizonte, também registra um intervalo experimental de 80%, explicitamente marcado como provisório até acumular validação prospectiva própria. O horizonte de 30 dias permanece sem correção enquanto não houver amostras maduras.
 
 `docs/data/validation.json` compara cada projeção central com a cota observada na data-alvo e calcula, por horizonte e versão do modelo:
 

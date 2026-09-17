@@ -203,6 +203,7 @@ def main():
 
         # Só a previsão realmente emitida na data mais recente é congelada; não há previsão retroativa.
         core.freeze_forecast(d, ledger)
+        core.freeze_shadow_forecast(d, ledger)
         validation = core.build_validation(d, ledger)
 
         core.write_json(core.DATA, d)

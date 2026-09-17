@@ -92,7 +92,9 @@ class SyncContracts(unittest.TestCase):
         old_ledger = json.loads(before['forecast_ledger.json'])['entries']
         new_ledger = json.loads(after['forecast_ledger.json'])['entries']
         self.assertEqual(new_ledger[:len(old_ledger)], old_ledger)
-        self.assertEqual(len(new_ledger), len(old_ledger) + 1)
+        self.assertEqual(len(new_ledger), len(old_ledger) + 2)
+        self.assertEqual(new_ledger[-2]['forecast_id'], f'{new_date}|MPHI v1.0')
+        self.assertEqual(new_ledger[-1]['forecast_id'], f'{new_date}|{core.SHADOW_VERSION}')
         self.assertEqual(json.loads(after['latest.json'])['current']['date'], new_date)
         self.assertEqual(json.loads(after['status.json'])['observation_date'], new_date)
 
@@ -114,7 +116,7 @@ class SyncContracts(unittest.TestCase):
         old_entries = json.loads(before['forecast_ledger.json'])['entries']
         new_entries = json.loads(after['forecast_ledger.json'])['entries']
         self.assertEqual(new_entries[:len(old_entries)], old_entries)
-        self.assertEqual(len(new_entries), len(old_entries)+1)
+        self.assertEqual(len(new_entries), len(old_entries)+2)
 
     def test_forecast_is_not_rewritten(self):
         d = copy.deepcopy(SEED); ledger = {'entries': []}
@@ -122,6 +124,28 @@ class SyncContracts(unittest.TestCase):
         d['projections']['7']['central'] = 1
         self.assertFalse(core.freeze_forecast(d, ledger))
         self.assertEqual(ledger, original)
+
+
+    def test_shadow_forecast_is_versioned_bias_corrected_and_immutable(self):
+        d = copy.deepcopy(SEED)
+        ledger = json.loads(core.LEDGER.read_text())
+        shadow_id = f"{d['current']['date']}|{core.SHADOW_VERSION}"
+        ledger['entries'] = [e for e in ledger['entries'] if e.get('forecast_id') != shadow_id]
+        original = copy.deepcopy(ledger['entries'])
+        self.assertTrue(core.freeze_shadow_forecast(d, ledger))
+        self.assertEqual(ledger['entries'][:len(original)], original)
+        shadow = ledger['entries'][-1]
+        self.assertEqual(shadow['forecast_id'], shadow_id)
+        self.assertEqual(shadow['model_status'], 'shadow')
+        self.assertLess(shadow['projections']['7']['central'], d['projections']['7']['central'])
+        self.assertLess(shadow['projections']['15']['central'], d['projections']['15']['central'])
+        self.assertEqual(shadow['projections']['30']['bias_correction_m'], 0.0)
+        interval = shadow['projections']['7']['interval80']
+        self.assertLessEqual(interval['low'], shadow['projections']['7']['central'])
+        self.assertGreaterEqual(interval['high'], shadow['projections']['7']['central'])
+        frozen = copy.deepcopy(ledger)
+        self.assertFalse(core.freeze_shadow_forecast(d, ledger))
+        self.assertEqual(ledger, frozen)
 
 
 if __name__ == '__main__':

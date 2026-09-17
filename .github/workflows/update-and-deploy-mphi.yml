@@ -68,11 +68,11 @@ jobs:
           from pathlib import Path
           before = json.loads((Path(os.environ["RUNNER_TEMP"]) / "forecast-ledger-before.json").read_text())["entries"]
           after = json.loads(Path("docs/data/forecast_ledger.json").read_text())["entries"]
-          if after[:len(before)] != before or len(after) not in (len(before), len(before) + 1):
+          if after[:len(before)] != before or len(after) not in (len(before), len(before) + 1, len(before) + 2):
               raise SystemExit("Ledger inválido: previsão anterior alterada ou emissão retroativa em lote.")
           if len({e["forecast_id"] for e in after}) != len(after):
               raise SystemExit("Ledger inválido: forecast_id duplicado.")
-          print(f"Ledger preservado: {len(before)} previsões anteriores; {len(after) - len(before)} nova.")
+          print(f"Ledger preservado: {len(before)} previsões anteriores; {len(after) - len(before)} nova(s).")
           PY
 
       - name: Detectar alteração válida

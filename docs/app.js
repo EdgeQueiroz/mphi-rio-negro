@@ -101,6 +101,8 @@ function renderValidation(){
   const h7=validationData.by_horizon?.['7']||{n:0};
   const h15=validationData.by_horizon?.['15']||{n:0};
   const h30=validationData.by_horizon?.['30']||{n:0};
+  const shadow=validationData.shadow_models?.[0];
+  const shadowCard=shadow?`<div><span>Modelo em teste</span><b>${esc(shadow.model_version)}</b><small>${shadow.forecast_count||0} previsões preservadas · ${shadow.matured_records||0} aferições maduras</small></div>`:'';
   const metric=h=>h.n?`${fmt(h.mae_m*100,1)} cm`:'em coleta';
   const coverage=h=>h.n?`${fmt(h.envelope_coverage_pct,1)}%`:'em coleta';
   const lead=validationData.alert_validation?.lead_time?.value_days;
@@ -109,6 +111,7 @@ function renderValidation(){
 
   projectionGrid.innerHTML=`
     <div><span>Previsões preservadas</span><b>${validationData.forecast_count??0}</b><small>${validationData.current_model_version||''}</small></div>
+    ${shadowCard}
     <div><span>Aferições concluídas</span><b>${validationData.matured_records??0}</b><small>comparações de 7, 15 e 30 dias</small></div>
     <div><span>Próxima comparação</span><b>${fmtDate(validationData.next_due)}</b><small>primeira projeção pendente</small></div>
     <div><span>Erro médio · 7 dias</span><b>${metric(h7)}</b><small>erro absoluto médio · ${h7.n||0} comparações</small></div>
