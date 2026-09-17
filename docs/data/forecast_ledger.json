@@ -681,6 +681,40 @@
           "confidence": "Baixa"
         }
       }
+    },
+    {
+      "forecast_id": "2026-09-17|MPHI v1.0",
+      "forecast_date": "2026-09-17",
+      "created_at": "2026-09-17T08:07:21-04:00",
+      "model_version": "MPHI v1.0",
+      "observed_level_at_issue": 21.44,
+      "score": 8,
+      "status": "ALTO",
+      "phase": "Vazante",
+      "persistence_days": 32,
+      "projections": {
+        "7": {
+          "target_date": "2026-09-24",
+          "soft": 20.4,
+          "central": 20.24,
+          "stress": 20.13,
+          "confidence": "Média"
+        },
+        "15": {
+          "target_date": "2026-10-02",
+          "soft": 19.22,
+          "central": 18.86,
+          "stress": 18.64,
+          "confidence": "Média-baixa"
+        },
+        "30": {
+          "target_date": "2026-10-17",
+          "soft": 16.99,
+          "central": 16.28,
+          "stress": 15.84,
+          "confidence": "Baixa"
+        }
+      }
     }
   ]
 }
