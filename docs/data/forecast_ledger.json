@@ -715,6 +715,77 @@
           "confidence": "Baixa"
         }
       }
+    },
+    {
+      "forecast_id": "2026-09-17|MPHI v1.1-shadow",
+      "forecast_date": "2026-09-17",
+      "created_at": "2026-09-17T11:22:05-04:00",
+      "model_version": "MPHI v1.1-shadow",
+      "model_status": "shadow",
+      "observed_level_at_issue": 21.44,
+      "score": 8,
+      "status": "ALTO",
+      "phase": "Vazante",
+      "persistence_days": 32,
+      "calibration": {
+        "source_model": "MPHI v1.0",
+        "method": "rolling median of matured signed errors by horizon",
+        "as_of": "2026-09-17",
+        "uses_future_information": false
+      },
+      "projections": {
+        "7": {
+          "soft": 20.23,
+          "central": 20.07,
+          "stress": 19.96,
+          "confidence": "Experimental",
+          "bias_correction_m": -0.165,
+          "calibration_n": 16,
+          "calibration_source": "MPHI v1.0",
+          "interval80": {
+            "low": 19.91,
+            "high": 20.23,
+            "target_coverage_pct": 80,
+            "status": "provisional",
+            "method": "conformal_residual_with_scenario_floor"
+          },
+          "target_date": "2026-09-24"
+        },
+        "15": {
+          "soft": 18.72,
+          "central": 18.36,
+          "stress": 18.14,
+          "confidence": "Experimental",
+          "bias_correction_m": -0.5,
+          "calibration_n": 11,
+          "calibration_source": "MPHI v1.0",
+          "interval80": {
+            "low": 18.0,
+            "high": 18.72,
+            "target_coverage_pct": 80,
+            "status": "provisional",
+            "method": "conformal_residual_with_scenario_floor"
+          },
+          "target_date": "2026-10-02"
+        },
+        "30": {
+          "soft": 16.99,
+          "central": 16.28,
+          "stress": 15.84,
+          "confidence": "Experimental",
+          "bias_correction_m": 0.0,
+          "calibration_n": 0,
+          "calibration_source": "MPHI v1.0",
+          "interval80": {
+            "low": null,
+            "high": null,
+            "target_coverage_pct": 80,
+            "status": "collecting",
+            "method": "awaiting_minimum_matured_records"
+          },
+          "target_date": "2026-10-17"
+        }
+      }
     }
   ]
 }
