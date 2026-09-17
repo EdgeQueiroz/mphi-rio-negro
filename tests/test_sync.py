@@ -57,12 +57,17 @@ class SyncContracts(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             sync.sync_month(d, [{'date': '2026-09-04', 'level': 30}], NOW)
 
-    def run_isolated(self, rows=None, error=None):
+    def run_isolated(self, rows=None, error=None, without_current_shadow=False):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)
             paths = {name: folder / name for name in ('latest.json', 'forecast_ledger.json', 'validation.json', 'status.json')}
             for name in ('latest.json', 'forecast_ledger.json', 'validation.json'):
                 paths[name].write_bytes((core.DATA.parent / name).read_bytes())
+            if without_current_shadow:
+                ledger = json.loads(paths['forecast_ledger.json'].read_text())
+                shadow_id = f"{SEED['current']['date']}|{core.SHADOW_VERSION}"
+                ledger['entries'] = [e for e in ledger['entries'] if e.get('forecast_id') != shadow_id]
+                paths['forecast_ledger.json'].write_text(json.dumps(ledger, ensure_ascii=False, indent=2))
             before = {name: path.read_bytes() for name, path in paths.items() if path.exists()}
             with patch.object(core, 'DATA', paths['latest.json']), patch.object(core, 'LEDGER', paths['forecast_ledger.json']), patch.object(core, 'VALIDATION', paths['validation.json']), patch.object(sync, 'STATUS', paths['status.json']), patch.object(sync, 'fetch_source', side_effect=error, return_value='fixture'), patch.object(sync, 'extract_recent_months', return_value=rows):
                 if error:
@@ -73,7 +78,7 @@ class SyncContracts(unittest.TestCase):
 
     def test_unchanged_source_bootstraps_shadow_without_touching_observation(self):
         rows = [copy.deepcopy(r) for r in SEED['series'] if r.get('level') is not None]
-        before, after = self.run_isolated(rows)
+        before, after = self.run_isolated(rows, without_current_shadow=True)
         self.assertEqual(before['latest.json'], after['latest.json'])
         old_entries = json.loads(before['forecast_ledger.json'])['entries']
         new_entries = json.loads(after['forecast_ledger.json'])['entries']
