@@ -96,7 +96,7 @@ function render(){
         const interval=p.interval80;
         const hasInterval=Number.isFinite(interval?.low)&&Number.isFinite(interval?.high);
         const range=hasInterval?`Faixa experimental de 80%: ${fmt(interval.low)}–${fmt(interval.high)} m`:'Faixa de 80%: em coleta';
-        return `<article class="proj shadow-proj"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(p.target_date)}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cenário central corrigido</span><div class="scenario-pair"><div><span>Suave</span><b>${fmt(p.soft)} m</b></div><div><span>Estresse</span><b>${fmt(p.stress)} m</b></div></div><p class="confidence">${range}<br>Ajuste histórico: ${signed(p.bias_correction_m*100,1)} cm · ${p.calibration_n||0} aferições maduras</p></article>`;
+        return `<article class="proj shadow-proj"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(p.target_date)}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cenário central corrigido</span><div class="scenario-pair"><div><span>Suave</span><b>${fmt(p.soft)} m</b></div><div><span>Estresse</span><b>${fmt(p.stress)} m</b></div></div><p class="confidence">${range}</p></article>`;
       }).join('');
     }else{
       shadowRows.innerHTML='';
@@ -119,7 +119,7 @@ function renderValidation(){
   const h15=validationData.by_horizon?.['15']||{n:0};
   const h30=validationData.by_horizon?.['30']||{n:0};
   const shadow=validationData.shadow_models?.[0];
-  const shadowCard=shadow?`<div><span>Modelo em teste</span><b>${esc(shadow.model_version)}</b><small>${shadow.forecast_count||0} previsões preservadas · ${shadow.matured_records||0} aferições maduras</small></div>`:'';
+  const shadowCard=shadow?`<div><span>Projeção experimental</span><b>Em avaliação</b><small>${shadow.forecast_count||0} previsão preservada · ${shadow.matured_records||0} comparações concluídas</small></div>`:'';
   const metric=h=>h.n?`${fmt(h.mae_m*100,1)} cm`:'em coleta';
   const coverage=h=>h.n?`${fmt(h.envelope_coverage_pct,1)}%`:'em coleta';
   const lead=validationData.alert_validation?.lead_time?.value_days;
@@ -127,7 +127,7 @@ function renderValidation(){
   const missedAlerts=validationData.alert_validation?.missed_alerts?.count;
 
   projectionGrid.innerHTML=`
-    <div><span>Previsões preservadas</span><b>${validationData.forecast_count??0}</b><small>${validationData.current_model_version||''}</small></div>
+    <div><span>Previsões preservadas</span><b>${validationData.forecast_count??0}</b><small>projeção oficial</small></div>
     ${shadowCard}
     <div><span>Aferições concluídas</span><b>${validationData.matured_records??0}</b><small>comparações de 7, 15 e 30 dias</small></div>
     <div><span>Próxima comparação</span><b>${fmtDate(validationData.next_due)}</b><small>primeira projeção pendente</small></div>
