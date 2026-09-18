@@ -1,0 +1,29 @@
+name: MPHI - vigília residente
+
+on:
+  # 07:43 em Manaus. Uma única execução permanece ativa e consulta o Porto
+  # a cada cinco minutos, evitando depender de novos disparos do cron.
+  schedule:
+    - cron: '43 11 * * *'
+  workflow_dispatch:
+  # Autoteste auditável quando a própria vigília é alterada.
+  push:
+    branches: ["fileOrganizer"]
+    paths:
+      - ".github/workflows/mphi-resident-watcher.yml"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  vigiar-e-publicar:
+    uses: ./.github/workflows/update-and-deploy-mphi.yml
+    with:
+      wait_for_today: true
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+

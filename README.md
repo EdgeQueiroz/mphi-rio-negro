@@ -8,19 +8,19 @@ O site é publicado pelo GitHub Pages a partir da pasta `docs/` e atualizado por
 
 ## Atualização diária
 
-O workflow principal e dois watchdogs independentes fazem tentativas diárias entre **08:05 e 14:49 America/Manaus**, em minutos diferentes da abertura da hora. A coleta independe de visitas ao site, do Codex e de computador local ligado.
+Uma vigília residente é iniciada às **07:43 America/Manaus** e permanece consultando o Porto a cada cinco minutos até encontrar a medição do dia ou chegar às 12:15. O workflow principal e dois watchdogs independentes continuam como redundância até 14:49. A coleta independe de visitas ao site, do Codex e de computador local ligado.
 
-**Limite da infraestrutura:** o GitHub Actions pode atrasar ou descartar execuções agendadas. Esta configuração oferece tentativas recorrentes, não uma garantia de pontualidade às 08:00. A atualização também depende da disponibilidade do Porto e da publicação no Pages. O Porto expõe a data da medição, mas não a hora exata em que a publicou. Não se atribui uma hora fictícia à fonte.
+**Limite da infraestrutura:** o GitHub Actions pode atrasar ou descartar o início de uma execução agendada. A vigília reduz esse risco porque, depois de iniciada, as novas consultas não dependem de outros eventos do cron. Isso não constitui garantia absoluta de pontualidade às 08:00. A atualização também depende da disponibilidade do Porto e da publicação no Pages. O Porto expõe a data da medição, mas não a hora exata em que a publicou. Não se atribui uma hora fictícia à fonte.
 
 O script `scripts/sync_mphi.py`:
 
-1. consulta o Porto com tentativas adicionais para falhas temporárias;
+1. consulta o Porto com tentativas adicionais, identificador único e cabeçalhos sem cache;
 2. recupera medições do mês atual e anterior, inclusive na virada do mês;
 3. rejeita dados futuros, regressões de data, tabelas conflitantes e saltos anômalos;
 4. recalcula e preserva uma previsão apenas quando os dados mudam;
 5. mantém previsões anteriores intactas e valida datas-alvo com observação disponível;
 6. registra a consulta em `docs/data/status.json`, inclusive quando não há medição nova;
-7. publica os dados e verifica os quatro arquivos públicos.
+7. publica os dados e verifica todos os arquivos públicos do modelo oficial e experimental.
 
 `latest.json.meta.updated_at` é o instante real da alteração dos dados. `status.json.checked_at` é o instante da consulta ao Porto. Acesso, recarga, dia sem leitura e falha de fonte não mudam o horário da última atualização válida. Em caso de falha, o painel preserva os dados e exibe a indisponibilidade; a execução fica marcada como falha após a publicação desse estado.
 
@@ -68,3 +68,4 @@ Lead time, falsos alertas e alertas perdidos permanecem em coleta até existir c
 ## Fonte operacional
 
 Porto de Manaus. O histórico de referência do projeto utiliza Manaus 14990000 — ANA/SGB.
+

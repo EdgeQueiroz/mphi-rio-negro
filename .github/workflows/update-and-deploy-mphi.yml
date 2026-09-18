@@ -19,6 +19,12 @@ on:
   workflow_dispatch:
   # Permite que agendas independentes reutilizem exatamente o mesmo fluxo.
   workflow_call:
+    inputs:
+      wait_for_today:
+        description: "Manter a execução ativa até o Porto publicar a medição do dia"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -33,7 +39,8 @@ concurrency:
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # A vigília residente pode permanecer ativa durante toda a manhã.
+    timeout-minutes: 330
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -52,6 +59,10 @@ jobs:
 
       - name: Instalar dependências
         run: pip install -r requirements.txt
+
+      - name: Aguardar a medição do dia no Porto
+        if: inputs.wait_for_today == true
+        run: python scripts/wait_for_porto.py --interval 300 --cutoff 12:15
 
       - name: Preservar referência do ledger
         run: |
@@ -185,3 +196,4 @@ jobs:
         if: steps.hydrologic.outcome == 'failure'
         run: |
           echo "A fonte telemétrica da bacia falhou; a projeção oficial e o último estado hidrológico válido foram preservados." >> "$GITHUB_STEP_SUMMARY"
+
