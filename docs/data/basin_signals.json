@@ -1,9 +1,9 @@
 {
   "schema": "mphi-basin-signals-v1",
-  "updated_at": "2026-09-18T11:17:46-04:00",
+  "updated_at": "2026-09-21T08:05:43-04:00",
   "source": "ANA/SGB - Serviço de dados hidrometeorológicos telemétricos",
   "source_url": "https://telemetriaws1.ana.gov.br/serviceana.asmx/DadosHidrometeorologicos",
-  "issue_date": "2026-09-18",
+  "issue_date": "2026-09-21",
   "usable_station_count": 5,
   "failed_stations": {},
   "stations": {
@@ -12,7 +12,7 @@
       "river": "Rio Negro",
       "role": "alto curso",
       "code": "14330000",
-      "latest_timestamp": "2026-09-18T11:45",
+      "latest_timestamp": "2026-09-21T08:45",
       "daily": [
         {
           "date": "2026-05-24",
@@ -601,8 +601,23 @@
         },
         {
           "date": "2026-09-18",
-          "level_m": 9.45,
-          "samples": 48
+          "level_m": 9.46,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-19",
+          "level_m": 9.51,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-20",
+          "level_m": 9.57,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-21",
+          "level_m": 9.63,
+          "samples": 36
         }
       ]
     },
@@ -611,7 +626,7 @@
       "river": "Rio Negro",
       "role": "médio curso",
       "code": "14420000",
-      "latest_timestamp": "2026-09-18T11:30",
+      "latest_timestamp": "2026-09-21T08:30",
       "daily": [
         {
           "date": "2026-05-24",
@@ -1201,7 +1216,22 @@
         {
           "date": "2026-09-18",
           "level_m": 6.43,
-          "samples": 47
+          "samples": 96
+        },
+        {
+          "date": "2026-09-19",
+          "level_m": 6.44,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-20",
+          "level_m": 6.47,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-21",
+          "level_m": 6.48,
+          "samples": 35
         }
       ]
     },
@@ -1210,7 +1240,7 @@
       "river": "Rio Negro",
       "role": "médio curso",
       "code": "14480002",
-      "latest_timestamp": "2026-09-18T12:00",
+      "latest_timestamp": "2026-09-21T08:00",
       "daily": [
         {
           "date": "2026-05-24",
@@ -1739,8 +1769,23 @@
         },
         {
           "date": "2026-09-18",
-          "level_m": 4.17,
-          "samples": 49
+          "level_m": 4.15,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-19",
+          "level_m": 4.09,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-20",
+          "level_m": 4.03,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-21",
+          "level_m": 3.99,
+          "samples": 33
         }
       ]
     },
@@ -1749,7 +1794,7 @@
       "river": "Rio Negro",
       "role": "baixo curso",
       "code": "14840000",
-      "latest_timestamp": "2026-09-18T12:00",
+      "latest_timestamp": "2026-09-21T08:00",
       "daily": [
         {
           "date": "2026-05-24",
@@ -2338,8 +2383,23 @@
         },
         {
           "date": "2026-09-18",
-          "level_m": 6.98,
-          "samples": 49
+          "level_m": 6.94,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-19",
+          "level_m": 6.78,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-20",
+          "level_m": 6.605,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-21",
+          "level_m": 6.49,
+          "samples": 33
         }
       ]
     },
@@ -2348,7 +2408,7 @@
       "river": "Rio Solimões-Amazonas",
       "role": "remanso",
       "code": "14100000",
-      "latest_timestamp": "2026-09-18T11:15",
+      "latest_timestamp": "2026-09-21T08:15",
       "daily": [
         {
           "date": "2026-05-24",
@@ -2937,8 +2997,23 @@
         },
         {
           "date": "2026-09-18",
-          "level_m": 11.93,
-          "samples": 46
+          "level_m": 11.87,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-19",
+          "level_m": 11.67,
+          "samples": 96
+        },
+        {
+          "date": "2026-09-20",
+          "level_m": 11.45,
+          "samples": 91
+        },
+        {
+          "date": "2026-09-21",
+          "level_m": 11.305,
+          "samples": 34
         }
       ]
     }
