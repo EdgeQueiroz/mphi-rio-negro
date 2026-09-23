@@ -96,9 +96,29 @@ function render(){
     if(showShadow){
       const description=shadowBlock.querySelector('.panel-description');
       const note=shadowBlock.querySelector('.footnote');
+      const title=shadowBlock.querySelector('h3');
+      const badge=shadowBlock.querySelector('.quiet-tag');
       if(hydrologicForecast){
-        description.textContent='Combina o histórico recente com sinais observados ao longo do Rio Negro e no Solimões.';
+        title.textContent='Projeção hidrológica integrada';
+        badge.textContent='EM CALIBRAÇÃO';
+        const groups=new Map();
+        Object.values(hydrologicForecast.stations||{}).forEach(station=>{
+          if(!station.name||!station.river)return;
+          const river=station.river==='Rio Solimões-Amazonas'?'Rio Solimões':station.river;
+          if(!groups.has(river))groups.set(river,[]);
+          groups.get(river).push(station.name);
+        });
+        const stations=[...groups].sort(([a],[b])=>a==='Rio Negro'?-1:b==='Rio Negro'?1:0)
+          .map(([river,names])=>`${river}: ${new Intl.ListFormat('pt-BR',{type:'conjunction'}).format(names)}`);
+        description.textContent=stations.length
+          ?`Estações consideradas nesta projeção: ${stations.join(' · ')}.`
+          :'Combina a tendência de Manaus com medições da bacia.';
         note.textContent='Mostrada em paralelo, sem substituir a projeção oficial. O modelo ainda está em calibração e será acompanhado diariamente.';
+      }else{
+        title.textContent='Projeção ajustada';
+        badge.textContent='EM AVALIAÇÃO';
+        description.textContent='Considera o comportamento observado nas projeções anteriores para reduzir desvios recorrentes.';
+        note.textContent='Mostrada em paralelo, sem substituir a projeção oficial. A faixa de 80% ainda é provisória; o horizonte de 30 dias permanece sem ajuste até haver histórico suficiente.';
       }
       shadowRows.innerHTML=Object.entries(experimentalForecast.projections).map(([days,p])=>{
         const interval=p.interval80;
@@ -129,7 +149,7 @@ function renderValidation(){
   const shadow=validationData.shadow_models?.[0];
   const hydroCurrent=hydrologicData?.forecast?.forecast_date===model.current.date;
   const hydroValidation=hydrologicData?.validation;
-  const shadowCard=hydroCurrent?`<div><span>Projeção experimental</span><b>Em calibração</b><small>${hydrologicData.forecast_count||0} previsões preservadas · ${hydrologicData.forecast.station_count||0} estações integradas · ${hydroValidation?.matured_records||0} comparações</small></div>`:shadow?`<div><span>Projeção experimental</span><b>Em avaliação</b><small>${shadow.forecast_count||0} previsões preservadas · ${shadow.matured_records||0} comparações concluídas</small></div>`:'';
+  const shadowCard=hydroCurrent?`<div><span>Projeção hidrológica integrada</span><b>Em calibração</b><small>${hydrologicData.forecast_count||0} previsões preservadas · ${hydrologicData.forecast.station_count||0} estações integradas · ${hydroValidation?.matured_records||0} comparações</small></div>`:shadow?`<div><span>Projeção ajustada</span><b>Em avaliação</b><small>${shadow.forecast_count||0} previsões preservadas · ${shadow.matured_records||0} comparações concluídas</small></div>`:'';
   const metric=h=>h.n?`${fmt(h.mae_m*100,1)} cm`:'em coleta';
   const coverage=h=>h.n?`${fmt(h.envelope_coverage_pct,1)}%`:'em coleta';
   const lead=validationData.alert_validation?.lead_time?.value_days;
@@ -200,3 +220,4 @@ $('retryBtn').addEventListener('click',load);
 setInterval(()=>{if(!document.hidden)load();},60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load();});
 load();
+
