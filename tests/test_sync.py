@@ -3,6 +3,7 @@ import copy
 from datetime import datetime
 import json
 from pathlib import Path
+from statistics import median
 import sys
 import tempfile
 import unittest
@@ -151,7 +152,14 @@ class SyncContracts(unittest.TestCase):
         self.assertEqual(shadow['model_status'], 'shadow')
         self.assertLess(shadow['projections']['7']['central'], d['projections']['7']['central'])
         self.assertLess(shadow['projections']['15']['central'], d['projections']['15']['central'])
-        self.assertEqual(shadow['projections']['30']['bias_correction_m'], 0.0)
+        matured_30 = [
+            r['signed_error_m'] for r in core.build_validation(d, ledger)['records']
+            if r['model_version'] == core.SHADOW_BASE_VERSION
+            and r['horizon_days'] == 30
+            and r['target_date'] <= d['current']['date']
+        ]
+        expected_bias = round(float(median(matured_30)), 3) if len(matured_30) >= core.MIN_BIAS_RECORDS else 0.0
+        self.assertEqual(shadow['projections']['30']['bias_correction_m'], expected_bias)
         interval = shadow['projections']['7']['interval80']
         self.assertLessEqual(interval['low'], shadow['projections']['7']['central'])
         self.assertGreaterEqual(interval['high'], shadow['projections']['7']['central'])
