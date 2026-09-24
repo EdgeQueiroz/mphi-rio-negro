@@ -11,10 +11,13 @@ import sync_mphi as sync
 TZ = timezone(timedelta(hours=-4))
 
 
-def probe(now=None):
+def sync_today(now=None):
     now = now or datetime.now(TZ)
-    rows = sync.extract_recent_months(sync.fetch_source(), now)
-    latest = rows[-1]['date']
+    # A consulta só é considerada pronta quando o dado já entrou no MPHI.
+    # Isso evita liberar o fluxo após uma leitura pontual que a coleta seguinte
+    # poderia não reproduzir por causa de caches intermediários da fonte.
+    sync.main()
+    latest = sync.core.read_json(sync.core.DATA, {}).get('current', {}).get('date')
     return latest == now.date().isoformat(), latest
 
 
@@ -35,16 +38,16 @@ def main():
         attempt += 1
         now = datetime.now(TZ)
         try:
-            ready, latest = probe(now)
+            ready, latest = sync_today(now)
             print(
-                f'Tentativa {attempt}: Porto em {latest}; '
+                f'Tentativa {attempt}: MPHI em {latest}; '
                 f'hoje é {now.date().isoformat()}.',
                 flush=True,
             )
             if ready:
-                print('Medição do dia encontrada; liberando sincronização.', flush=True)
+                print('Medição do dia sincronizada; liberando publicação.', flush=True)
                 return
-        except Exception as exc:
+        except (Exception, SystemExit) as exc:
             print(f'Tentativa {attempt}: fonte indisponível ({type(exc).__name__}).', flush=True)
 
         if not before_cutoff(now, cutoff_hour, cutoff_minute):
@@ -55,4 +58,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

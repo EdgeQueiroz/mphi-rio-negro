@@ -12,13 +12,17 @@ import wait_for_porto as watcher
 
 
 class ResidentWatcherContracts(unittest.TestCase):
-    def test_probe_recognizes_today(self):
+    def test_sync_today_requires_persisted_day(self):
         now = datetime(2026, 9, 18, 8, 2, tzinfo=sync.TZ)
-        rows = [{'date': '2026-09-18', 'level': 21.26}]
-        with patch.object(sync, 'fetch_source', return_value='page'), patch.object(
-            sync, 'extract_recent_months', return_value=rows
+        with patch.object(sync, 'main') as run, patch.object(
+            sync.core, 'read_json', return_value={'current': {'date': '2026-09-18'}}
         ):
-            self.assertEqual(watcher.probe(now), (True, '2026-09-18'))
+            self.assertEqual(watcher.sync_today(now), (True, '2026-09-18'))
+            run.assert_called_once_with()
+        with patch.object(sync, 'main'), patch.object(
+            sync.core, 'read_json', return_value={'current': {'date': '2026-09-17'}}
+        ):
+            self.assertEqual(watcher.sync_today(now), (False, '2026-09-17'))
 
     def test_cutoff_is_strict(self):
         before = datetime(2026, 9, 18, 12, 14, tzinfo=sync.TZ)
@@ -42,4 +46,3 @@ class ResidentWatcherContracts(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

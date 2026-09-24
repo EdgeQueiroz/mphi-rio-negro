@@ -1,0 +1,20 @@
+name: MPHI - disparo diario com vigilia
+
+on:
+  push:
+    branches: ["fileOrganizer"]
+    paths:
+      - ".mphi-site-trigger"
+      - ".github/workflows/mphi-daily-trigger.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  aguardar-e-publicar:
+    uses: ./.github/workflows/update-and-deploy-mphi.yml
+    with:
+      wait_for_today: true

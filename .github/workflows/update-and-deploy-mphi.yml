@@ -11,6 +11,7 @@ on:
       - "docs/data/basin_signals.json"
       - "docs/data/hydrologic_latest.json"
       - "docs/data/hydrologic_ledger.json"
+      - ".mphi-site-trigger"
   # Agenda principal: 08:05, 08:35, 09:05, 09:35 e 10:05 em Manaus.
   # Minutos fora do topo da hora reduzem atrasos do agendador do GitHub.
   schedule:
@@ -60,10 +61,6 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
-      - name: Aguardar a medição do dia no Porto
-        if: inputs.wait_for_today == true
-        run: python scripts/wait_for_porto.py --interval 300 --cutoff 12:15
-
       - name: Preservar referência do ledger
         run: |
           cp docs/data/forecast_ledger.json "$RUNNER_TEMP/forecast-ledger-before.json"
@@ -71,6 +68,10 @@ jobs:
 
       - name: Verificar contratos da coleta
         run: python -m unittest discover -s tests -v
+
+      - name: Aguardar a medição do dia no Porto
+        if: inputs.wait_for_today == true
+        run: python scripts/wait_for_porto.py --interval 300 --cutoff 12:15
 
       - name: Sincronizar Porto e recalcular MPHI
         id: update
@@ -196,4 +197,3 @@ jobs:
         if: steps.hydrologic.outcome == 'failure'
         run: |
           echo "A fonte telemétrica da bacia falhou; a projeção oficial e o último estado hidrológico válido foram preservados." >> "$GITHUB_STEP_SUMMARY"
-
