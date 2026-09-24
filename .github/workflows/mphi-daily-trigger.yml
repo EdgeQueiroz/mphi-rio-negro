@@ -5,6 +5,7 @@ on:
     branches: ["fileOrganizer"]
     paths:
       - ".mphi-site-trigger"
+      # Autoteste da vigília quando esta configuração muda.
       - ".github/workflows/mphi-daily-trigger.yml"
   workflow_dispatch:
 

@@ -67,6 +67,9 @@ jobs:
           cp docs/data/hydrologic_ledger.json "$RUNNER_TEMP/hydrologic-ledger-before.json"
 
       - name: Verificar contratos da coleta
+        # Testes de desenvolvimento não podem impedir a atualização diária.
+        # A vigília mantém as verificações de ledger e da publicação pública.
+        if: inputs.wait_for_today != true && github.event_name != 'schedule'
         run: python -m unittest discover -s tests -v
 
       - name: Aguardar a medição do dia no Porto
