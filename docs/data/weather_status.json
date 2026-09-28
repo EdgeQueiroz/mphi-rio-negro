@@ -1,7 +1,7 @@
 {
   "schema": "mphi-weather-v1",
   "source": "Climatempo Advisor",
-  "checked_at": "2026-09-28T01:35:41+00:00",
+  "checked_at": "2026-09-28T09:59:08+00:00",
   "state": "not_configured",
   "errors": {},
   "stale_after_hours": 12,
