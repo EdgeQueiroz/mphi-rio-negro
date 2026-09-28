@@ -1,0 +1,123 @@
+name: MPHI - contexto meteorológico Climatempo
+
+on:
+  schedule:
+    # 05:23, 11:23, 17:23, 23:23 em Manaus; oito consultas/dia + resolução da cidade.
+    - cron: '23 3,9,15,21 * * *'
+  workflow_dispatch:
+  push:
+    branches: [fileOrganizer]
+    paths:
+      - .github/workflows/update-weather.yml
+      - scripts/update_weather.py
+      - tests_weather/**
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Mesmo mutex da publicação hidrológica: checkout -> commit -> Pages sem corrida.
+concurrency:
+  group: mphi-sync-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fileOrganizer
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Testar integração isolada
+        run: python -m unittest discover -s tests_weather -v
+      - name: Coletar contexto, sem recalcular hidrologia
+        continue-on-error: true
+        env:
+          CLIMATEMPO_TOKEN: ${{ secrets.CLIMATEMPO_TOKEN }}
+          CLIMATEMPO_LOCALE_ID: ${{ vars.CLIMATEMPO_LOCALE_ID }}
+          CLIMATEMPO_SOURCE_TIMEZONE: ${{ vars.CLIMATEMPO_SOURCE_TIMEZONE }}
+        run: python scripts/update_weather.py
+      - name: Garantir isolamento e histórico append-only
+        run: |
+          git diff --exit-code -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/hydrologic_latest.json docs/data/hydrologic_ledger.json docs/data/basin_signals.json docs/data/status.json
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          path = 'docs/data/weather_history.json'
+          before = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + path]))['entries']
+          after = json.loads(Path(path).read_text())['entries']
+          assert after[:len(before)] == before, 'Histórico meteorológico anterior alterado'
+          assert len({x['snapshot_id'] for x in after}) == len(after)
+          PY
+      - name: Registrar somente os arquivos meteorológicos
+        run: |
+          git config user.name 'MPHI Bot'
+          git config user.email 'mphi-bot@users.noreply.github.com'
+          git add docs/data/weather_latest.json docs/data/weather_history.json docs/data/weather_status.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Atualiza contexto Climatempo; núcleo MPHI preservado'
+            git push origin HEAD:fileOrganizer
+          fi
+      - uses: actions/configure-pages@v5
+        id: pages
+      - name: Preservar horário mais recente da consulta hidrológica publicada
+        env:
+          PAGE_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          import requests
+          p = Path('docs/data/status.json')
+          local = json.loads(p.read_text())
+          try:
+              response = requests.get(os.environ['PAGE_URL'].rstrip('/') + '/data/status.json', params={'verify': os.environ['GITHUB_RUN_ID']}, timeout=10)
+              response.raise_for_status()
+              remote = response.json()
+              current = json.loads(Path('docs/data/latest.json').read_text())['current']['date']
+              if remote.get('observation_date') == current and remote.get('checked_at', '') > local.get('checked_at', ''):
+                  p.write_text(json.dumps(remote, ensure_ascii=False, indent=2))
+          except (requests.RequestException, ValueError):
+              print('Usando estado hidrológico preservado no repositório.')
+          PY
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+          name: weather-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/deploy-pages@v4
+        id: deployment
+        with:
+          artifact_name: weather-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Conferir publicação ponta a ponta
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python - <<'PY'
+          import json, os, time
+          from pathlib import Path
+          import requests
+          files = ['weather_latest.json', 'weather_status.json', 'weather_history.json', 'latest.json', 'forecast_ledger.json', 'validation.json', 'hydrologic_latest.json', 'hydrologic_ledger.json']
+          for attempt in range(8):
+              try:
+                  for name in files:
+                      r = requests.get(os.environ['PAGE_URL'].rstrip('/') + '/data/' + name, params={'verify': f'{os.environ["GITHUB_RUN_ID"]}-{attempt}'}, timeout=10)
+                      r.raise_for_status()
+                      assert r.json() == json.loads((Path('docs/data') / name).read_text()), name
+                  break
+              except (requests.RequestException, ValueError, AssertionError):
+                  if attempt == 7:
+                      raise
+                  time.sleep(5)
+          state = json.loads(Path('docs/data/weather_status.json').read_text())['state']
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write(f'Publicação meteorológica conferida. Estado: {state}. MPHI preservado.\n')
+          PY

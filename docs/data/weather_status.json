@@ -1,0 +1,9 @@
+{
+  "schema": "mphi-weather-v1",
+  "source": "Climatempo Advisor",
+  "checked_at": null,
+  "state": "not_configured",
+  "errors": {},
+  "stale_after_hours": 12,
+  "expected_interval_hours": 6
+}

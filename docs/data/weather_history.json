@@ -1,0 +1,5 @@
+{
+  "schema": "mphi-weather-v1",
+  "policy": "append-only; snapshots at reception, no retrospective fill",
+  "entries": []
+}

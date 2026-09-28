@@ -1,0 +1,8 @@
+{
+  "schema": "mphi-weather-v1",
+  "source": "Climatempo Advisor",
+  "location": {"name": "Manaus", "state": "AM", "country": "BR", "timezone": "America/Manaus"},
+  "updated_at": null,
+  "current": null,
+  "forecast": null
+}

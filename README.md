@@ -28,7 +28,7 @@ O navegador consulta a publicação a cada minuto enquanto a página estiver vis
 
 ## Interface
 
-Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e série completa; cenários de 7/15/30 dias; confiabilidade e critérios expansíveis. Verde profundo, marfim e cobre; layout responsivo, foco por teclado e preferência de movimento reduzido. As médias são identificadas como últimas leituras disponíveis, não velocidade de corrente.
+Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e série completa; cenários de 7/15/30 dias; confiabilidade e critérios expansíveis. Azul-rio profundo, ciano discreto e sinalização âmbar/vermelha; layout responsivo, foco por teclado e preferência de movimento reduzido. A interface inclui contexto Climatempo isolado, gráfico de cenários e tabela de MAE/bias/RMSE/cobertura por horizonte. As médias são identificadas como últimas leituras disponíveis, não velocidade de corrente.
 
 ## Verificação
 
@@ -69,3 +69,7 @@ Lead time, falsos alertas e alertas perdidos permanecem em coleta até existir c
 
 Porto de Manaus. O histórico de referência do projeto utiliza Manaus 14990000 — ANA/SGB.
 
+
+## Meteorologia contextual — Climatempo
+
+Integração independente com API oficial Advisor. Não altera nenhuma versão do modelo. Ativação por GitHub Secret `CLIMATEMPO_TOKEN`; documentação de contrato, arquitetura, falhas, limites e testes em [documentation/CLIMATEMPO.md](documentation/CLIMATEMPO.md). Sem credencial, o painel mantém o MPHI operacional e informa que a camada meteorológica aguarda ativação.

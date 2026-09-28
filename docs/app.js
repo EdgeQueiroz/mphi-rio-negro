@@ -29,6 +29,9 @@ function renderFreshness(){
   const c=model.current,s=collectionStatus;
   $('updatedAt').textContent='Dados atualizados em '+fmtTime(model.meta.updated_at);
   $('checkedAt').textContent='Última consulta ao Porto: '+fmtTime(s?.checked_at);
+  $('topDate').textContent=fmtDate(c.date);
+  $('topUpdated').textContent=fmtTime(model.meta.updated_at);
+  $('topSource').textContent=s?.state==='error'?'Fonte indisponível · último dado preservado':s?.checked_at?'Porto de Manaus · última consulta '+fmtTime(s.checked_at):'Consulta à fonte ainda não confirmada';
   const today=localDate();
   const checkIsToday=s?.checked_at&&new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(s.checked_at))===today;
   const now=new Date(), scheduled=new Date(today+'T08:00:00-04:00');
@@ -131,7 +134,7 @@ function render(){
     }
   }
   $('seasonCards').innerHTML=Object.entries(model.seasonal).map(([m,s])=>`<div class="season-card ${m===c.date.slice(5,7)?'current':''}"><b>${new Date('2026-'+m+'-15T12:00:00Z').toLocaleDateString('pt-BR',{month:'long'})}</b>${m===c.date.slice(5,7)?'<small>MÊS DA ÚLTIMA MEDIÇÃO</small>':''}<p>1º quartil · ${fmt(s.q1)} m<br>Mediana · ${fmt(s.median)} m</p></div>`).join('');
-  renderFreshness();renderValidation();drawChart();
+  renderFreshness();renderValidation();drawChart();drawProjectionChart();
 }
 function renderValidation(){
   const panel=document.querySelector('.panel.validation');
@@ -139,10 +142,12 @@ function renderValidation(){
   const alertGrid=panel?.querySelector('#alertValidationGrid');
   if(!panel||!projectionGrid||!alertGrid)return;
   if(!validationData){
+    $('technicalMetrics').innerHTML='';
     projectionGrid.innerHTML='<div><span>Validação</span><b>indisponível</b><small>dados de controle não carregados</small></div>';
     alertGrid.innerHTML='<div><span>Alertas</span><b>em coleta</b><small>aguardando base independente</small></div>';
     return;
   }
+  renderTechnicalMetrics();
   const h7=validationData.by_horizon?.['7']||{n:0};
   const h15=validationData.by_horizon?.['15']||{n:0};
   const h30=validationData.by_horizon?.['30']||{n:0};
@@ -198,22 +203,47 @@ function drawChart(){
   const min=Math.floor(Math.min(...values)-.5),max=Math.ceil(Math.max(...values)+.5);
   const first=Date.parse(pts[0].date),last=Date.parse(pts.at(-1).date),span=Math.max(last-first,86400000);
   const x=date=>pad.l+(Date.parse(date)-first)*(W-pad.l-pad.r)/span,y=v=>pad.t+(max-v)*(H-pad.t-pad.b)/(max-min);
-  ctx.clearRect(0,0,W,H);ctx.font='10px system-ui';ctx.fillStyle='#60716b';ctx.strokeStyle='#e4e8df';ctx.lineWidth=1;
+  ctx.clearRect(0,0,W,H);ctx.font='10px system-ui';ctx.fillStyle='#a8bdcc';ctx.strokeStyle='#294050';ctx.lineWidth=1;
   const step=Math.max(1,Math.ceil((max-min)/5));
   for(let v=min;v<=max;v+=step){ctx.beginPath();ctx.moveTo(pad.l,y(v));ctx.lineTo(W-pad.r,y(v));ctx.stroke();ctx.fillText(v+' m',2,y(v)+3);}
-  if(sea){[['q1','#a07543'],['median','#87958c']].forEach(([key,color])=>{ctx.setLineDash([4,5]);ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(pad.l,y(sea[key]));ctx.lineTo(W-pad.r,y(sea[key]));ctx.stroke();});ctx.setLineDash([]);}
-  ctx.beginPath();ctx.moveTo(x(pts[0].date),y(pts[0].level));pts.slice(1).forEach(p=>ctx.lineTo(x(p.date),y(p.level)));ctx.lineTo(x(pts.at(-1).date),H-pad.b);ctx.lineTo(x(pts[0].date),H-pad.b);ctx.closePath();ctx.fillStyle='rgba(25,119,106,.045)';ctx.fill();
-  ctx.lineWidth=2.5;ctx.strokeStyle='#19776a';
+  if(sea){[['q1','#e8b669'],['median','#92a5b5']].forEach(([key,color])=>{ctx.setLineDash([4,5]);ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(pad.l,y(sea[key]));ctx.lineTo(W-pad.r,y(sea[key]));ctx.stroke();});ctx.setLineDash([]);}
+  ctx.beginPath();ctx.moveTo(x(pts[0].date),y(pts[0].level));pts.slice(1).forEach(p=>ctx.lineTo(x(p.date),y(p.level)));ctx.lineTo(x(pts.at(-1).date),H-pad.b);ctx.lineTo(x(pts[0].date),H-pad.b);ctx.closePath();ctx.fillStyle='rgba(108,204,200,.07)';ctx.fill();
+  ctx.lineWidth=2.5;ctx.strokeStyle='#6cccc8';
   // Dashed segments indicate gaps; no synthetic observations are inserted.
   for(let i=1;i<pts.length;i++){ctx.setLineDash(Date.parse(pts[i].date)-Date.parse(pts[i-1].date)>86400000?[4,4]:[]);ctx.beginPath();ctx.moveTo(x(pts[i-1].date),y(pts[i-1].level));ctx.lineTo(x(pts[i].date),y(pts[i].level));ctx.stroke();}ctx.setLineDash([]);
-  const end=pts.at(-1);ctx.fillStyle='#19776a';ctx.beginPath();ctx.arc(x(end.date),y(end.level),4,0,Math.PI*2);ctx.fill();ctx.font='600 11px system-ui';ctx.fillStyle='#203c37';ctx.textAlign='right';ctx.fillText(fmt(end.level)+' m',x(end.date),y(end.level)-12);
-  const ticks=W<500?3:5;ctx.fillStyle='#60716b';ctx.font='9px system-ui';ctx.textAlign='center';
+  const end=pts.at(-1);ctx.fillStyle='#6cccc8';ctx.beginPath();ctx.arc(x(end.date),y(end.level),4,0,Math.PI*2);ctx.fill();ctx.font='600 11px system-ui';ctx.fillStyle='#e6eef5';ctx.textAlign='right';ctx.fillText(fmt(end.level)+' m',x(end.date),y(end.level)-12);
+  const ticks=W<500?3:5;ctx.fillStyle='#a8bdcc';ctx.font='9px system-ui';ctx.textAlign='center';
   for(let i=0;i<ticks;i++){const p=pts[Math.round(i*(pts.length-1)/(ticks-1))];ctx.fillText(fmtDate(p.date).slice(0,5),x(p.date),H-5);}
   const summary=`${pts.length} medições de ${fmtDate(pts[0].date)} a ${fmtDate(end.date)}. Última cota: ${fmt(end.level)} m. Trechos pontilhados indicam intervalos sem medição.`;
   $('chartSummary').textContent=summary;canvas.setAttribute('aria-label',summary);
 }
+
+function renderTechnicalMetrics(){
+  const metrics=validationData.by_horizon||{};
+  $('technicalMetrics').innerHTML=`<table class="metrics-table"><caption>Validação prospectiva · MPHI v1.0</caption><thead><tr><th scope="col">Horizonte</th><th scope="col">n</th><th scope="col">MAE (cm)</th><th scope="col">Bias (cm)</th><th scope="col">RMSE (cm)</th><th scope="col">Cobertura</th></tr></thead><tbody>${['7','15','30'].map(h=>{const m=metrics[h]||{},n=m.n||0;const cm=k=>n&&Number.isFinite(m[k])?fmt(m[k]*100,1):'—';return `<tr><td>+${h} dias</td><td>${n}</td><td>${cm('mae_m')}</td><td>${cm('bias_m')}</td><td>${cm('rmse_m')}</td><td>${n?fmt(m.envelope_coverage_pct,1)+'%':'—'}</td></tr>`;}).join('')}</tbody></table><p class="metrics-note">Bias = observado − previsto. Cobertura = observações no envelope suave–estresse. n = aferições maduras; ausências não são zero. <a href="data/forecast_ledger.json" target="_blank" rel="noopener">Previsões congeladas ↗</a></p>`;
+}
+function drawProjectionChart(){
+  const canvas=$('projectionChart');if(!canvas||!model)return;
+  const rect=canvas.getBoundingClientRect();if(!rect.width)return;
+  const ctx=canvas.getContext('2d'),dpr=window.devicePixelRatio||1;
+  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;ctx.scale(dpr,dpr);
+  const W=rect.width,H=rect.height,pad={l:44,r:24,t:18,b:28};
+  const points=[{day:0,central:model.current.level,soft:model.current.level,stress:model.current.level},...Object.entries(model.projections).map(([day,p])=>({day:Number(day),...p}))];
+  const values=points.flatMap(p=>[p.central,p.soft,p.stress]).filter(Number.isFinite);
+  const min=Math.floor(Math.min(...values)-.3),max=Math.ceil(Math.max(...values)+.3);
+  const x=d=>pad.l+d/30*(W-pad.l-pad.r),y=v=>pad.t+(max-v)/(max-min)*(H-pad.t-pad.b);
+  ctx.clearRect(0,0,W,H);ctx.font='10px system-ui';ctx.strokeStyle='#294050';ctx.fillStyle='#a8bdcc';ctx.lineWidth=1;
+  for(let v=min;v<=max;v+=Math.max(1,Math.ceil((max-min)/4))){ctx.beginPath();ctx.moveTo(pad.l,y(v));ctx.lineTo(W-pad.r,y(v));ctx.stroke();ctx.fillText(v+' m',2,y(v)+3);}
+  ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(x(p.day),y(Math.max(p.soft,p.stress))):ctx.moveTo(x(p.day),y(p.soft)));
+  [...points].reverse().forEach(p=>ctx.lineTo(x(p.day),y(Math.min(p.soft,p.stress))));ctx.closePath();ctx.fillStyle='#6cccc820';ctx.fill();
+  for(const key of ['soft','stress','central']){ctx.beginPath();ctx.lineWidth=key==='central'?2:1;ctx.strokeStyle=key==='central'?'#79d5d1':'#699aab';ctx.setLineDash(key==='central'?[5,4]:[2,4]);points.forEach((p,i)=>i?ctx.lineTo(x(p.day),y(p[key])):ctx.moveTo(x(p.day),y(p[key])));ctx.stroke();}
+  ctx.setLineDash([]);ctx.textAlign='center';ctx.font='10px system-ui';
+  points.forEach(p=>{ctx.fillStyle='#a8bdcc';ctx.fillText(p.day?'+'+p.day+' dias':'Base',x(p.day),H-6);ctx.fillStyle='#91ddd7';ctx.beginPath();ctx.arc(x(p.day),y(p.central),3,0,Math.PI*2);ctx.fill();});
+  canvas.setAttribute('aria-label','Projeção condicional a partir de '+fmtDate(model.current.date)+'. '+points.slice(1).map(p=>'Em '+p.day+' dias: central '+fmt(p.central)+' m; envelope '+fmt(Math.min(p.soft,p.stress))+' a '+fmt(Math.max(p.soft,p.stress))+' m').join('. ')+'. As linhas apenas conectam os horizontes; não são previsões diárias.');
+}
+
 let resizeTimer;
-window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>model&&drawChart(),120);});
+window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(model){drawChart();drawProjectionChart();}},120);});
 document.querySelectorAll('[data-range]').forEach(button=>button.addEventListener('click',()=>{chartRange=button.dataset.range;document.querySelectorAll('[data-range]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));if(model)drawChart();}));
 $('retryBtn').addEventListener('click',load);
 // Reads the already-published snapshot; never manufactures a collection timestamp.
