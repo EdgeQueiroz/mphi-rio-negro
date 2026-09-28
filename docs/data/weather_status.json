@@ -1,9 +1,11 @@
 {
   "schema": "mphi-weather-v1",
-  "source": "Climatempo Advisor",
-  "checked_at": "2026-09-28T09:59:08+00:00",
-  "state": "not_configured",
+  "source": "MET Norway · Locationforecast",
+  "checked_at": "2026-09-28T14:58:18+00:00",
+  "state": "ok",
   "errors": {},
   "stale_after_hours": 12,
-  "expected_interval_hours": 6
+  "expected_interval_hours": 6,
+  "provider_last_modified": "Mon, 28 Sep 2026 14:32:01 GMT",
+  "provider_expires_at": "2026-09-28T15:03:13+00:00"
 }
