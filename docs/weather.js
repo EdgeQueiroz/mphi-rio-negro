@@ -26,7 +26,7 @@
     const messages={ok:'Climatempo Advisor · contexto atualizado',not_configured:'Integração preparada · aguardando ativação da Climatempo.',unavailable:'Dados meteorológicos temporariamente indisponíveis. Última atualização válida preservada.',partial:'Atualização parcial da Climatempo. Dados anteriores preservados onde necessário.',stale:'Última atualização meteorológica disponível · nova coleta em atraso.'};
     el('weatherStatus').textContent=messages[state]||messages.unavailable;
     el('weatherStatus').dataset.state=state;
-    el('weatherNowLabel').textContent=observationOld||age(c?.collected_at)>limit?'Última condição disponível':'Clima agora';
+    el('weatherNowLabel').textContent=!c?'Clima atual · sem dados':observationOld||age(c.collected_at)>limit?'Última condição disponível':'Clima agora';
     el('weatherTemp').textContent=value(c?.temperature_c,'',1);
     el('weatherFeels').textContent='Sensação térmica: '+value(c?.feels_like_c,' °C',1);
     el('weatherCondition').textContent=c?.condition||'Aguardando a primeira atualização válida';
@@ -43,7 +43,7 @@
     }).join(''):'<p class="footnote">Previsão curta ainda não disponível para os próximos dias.</p>';
     el('weatherObserved').textContent='Horário da observação: '+(c?.observed_at?time(c.observed_at):c?.source_time?c.source_time+' (fuso não informado pela fonte)': 'não disponível')+'.';
     el('weatherCollected').textContent='Última coleta válida do clima atual: '+time(c?.collected_at)+'. Coleta programada a cada seis horas; não é uma transmissão em tempo real.';
-    el('weatherForecastTime').textContent='Previsão recebida em '+time(f?.collected_at)+'. Horário de emissão não informado. Chuva prevista é total diário estimado; não é chuva observada.';
+    el('weatherForecastTime').textContent=(f?.collected_at?'Previsão recebida em '+time(f.collected_at)+'.':'Previsão ainda não recebida.')+' Horário de emissão não informado. Chuva prevista é total diário estimado; não é chuva observada.';
     el('weatherAccumulated').textContent='Precipitação acumulada observada: '+(c?.precipitation_accumulated_mm!=null?value(c.precipitation_accumulated_mm,' mm',1)+' · '+(c.precipitation_accumulation_period||'período não informado'):'não fornecida pelo produto atual')+'.';
   }
   async function json(path){

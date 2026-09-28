@@ -1,0 +1,12 @@
+{
+  "reference_commit": "ea003b6376d0f1842f69821194dea0c690df2357",
+  "files": {
+    "docs/data/hydrologic_latest.json": "2609ee30675a23768b5c4a257c700afacce41b4b9322a05d0e331d81a1a819ff",
+    "docs/data/forecast_ledger.json": "af8243beff775608273d99ad92bb3f84900d1337c86c9b4587201d9bfa342da3",
+    "docs/data/status.json": "14424c23debf916d079a33d69571b1bf27cdcd6768010de24d37650ec7418fc9",
+    "docs/data/hydrologic_ledger.json": "20ed0c4d57b933fda709aa28d981c727bf5ba25054aa4d0c90d2c8db0032f7e6",
+    "docs/data/latest.json": "5eb28ddac671cb4e6b79bfdfb4cf05303ce3df5e51ff8a94067063b32f68453d",
+    "docs/data/validation.json": "1f2f95391f10d5c637b0a7a68ca8991495647e3b243ecad60cc176fd14ff9961",
+    "docs/data/basin_signals.json": "27928fd92b61f5177acebd1e990b7c4501bbf81eaa8eae164f1d522a0adec877"
+  }
+}

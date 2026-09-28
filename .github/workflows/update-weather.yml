@@ -39,6 +39,8 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Testar integração isolada
         run: python -m unittest discover -s tests_weather -v
+      - name: Testar isolamento e cache do frontend
+        run: node --test tests_weather/test_frontend.cjs
       - name: Coletar contexto, sem recalcular hidrologia
         continue-on-error: true
         env:
