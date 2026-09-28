@@ -1,5 +1,7 @@
 # MPHI — integração meteorológica contextual
 
+> A coleta padrão agora usa o MET Norway sem credencial. Este documento descreve a Climatempo como fonte prioritária opcional quando `CLIMATEMPO_TOKEN` for configurado. A seleção, a atribuição e os limites da fonte ativa estão em [METEOROLOGIA.md](METEOROLOGIA.md).
+
 ## Invariante
 
 O clima não integra MPHI v1.0, v1.1-shadow ou v2.0-hydrologic-alpha. Não existe importação do coletor meteorológico pelos motores nem leitura de `weather_*.json` no cálculo. Score, thresholds, persistência, projeções, envelopes e validação mantêm o código anterior. A interface apenas apresenta métricas já calculadas e desenha os horizontes existentes, sem gerar novas previsões.

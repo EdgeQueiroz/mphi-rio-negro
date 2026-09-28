@@ -186,10 +186,15 @@ def update(folder=DATA_DIR, env=None, session=None, now=None):
             if not any(x['snapshot_id'] == snapshot['snapshot_id'] for x in history['entries']):
                 history['entries'].append(snapshot)
                 write(history_path, history)
-            latest.update(received)
-            latest['location'] = snapshot['location']
-            latest['updated_at'] = stamp
-            write(latest_path, latest)
+            # A partial response must not combine sections from different sources.
+            if latest.get('source') != SOURCE and len(received) < 2:
+                status['errors']['provider_switch'] = 'incomplete_response'
+            else:
+                latest.update(received)
+                latest['source'] = SOURCE
+                latest['location'] = snapshot['location']
+                latest['updated_at'] = stamp
+                write(latest_path, latest)
     except Exception as exc:
         status['errors']['collection'] = type(exc).__name__
     status['state'] = 'ok' if len(received) == 2 and not status['errors'] else 'partial' if received else 'unavailable'

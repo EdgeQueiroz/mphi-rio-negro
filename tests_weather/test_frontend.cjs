@@ -19,3 +19,13 @@ test('missing credential displays no invented temperatures',async()=>{const {ele
 test('malformed weather schema remains isolated',async()=>{const {elements:e}=await run({unexpected:true});assert.match(e.get('weatherStatus').textContent,/temporariamente indisponíveis/);});
 test('old observation never claims current weather',async()=>{const old=structuredClone(good);old.current.observed_at='2020-01-01T00:00:00Z';const {elements:e}=await run(old);assert.equal(e.get('weatherStatus').dataset.state,'stale');assert.equal(e.get('weatherNowLabel').textContent,'Última condição disponível');});
 test('refresh failure preserves previously displayed valid temperature',async()=>{const r=await run();r.ctx.fetch=async()=>{throw new Error('offline');};r.refresh();await new Promise(done=>setImmediate(done));assert.equal(r.elements.get('weatherTemp').textContent,'29');assert.match(r.elements.get('weatherStatus').textContent,/temporariamente indisponíveis/);});
+test('MET model is identified as a forecast; missing values stay missing',async()=>{
+ const modeled=structuredClone(good);modeled.source='MET Norway · Locationforecast';modeled.current.data_type='model_forecast';modeled.current.valid_at=stamp;modeled.current.feels_like_c=null;modeled.forecast.issued_at=stamp;modeled.forecast.days[0].rain_probability_pct=null;
+ const {elements:e}=await run(modeled);
+ assert.equal(e.get('weatherNowLabel').textContent,'Estimativa horária');
+ assert.equal(e.get('weatherProbability').textContent,'—');
+ assert.equal(e.get('weatherFeels').textContent,'Sensação térmica: —');
+ assert.match(e.get('weatherObserved').textContent,/Não é medição em estação local/);
+ assert.match(e.get('weatherCredit').innerHTML,/creativecommons.org\/licenses\/by\/4.0/);
+ assert.equal(e.get('weatherRainLabel').textContent,'Chuva restante · hoje');
+});

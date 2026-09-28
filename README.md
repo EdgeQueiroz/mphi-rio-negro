@@ -28,7 +28,7 @@ O navegador consulta a publicação a cada minuto enquanto a página estiver vis
 
 ## Interface
 
-Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e série completa; cenários de 7/15/30 dias; confiabilidade e critérios expansíveis. Azul-rio profundo, ciano discreto e sinalização âmbar/vermelha; layout responsivo, foco por teclado e preferência de movimento reduzido. A interface inclui contexto Climatempo isolado, gráfico de cenários e tabela de MAE/bias/RMSE/cobertura por horizonte. As médias são identificadas como últimas leituras disponíveis, não velocidade de corrente.
+Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e série completa; cenários de 7/15/30 dias; confiabilidade e critérios expansíveis. Azul-rio profundo, ciano discreto e sinalização âmbar/vermelha; layout responsivo, foco por teclado e preferência de movimento reduzido. A interface inclui contexto meteorológico isolado, gráfico de cenários e tabela de MAE/bias/RMSE/cobertura por horizonte. As médias são identificadas como últimas leituras disponíveis, não velocidade de corrente.
 
 ## Verificação
 
@@ -70,6 +70,6 @@ Lead time, falsos alertas e alertas perdidos permanecem em coleta até existir c
 Porto de Manaus. O histórico de referência do projeto utiliza Manaus 14990000 — ANA/SGB.
 
 
-## Meteorologia contextual — Climatempo
+## Meteorologia contextual — MET Norway e Climatempo
 
-Integração independente com API oficial Advisor. Não altera nenhuma versão do modelo. Ativação por GitHub Secret `CLIMATEMPO_TOKEN`; documentação de contrato, arquitetura, falhas, limites e testes em [documentation/CLIMATEMPO.md](documentation/CLIMATEMPO.md). Sem credencial, o painel mantém o MPHI operacional e informa que a camada meteorológica aguarda ativação.
+Integração independente com [MET Norway Locationforecast](https://api.met.no/weatherapi/locationforecast/2.0/documentation), sem credencial, e com API oficial Climatempo Advisor quando o GitHub Secret `CLIMATEMPO_TOKEN` estiver configurado. O MET oferece previsão modelada para Manaus, **não observação de uma estação local**. O painel identifica modelo, fonte, horários e variáveis não fornecidas. Documentação, falhas, atribuição e testes em [documentation/METEOROLOGIA.md](documentation/METEOROLOGIA.md). Nenhuma fonte altera o MPHI v1.0.

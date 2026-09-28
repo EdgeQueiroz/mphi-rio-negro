@@ -1,8 +1,8 @@
-name: MPHI - contexto meteorológico Climatempo
+name: MPHI - contexto meteorológico
 
 on:
   schedule:
-    # 05:23, 11:23, 17:23, 23:23 em Manaus; oito consultas/dia + resolução da cidade.
+    # 05:23, 11:23, 17:23, 23:23 em Manaus; uma consulta ao MET por janela sem Climatempo.
     - cron: '23 3,9,15,21 * * *'
   workflow_dispatch:
   push:
@@ -10,6 +10,8 @@ on:
     paths:
       - .github/workflows/update-weather.yml
       - scripts/update_weather.py
+      - scripts/update_met.py
+      - scripts/collect_weather.py
       - tests_weather/**
 
 permissions:
@@ -47,7 +49,7 @@ jobs:
           CLIMATEMPO_TOKEN: ${{ secrets.CLIMATEMPO_TOKEN }}
           CLIMATEMPO_LOCALE_ID: ${{ vars.CLIMATEMPO_LOCALE_ID }}
           CLIMATEMPO_SOURCE_TIMEZONE: ${{ vars.CLIMATEMPO_SOURCE_TIMEZONE }}
-        run: python scripts/update_weather.py
+        run: python scripts/collect_weather.py
       - name: Garantir isolamento e histórico append-only
         run: |
           git diff --exit-code -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/hydrologic_latest.json docs/data/hydrologic_ledger.json docs/data/basin_signals.json docs/data/status.json
@@ -66,7 +68,7 @@ jobs:
           git config user.email 'mphi-bot@users.noreply.github.com'
           git add docs/data/weather_latest.json docs/data/weather_history.json docs/data/weather_status.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Atualiza contexto Climatempo; núcleo MPHI preservado'
+            git commit -m 'Atualiza contexto meteorológico; núcleo MPHI preservado'
             git push origin HEAD:fileOrganizer
           fi
       - uses: actions/configure-pages@v5
