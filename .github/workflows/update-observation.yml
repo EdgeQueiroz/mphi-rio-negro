@@ -1,0 +1,120 @@
+name: MPHI - medicao meteorologica Manaus
+
+on:
+  schedule:
+    # A estação METAR é consultada uma vez por hora. Ações agendadas podem atrasar.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [fileOrganizer]
+    paths:
+      - .github/workflows/update-observation.yml
+      - scripts/update_observation.py
+      - tests_weather/test_observation.py
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: mphi-sync-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  observation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fileOrganizer
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Testar o contrato quando o coletor mudar
+        if: github.event_name == 'push'
+        run: |
+          python -m unittest discover -s tests_weather -v
+          node --test tests_weather/test_frontend.cjs
+      - name: Consultar observacao sem tocar no modelo
+        run: python scripts/update_observation.py
+      - name: Preservar hidrologia e historico meteorologico
+        run: |
+          git diff --exit-code -- docs/data/latest.json docs/data/forecast_ledger.json docs/data/validation.json docs/data/hydrologic_latest.json docs/data/hydrologic_ledger.json docs/data/status.json
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          name = 'docs/data/weather_observation_history.json'
+          before = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + name]))['entries']
+          after = json.loads(Path(name).read_text())['entries']
+          assert after[:len(before)] == before, 'Histórico anterior alterado'
+          assert len({x['snapshot_id'] for x in after}) == len(after)
+          PY
+      - name: Registrar somente observacoes meteorologicas
+        run: |
+          git config user.name 'MPHI Bot'
+          git config user.email 'mphi-bot@users.noreply.github.com'
+          git add docs/data/weather_observation_latest.json docs/data/weather_observation_history.json docs/data/weather_observation_status.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Atualiza observacao de Manaus; nucleo MPHI preservado'
+            git push origin HEAD:fileOrganizer
+          fi
+      - uses: actions/configure-pages@v5
+        id: pages
+      - name: Manter horario mais recente da consulta hidrologica publicada
+        env:
+          PAGE_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          import requests
+          p = Path('docs/data/status.json')
+          local = json.loads(p.read_text())
+          try:
+              r = requests.get(os.environ['PAGE_URL'].rstrip('/') + '/data/status.json', params={'verify': os.environ['GITHUB_RUN_ID']}, timeout=10)
+              r.raise_for_status()
+              remote = r.json()
+              date = json.loads(Path('docs/data/latest.json').read_text())['current']['date']
+              if remote.get('observation_date') == date and remote.get('checked_at', '') > local.get('checked_at', ''):
+                  p.write_text(json.dumps(remote, ensure_ascii=False, indent=2))
+          except (requests.RequestException, ValueError):
+              print('Usando estado hidrológico preservado no repositório.')
+          PY
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+          name: observation-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/deploy-pages@v4
+        id: deployment
+        with:
+          artifact_name: observation-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Conferir observacao e previsao publicadas
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python - <<'PY'
+          import json, os, time
+          from pathlib import Path
+          import requests
+          files = ['weather_observation_latest.json', 'weather_observation_history.json',
+                   'weather_observation_status.json', 'weather_latest.json', 'latest.json',
+                   'forecast_ledger.json', 'validation.json']
+          for attempt in range(8):
+              try:
+                  for name in files:
+                      url = os.environ['PAGE_URL'].rstrip('/') + '/data/' + name
+                      response = requests.get(url, params={'verify': f'{os.environ["GITHUB_RUN_ID"]}-{attempt}'}, timeout=10)
+                      response.raise_for_status()
+                      assert response.json() == json.loads((Path('docs/data') / name).read_text()), name
+                  break
+              except (requests.RequestException, ValueError, AssertionError):
+                  if attempt == 7:
+                      raise
+                  time.sleep(5)
+          PY

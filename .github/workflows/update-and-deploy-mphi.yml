@@ -11,6 +11,12 @@ on:
       - "docs/data/basin_signals.json"
       - "docs/data/hydrologic_latest.json"
       - "docs/data/hydrologic_ledger.json"
+      - "docs/data/weather_latest.json"
+      - "docs/data/weather_history.json"
+      - "docs/data/weather_status.json"
+      - "docs/data/weather_observation_latest.json"
+      - "docs/data/weather_observation_history.json"
+      - "docs/data/weather_observation_status.json"
       - ".mphi-site-trigger"
   # Agenda principal: 08:05, 08:35, 09:05, 09:35 e 10:05 em Manaus.
   # Minutos fora do topo da hora reduzem atrasos do agendador do GitHub.
