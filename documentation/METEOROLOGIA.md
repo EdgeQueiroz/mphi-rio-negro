@@ -2,11 +2,15 @@
 
 ## Temperatura atual: estação observada
 
-O bloco principal usa a última observação METAR disponível em **Ponta Pelada (SBMN)**, em Manaus, publicada pela API oficial do [Aviation Weather Center / NOAA](https://aviationweather.gov/data/api/). Se a estação estiver sem leitura recente, aceita **Eduardo Gomes (SBEG)** e identifica a estação escolhida no painel. Só aceita leitura com no máximo duas horas, temperatura válida e coordenadas esperadas. A coleta ocorre uma vez por hora no servidor; a página não consulta a NOAA diretamente. O horário exibido é o da observação em Manaus, não o horário da visita.
+O bloco principal usa a última observação METAR disponível em **Ponta Pelada (SBMN)**, em Manaus, publicada pela API oficial do [Aviation Weather Center / NOAA](https://aviationweather.gov/data/api/). Se a estação estiver sem leitura recente, aceita **Eduardo Gomes (SBEG)** e identifica a estação escolhida no painel. Só aceita leitura com no máximo duas horas, temperatura válida e coordenadas esperadas. A coleta é gravada uma vez por hora no servidor. Como complemento, ao abrir o site o navegador consulta o **Open-Meteo** para obter uma estimativa modelada atual; essa estimativa nunca substitui uma observação METAR fresca. O horário exibido é o da observação ou estimativa em Manaus, não apenas o horário da visita.
 
 Temperatura, ponto de orvalho e vento são leituras do METAR; a umidade relativa é **calculada** a partir de temperatura e ponto de orvalho, assim identificada no painel. A estação é uma referência municipal e pode diferir da temperatura no Uiara ou em outro bairro. METAR não informa acumulado de chuva nem sensação térmica neste produto; permanecem `—`.
 
 Os arquivos `weather_observation_latest.json`, `weather_observation_status.json` e `weather_observation_history.json` ficam separados da previsão. O histórico preserva o texto original do METAR e só acrescenta uma leitura nova. Falha ou ausência de leitura recente preserva a última observação com horário e aviso explícitos; **uma temperatura prevista pelo modelo nunca é apresentada como “clima agora”**. A automação meteorológica não importa nem modifica o MPHI v1.0. A API limita consultas a 100 por minuto; o MPHI faz uma consulta por hora para as duas estações.
+
+## Atualização no acesso
+
+O GitHub Pages não executa código de servidor e a API METAR da NOAA não permite CORS no navegador. Por isso, `docs/weather.js` mantém a observação NOAA como referência principal e, quando ela ultrapassa duas horas ou está indisponível, consulta diretamente o endpoint público do [Open-Meteo](https://open-meteo.com/) — coordenadas da estação Ponta Pelada, atualização atual em UTC — para fornecer uma **estimativa modelada** imediatamente na abertura. O painel altera o rótulo para `Estimativa atual · modelo`, usa cor de estado parcial e mantém a última observação de estação identificada. A consulta ao Open-Meteo não é gravada no histórico nem alimenta o score, a projeção, o envelope, a persistência ou qualquer cálculo do MPHI v1.0. A atribuição do serviço segue a licença CC BY 4.0.
 
 ## Fonte ativa sem credencial
 
