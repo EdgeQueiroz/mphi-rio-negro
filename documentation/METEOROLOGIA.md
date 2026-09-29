@@ -6,7 +6,7 @@ O bloco principal usa a última observação METAR disponível em **Ponta Pelada
 
 Temperatura, ponto de orvalho e vento são leituras do METAR; a umidade relativa é **calculada** a partir de temperatura e ponto de orvalho, assim identificada no painel. A estação é uma referência municipal e pode diferir da temperatura no Uiara ou em outro bairro. METAR não informa acumulado de chuva nem sensação térmica neste produto; permanecem `—`.
 
-Os arquivos `weather_observation_latest.json`, `weather_observation_status.json` e `weather_observation_history.json` ficam separados da previsão. O histórico preserva o texto original do METAR e só acrescenta uma leitura nova. Falha ou ausência de leitura recente preserva a última observação com horário e aviso explícitos; **uma temperatura prevista pelo modelo nunca é apresentada como “clima agora”**. A automação meteorológica não importa nem modifica o MPHI v1.0. A API limita consultas a 100 por minuto; o MPHI faz uma consulta por hora para as duas estações.
+Os arquivos `weather_observation_latest.json`, `weather_observation_status.json` e `weather_observation_history.json` ficam separados da previsão. O histórico preserva o texto original do METAR e só acrescenta uma leitura nova. Falha ou ausência de leitura recente preserva a última observação com horário e aviso explícitos; quando o fallback modelado é necessário, ele aparece no painel como **“Estimativa atual · modelo”**, nunca como observação de estação. A automação meteorológica não importa nem modifica o MPHI v1.0. A API limita consultas a 100 por minuto; o MPHI faz uma consulta por hora para as duas estações.
 
 ## Atualização no acesso
 
