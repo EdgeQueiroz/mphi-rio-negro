@@ -2,8 +2,9 @@ name: MPHI - medicao meteorologica Manaus
 
 on:
   schedule:
-    # A estação METAR é consultada uma vez por hora. Ações agendadas podem atrasar.
+    # Duas janelas por hora reduzem o impacto de atrasos do agendador do GitHub.
     - cron: '17 * * * *'
+    - cron: '47 * * * *'
   workflow_dispatch:
   push:
     branches: [fileOrganizer]
