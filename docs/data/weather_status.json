@@ -1,11 +1,11 @@
 {
   "schema": "mphi-weather-v1",
   "source": "MET Norway · Locationforecast",
-  "checked_at": "2026-09-29T01:04:43+00:00",
+  "checked_at": "2026-09-29T09:58:46+00:00",
   "state": "ok",
   "errors": {},
   "stale_after_hours": 12,
   "expected_interval_hours": 6,
-  "provider_last_modified": "Tue, 29 Sep 2026 00:47:02 GMT",
-  "provider_expires_at": "2026-09-29T01:17:42+00:00"
+  "provider_last_modified": "Tue, 29 Sep 2026 09:47:01 GMT",
+  "provider_expires_at": "2026-09-29T10:18:20+00:00"
 }
