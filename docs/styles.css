@@ -362,3 +362,22 @@ body{background:radial-gradient(ellipse at 70% 0%,#112b403d,transparent 48%),var
 @media(max-width:540px){.historic-grid{grid-template-columns:1fr}.historic-record{padding:14px 17px}.historic-value{margin-top:10px;font-size:33px}.historic-note{font-size:11px}}
 @media(max-width:390px){.page-intro h1{font-size:29px}.level-panel{padding:22px}.big-number{font-size:83px}.weather-day{gap:7px}.metrics-table th,.metrics-table td{padding:10px 3px;font-size:9px}.weather-temperature{font-size:46px}}
 @media(prefers-reduced-motion:no-preference){button,a{transition:color .15s,background-color .15s}.panel{animation:appear .35s ease-out}@keyframes appear{from{opacity:.75;transform:translateY(3px)}to{opacity:1;transform:none}}}
+
+/* Readable, in-page archive: keep visitors in the dashboard. */
+.forecast-archive{border-block:1px solid var(--line);margin:22px 0;padding:14px 0;scroll-margin-top:24px}
+.forecast-archive>summary{color:var(--river);padding:10px 0;font-size:14px}
+.forecast-archive>summary span{color:var(--muted);font-size:11px;margin-left:12px}
+.archive-entry{border-top:1px solid var(--line);padding:6px 0}
+.archive-entry>summary{padding:14px 0;font-size:12px;color:var(--text)}
+.archive-entry>summary span:last-child{float:right;color:var(--muted)}
+.archive-reference{font-size:12px;color:var(--muted);line-height:1.7}
+.archive-horizons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:8px 0 18px}
+.archive-horizons article{background:var(--bg);padding:18px;border:1px solid var(--line);border-radius:10px;min-width:0}
+.archive-horizons h3{font-size:15px;margin:0 0 16px;color:var(--river)}
+.archive-horizons h3 small{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:5px}
+.archive-horizons dl{margin:0}.archive-horizons dl div{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12px}
+.archive-horizons dt{color:var(--muted)}.archive-horizons dd{margin:0;white-space:nowrap}
+.archive-horizons p{font-size:11px;color:var(--muted);margin:16px 0 0}
+.archive-close{padding:12px 16px;margin:16px 0 4px;font:inherit;font-size:12px;color:var(--river);border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:pointer}
+#historico-afericoes{scroll-margin-top:24px}
+@media(max-width:780px){.forecast-archive>summary span{display:block;margin:6px 0 0}.archive-entry>summary span:last-child{float:none;display:block;margin:6px 0 0 16px}.archive-horizons{grid-template-columns:1fr;gap:10px}.archive-close{width:100%;text-align:center;line-height:1.5}}

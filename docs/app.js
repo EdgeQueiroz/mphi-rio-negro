@@ -180,6 +180,7 @@ function renderValidation(){
   if(!history){
     history=document.createElement('div');
     history.className='validation-history';
+    history.id='historico-afericoes';
     panel.insertBefore(history,panel.querySelector('.validation-section.alerts'));
   }
   const records=(validationData.latest_records||[]).slice(0,5);
@@ -220,7 +221,7 @@ function drawChart(){
 
 function renderTechnicalMetrics(){
   const metrics=validationData.by_horizon||{};
-  $('technicalMetrics').innerHTML=`<table class="metrics-table"><caption>Validação prospectiva · MPHI v1.0</caption><thead><tr><th scope="col">Horizonte</th><th scope="col">n</th><th scope="col">MAE (cm)</th><th scope="col">Bias (cm)</th><th scope="col">RMSE (cm)</th><th scope="col">Cobertura</th></tr></thead><tbody>${['7','15','30'].map(h=>{const m=metrics[h]||{},n=m.n||0;const cm=k=>n&&Number.isFinite(m[k])?fmt(m[k]*100,1):'—';return `<tr><td>+${h} dias</td><td>${n}</td><td>${cm('mae_m')}</td><td>${cm('bias_m')}</td><td>${cm('rmse_m')}</td><td>${n?fmt(m.envelope_coverage_pct,1)+'%':'—'}</td></tr>`;}).join('')}</tbody></table><p class="metrics-note">Bias = observado − previsto. Cobertura = observações no envelope suave–estresse. n = aferições maduras; ausências não são zero. <a href="data/forecast_ledger.json" target="_blank" rel="noopener">Previsões congeladas ↗</a></p>`;
+  $('technicalMetrics').innerHTML=`<table class="metrics-table"><caption>Validação prospectiva · MPHI v1.0</caption><thead><tr><th scope="col">Horizonte</th><th scope="col">n</th><th scope="col">MAE (cm)</th><th scope="col">Bias (cm)</th><th scope="col">RMSE (cm)</th><th scope="col">Cobertura</th></tr></thead><tbody>${['7','15','30'].map(h=>{const m=metrics[h]||{},n=m.n||0;const cm=k=>n&&Number.isFinite(m[k])?fmt(m[k]*100,1):'—';return `<tr><td>+${h} dias</td><td>${n}</td><td>${cm('mae_m')}</td><td>${cm('bias_m')}</td><td>${cm('rmse_m')}</td><td>${n?fmt(m.envelope_coverage_pct,1)+'%':'—'}</td></tr>`;}).join('')}</tbody></table><p class="metrics-note">Bias = observado − previsto. Cobertura = observações no envelope suave–estresse. n = aferições maduras; ausências não são zero. <a href="#previsoes-preservadas">Previsões congeladas ↓</a></p>`;
 }
 function drawProjectionChart(){
   const canvas=$('projectionChart');if(!canvas||!model)return;
