@@ -73,7 +73,7 @@ def load_series():
             continue
         if value > 500:
             series[dt] = value / 100.0
-    return {d: v for d, v in series.items() if "1903-01-01" <= d < "2026-01-01"}
+    return {d: v for d, v in series.items() if "1902-01-01" <= d < "2026-01-01"}
 
 def summarize(series):
     out = {}
