@@ -33,10 +33,15 @@ def load_series():
     with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
         member = next(n for n in archive.namelist() if n.endswith("14990000_Cotas.csv"))
         text = archive.read(member).decode("latin-1")
-    rows = list(csv.DictReader(io.StringIO("\n".join(text.splitlines()[14:])), delimiter=";"))
+    reader_hist = csv.DictReader(io.StringIO("\n".join(text.splitlines()[14:])), delimiter=";")
+    rows = list(reader_hist)
+    print("MPHI_HIST_FIELDS=" + json.dumps(reader_hist.fieldnames))
+    if rows:
+        sample_keys = ["Data", "MediaDiaria", "NivelConsistencia", "Cota01", "Cota15", "Cota31"]
+        print("MPHI_HIST_SAMPLE=" + json.dumps({k: rows[0].get(k) for k in sample_keys}, ensure_ascii=False))
     best = {}
     for row in rows:
-        if str(row.get("MediaDiaria", "")).strip() != "1":
+        if number(row.get("MediaDiaria")) != 1:
             continue
         raw_date = str(row.get("Data", "")).strip()
         try:
