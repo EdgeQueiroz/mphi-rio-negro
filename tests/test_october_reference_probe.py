@@ -33,25 +33,23 @@ def load_series():
     with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
         member = next(n for n in archive.namelist() if n.endswith("14990000_Cotas.csv"))
         text = archive.read(member).decode("latin-1")
-    reader_hist = csv.DictReader(io.StringIO("\n".join(text.splitlines()[14:])), delimiter=";")
-    rows = list(reader_hist)
-    print("MPHI_HIST_FIELDS=" + json.dumps(reader_hist.fieldnames))
-    if rows:
-        sample_keys = ["Data", "MediaDiaria", "NivelConsistencia", "Cota01", "Cota15", "Cota31"]
-        print("MPHI_HIST_SAMPLE=" + json.dumps({k: rows[0].get(k) for k in sample_keys}, ensure_ascii=False))
+    lines = text.splitlines()
+    header = next(i for i, line in enumerate(lines) if "Data;" in line and "Cota01" in line)
+    rows = list(csv.DictReader(io.StringIO("\n".join(lines[header:])), delimiter=";"))
     best = {}
     for row in rows:
         if number(row.get("MediaDiaria")) != 1:
             continue
         raw_date = str(row.get("Data", "")).strip()
         try:
-            month_date = datetime.strptime(raw_date, "%d/%m/%Y")
+            month_date = datetime.strptime(raw_date[:10], "%d/%m/%Y")
         except ValueError:
             continue
-        consistency = int(float(str(row.get("NivelConsistencia", "0")).replace(",", ".") or 0))
+        consistency = int(number(row.get("NivelConsistencia")) or 0)
         key = (month_date.year, month_date.month)
         if key not in best or consistency > best[key][0]:
             best[key] = (consistency, row)
+
     series = {}
     for (year, month), (_, row) in best.items():
         for day in range(1, 32):
@@ -65,8 +63,7 @@ def load_series():
 
     cur = requests.get(CUR_URL, timeout=60)
     cur.raise_for_status()
-    reader = csv.DictReader(io.StringIO(cur.text))
-    for row in reader:
+    for row in csv.DictReader(io.StringIO(cur.text)):
         dt = row.get("Dt", "")
         if not ("2015-01-01" <= dt < "2026-01-01"):
             continue
@@ -82,8 +79,7 @@ def summarize(series):
     out = {}
     by_year_month = defaultdict(list)
     for d, level in series.items():
-        year = int(d[:4]); month = int(d[5:7])
-        by_year_month[(year, month)].append(level)
+        by_year_month[(int(d[:4]), int(d[5:7]))].append(level)
     for month in (8, 9, 10, 11, 12):
         pooled = [v for d, v in series.items() if int(d[5:7]) == month]
         monthly_means = [sum(vals)/len(vals) for (y,m), vals in by_year_month.items() if m == month]
@@ -101,7 +97,9 @@ def summarize(series):
 
 class OctoberReferenceProbe(unittest.TestCase):
     def test_print_reference_candidates(self):
-        result = summarize(load_series())
+        series = load_series()
+        result = summarize(series)
+        print("MPHI_SERIES_RANGE=" + min(series) + ".." + max(series) + f" n={len(series)}")
         print("MPHI_SEASONAL_PROBE=" + json.dumps(result, sort_keys=True))
         self.assertGreater(result["10"]["pooled_n"], 1000)
 
