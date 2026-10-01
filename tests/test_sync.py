@@ -168,5 +168,19 @@ class SyncContracts(unittest.TestCase):
         self.assertEqual(ledger, frozen)
 
 
+    def test_october_seasonal_reference_is_applied(self):
+        d = copy.deepcopy(SEED)
+        self.assertEqual(d['seasonal']['10'], {'q1': 17.39, 'median': 18.63})
+        self.assertEqual(core.seasonal_score(d, '2026-10-01', 18.73, required=True), 0)
+        self.assertEqual(core.seasonal_score(d, '2026-10-01', 18.00, required=True), 1)
+        self.assertEqual(core.seasonal_score(d, '2026-10-01', 17.00, required=True), 2)
+
+    def test_missing_current_seasonal_reference_fails_closed(self):
+        d = copy.deepcopy(SEED)
+        d['seasonal'].pop(d['current']['date'][5:7], None)
+        with self.assertRaisesRegex(RuntimeError, 'Referência sazonal ausente'):
+            core.recalc(d)
+
+
 if __name__ == '__main__':
     unittest.main()

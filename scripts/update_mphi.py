@@ -63,15 +63,29 @@ def extract_latest(html):
     return f'{now.year:04d}-{now.month:02d}-{day:02d}', level, delta
 
 
-def base_score_for_prefix(valid, idx, d):
+def seasonal_score(d, date_str, level, *, required=False):
+    month = date_str[5:7]
+    sea = d.get('seasonal', {}).get(month)
+    if not sea:
+        if required:
+            raise RuntimeError(
+                f'Referência sazonal ausente para o mês {month}; '
+                'o MPHI não pode pontuar posição sazonal como zero por omissão.'
+            )
+        return 0
+    return 2 if level < sea['q1'] else 1 if level < sea['median'] else 0
+
+
+def base_score_for_prefix(valid, idx, d, *, require_seasonal=False):
     sub = valid[:idx + 1]
     cur = sub[-1]
     level = cur['level']
     a7 = avg(sub, 7)
     a15 = avg(sub, 15)
     accel = round(a7 - a15, 2)
-    sea = d.get('seasonal', {}).get(cur['date'][5:7])
-    seasonal = 2 if sea and level < sea['q1'] else 1 if sea and level < sea['median'] else 0
+    seasonal = seasonal_score(
+        d, cur['date'], level, required=require_seasonal
+    )
     vel = 2 if a7 <= -12 else 1 if a7 <= -8 else 0
     acc = 2 if accel <= -2 else 1 if accel <= -.5 else 0
     peak = max(x['level'] for x in sub)
@@ -113,7 +127,7 @@ def recalc(d):
     c['peak_date'] = peakrow['date']
     c['drawdown'] = round(peak - c['level'], 2)
     c['phase'] = 'Vazante' if c['avg3'] < -0.5 else 'Enchente' if c['avg3'] > 0.5 else 'Estabilidade'
-    base = base_score_for_prefix(valid, len(valid) - 1, d)
+    base = base_score_for_prefix(valid, len(valid) - 1, d, require_seasonal=True)
     c['base_score'] = base
     c['persistence_days'] = persistence_days(valid, d)
     c['persistence_points'] = 2 if c['persistence_days'] >= 7 else 0
