@@ -101,6 +101,11 @@ class OctoberReferenceProbe(unittest.TestCase):
         result = summarize(series)
         print("MPHI_SERIES_RANGE=" + min(series) + ".." + max(series) + f" n={len(series)}")
         print("MPHI_SEASONAL_PROBE=" + json.dumps(result, sort_keys=True))
+        for end_year in (2022, 2023, 2024, 2025):
+            subset = {d: v for d, v in series.items() if int(d[:4]) <= end_year}
+            s = summarize(subset)
+            compact = {m: {"q1": s[m]["pooled_q1"], "median": s[m]["pooled_median"], "n": s[m]["pooled_n"]} for m in ("08", "09", "10")}
+            print(f"MPHI_CUTOFF_{end_year}=" + json.dumps(compact, sort_keys=True))
         self.assertGreater(result["10"]["pooled_n"], 1000)
 
 if __name__ == "__main__":
