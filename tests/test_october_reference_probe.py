@@ -11,7 +11,7 @@ CUR_URL = "https://raw.githubusercontent.com/thiagosfsilva/ENSO-Monitor/main/dat
 def number(value):
     if value is None:
         return None
-    text = str(value).strip().replace(".", "").replace(",", ".")
+    text = str(value).strip().replace(",", ".")
     if not text or text.lower() in {"na", "nan", "null", "none"}:
         return None
     try:
