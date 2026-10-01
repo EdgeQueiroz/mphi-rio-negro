@@ -1,11 +1,11 @@
 {
   "schema": "mphi-weather-observation-v1",
   "source": "NOAA Aviation Weather Center · METAR",
-  "checked_at": "2026-10-01T15:41:04+00:00",
+  "checked_at": "2026-10-01T19:34:35+00:00",
   "state": "ok",
   "errors": {},
   "stale_after_hours": 2,
   "expected_interval_hours": 1,
-  "observed_at": "2026-10-01T15:00:00+00:00",
+  "observed_at": "2026-10-01T19:00:00+00:00",
   "station_id": "SBMN"
 }
