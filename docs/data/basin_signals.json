@@ -1,9 +1,9 @@
 {
   "schema": "mphi-basin-signals-v1",
-  "updated_at": "2026-10-01T08:01:10-04:00",
+  "updated_at": "2026-10-02T08:11:04-04:00",
   "source": "ANA/SGB - Serviço de dados hidrometeorológicos telemétricos",
   "source_url": "https://telemetriaws1.ana.gov.br/serviceana.asmx/DadosHidrometeorologicos",
-  "issue_date": "2026-10-01",
+  "issue_date": "2026-10-02",
   "usable_station_count": 5,
   "failed_stations": {},
   "stations": {
@@ -12,7 +12,7 @@
       "river": "Rio Negro",
       "role": "alto curso",
       "code": "14330000",
-      "latest_timestamp": "2026-10-01T08:45",
+      "latest_timestamp": "2026-10-02T08:45",
       "daily": [
         {
           "date": "2026-05-24",
@@ -666,7 +666,12 @@
         },
         {
           "date": "2026-10-01",
-          "level_m": 9.9,
+          "level_m": 9.91,
+          "samples": 96
+        },
+        {
+          "date": "2026-10-02",
+          "level_m": 9.95,
           "samples": 36
         }
       ]
@@ -676,7 +681,7 @@
       "river": "Rio Negro",
       "role": "médio curso",
       "code": "14420000",
-      "latest_timestamp": "2026-10-01T08:30",
+      "latest_timestamp": "2026-10-02T08:30",
       "daily": [
         {
           "date": "2026-05-24",
@@ -1330,7 +1335,12 @@
         },
         {
           "date": "2026-10-01",
-          "level_m": 6.62,
+          "level_m": 6.63,
+          "samples": 96
+        },
+        {
+          "date": "2026-10-02",
+          "level_m": 6.66,
           "samples": 35
         }
       ]
@@ -1340,7 +1350,7 @@
       "river": "Rio Negro",
       "role": "médio curso",
       "code": "14480002",
-      "latest_timestamp": "2026-10-01T08:00",
+      "latest_timestamp": "2026-10-02T08:00",
       "daily": [
         {
           "date": "2026-05-24",
@@ -1935,6 +1945,11 @@
         {
           "date": "2026-10-01",
           "level_m": 3.88,
+          "samples": 96
+        },
+        {
+          "date": "2026-10-02",
+          "level_m": 3.89,
           "samples": 33
         }
       ]
@@ -1944,7 +1959,7 @@
       "river": "Rio Negro",
       "role": "baixo curso",
       "code": "14840000",
-      "latest_timestamp": "2026-10-01T08:00",
+      "latest_timestamp": "2026-10-02T08:00",
       "daily": [
         {
           "date": "2026-05-24",
@@ -2598,7 +2613,12 @@
         },
         {
           "date": "2026-10-01",
-          "level_m": 5.29,
+          "level_m": 5.27,
+          "samples": 96
+        },
+        {
+          "date": "2026-10-02",
+          "level_m": 5.23,
           "samples": 33
         }
       ]
@@ -2608,7 +2628,7 @@
       "river": "Rio Solimões-Amazonas",
       "role": "remanso",
       "code": "14100000",
-      "latest_timestamp": "2026-10-01T08:15",
+      "latest_timestamp": "2026-10-02T08:15",
       "daily": [
         {
           "date": "2026-05-24",
@@ -3262,7 +3282,12 @@
         },
         {
           "date": "2026-10-01",
-          "level_m": 9.42,
+          "level_m": 9.37,
+          "samples": 96
+        },
+        {
+          "date": "2026-10-02",
+          "level_m": 9.3,
           "samples": 34
         }
       ]
