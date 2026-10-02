@@ -363,6 +363,40 @@ body{background:radial-gradient(ellipse at 70% 0%,#112b403d,transparent 48%),var
 @media(max-width:390px){.page-intro h1{font-size:29px}.level-panel{padding:22px}.big-number{font-size:83px}.weather-day{gap:7px}.metrics-table th,.metrics-table td{padding:10px 3px;font-size:9px}.weather-temperature{font-size:46px}}
 @media(prefers-reduced-motion:no-preference){button,a{transition:color .15s,background-color .15s}.panel{animation:appear .35s ease-out}@keyframes appear{from{opacity:.75;transform:translateY(3px)}to{opacity:1;transform:none}}}
 
+/* Amazonian river opening. Data remains in the foreground; charts use solid surfaces. */
+.river-opening{position:relative;isolation:isolate;margin-top:26px;border:1px solid #496474;border-radius:18px;background:#102839;overflow:hidden}
+.river-backdrop{position:absolute;inset:0;z-index:-2;background:#102839 url("assets/river-opening.jpg") center 54%/cover no-repeat;pointer-events:none}
+.river-backdrop video{width:100%;height:100%;object-fit:cover;object-position:center 54%;opacity:0;transition:opacity .7s ease}
+.river-playing .river-backdrop video{opacity:1}
+.river-opening::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(4,18,30,.88),rgba(4,18,30,.49) 65%,rgba(4,18,30,.38)),linear-gradient(0deg,rgba(5,21,34,.9),transparent 68%);pointer-events:none}
+.river-content{padding:0 30px 16px}
+.river-opening .page-intro{padding:28px 0 20px}
+.river-opening .page-intro h1{color:#f6fafc;text-shadow:0 2px 20px #0005}
+.river-opening .page-intro .eyebrow{font-size:12px;color:#a1e2dc;letter-spacing:.12em}
+.river-opening .page-intro p:last-child{color:#d2e0e9;font-size:14px}
+.river-opening .title-divider{color:#a0c3cf}
+.river-opening .source-link{font-size:14px;color:#b2ebe5}
+.river-opening .meta-bar{border-color:#bed5de30;color:#d0e0e9;font-size:12px;padding:14px 0 18px;gap:18px}
+.river-opening .meta-bar b{color:#fff}
+.river-opening .level-panel{background:#071b2a66;border-color:#a3c8d23b;box-shadow:none}
+.river-opening .level-panel::before{display:none}
+.river-opening .label{font-size:14px}
+.river-opening .observation{color:#d5e3eb;font-size:14px}
+.river-opening .station{color:#c5dce7;font-size:10px}
+.river-opening .level-bottom{font-size:12px;color:#c5dce7;border-color:#bed5de30}
+.river-opening .river-movement>span:last-child{font-size:12px;color:#c5dce7}
+.river-opening .phase{font-size:12px;color:#b2ebe5}
+.river-opening .outlook-panel{background:#0c2030e8;border-color:#526a79;box-shadow:none}
+.river-opening .outlook-panel>p{font-size:14px;color:#d5e3eb}
+.river-opening .outlook-panel>a{font-size:14px}
+.river-caption{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:40px;margin-top:12px;color:#c5d8e2;font-size:12px;line-height:1.6}
+.river-caption a{text-decoration:none}.river-caption a:hover{text-decoration:underline}
+.river-caption button{flex-shrink:0;border:1px solid #8cacbb77;border-radius:7px;padding:8px 12px;color:#e8f4f8;background:#071b2abf;font-size:14px}
+.river-caption button:hover{background:#193c50}.river-caption button[hidden]{display:none}
+@media(max-width:1080px){.river-content{padding-inline:24px}.river-opening .page-intro{align-items:flex-start;flex-direction:column;gap:12px}}
+@media(max-width:780px){.river-opening{margin-top:18px;border-radius:14px}.river-content{padding:0 18px 12px}.river-opening .page-intro{padding-top:24px}.river-opening .page-intro p:last-child{max-width:38ch}.river-opening .meta-bar>span:last-child{font-size:12px}.river-opening .level-panel{padding:22px 18px}.river-opening .big-number{font-size:clamp(64px,20vw,86px)}.river-opening .level-main{gap:20px}.river-opening .outlook-panel{padding:18px}.river-opening .outlook-panel>a{margin-top:7px}.river-caption{align-items:flex-start;gap:12px;margin-top:14px}.river-caption>span{max-width:27ch}.river-caption button{padding:8px;font-size:12px}.river-opening::before{background:linear-gradient(90deg,rgba(4,18,30,.85),rgba(4,18,30,.48)),linear-gradient(0deg,rgba(5,21,34,.95),transparent 80%)}}
+@media(prefers-reduced-motion:reduce){.river-backdrop video{display:none;transition:none}}
+
 /* Readable, in-page archive: keep visitors in the dashboard. */
 .forecast-archive{border-block:1px solid var(--line);margin:22px 0;padding:14px 0;scroll-margin-top:24px}
 .forecast-archive>summary{color:var(--river);padding:10px 0;font-size:14px}

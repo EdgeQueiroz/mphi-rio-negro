@@ -21,7 +21,7 @@
   <meta name="twitter:title" content="MPHI | Rio Negro — Manaus">
   <meta name="twitter:description" content="Cota do Rio Negro, projeções hidrológicas e validação contínua em Manaus.">
   <meta name="twitter:image" content="https://edgequeiroz.github.io/mphi-rio-negro/assets/mphi-rio-negro-social.jpg">
-  <link rel="stylesheet" href="styles.css?v=20260930-registros">
+  <link rel="stylesheet" href="styles.css?v=20261002-rio">
 </head>
 <body>
 <a class="skip-link" href="#panorama">Ir para os dados do rio</a>
@@ -31,6 +31,9 @@
   <span class="location">MANAUS · AMAZONAS</span>
 </header>
 <main>
+  <div class="river-opening" id="riverOpening">
+    <div class="river-backdrop" aria-hidden="true"><video id="riverVideo" muted loop playsinline preload="none" poster="assets/river-opening.jpg" tabindex="-1" data-desktop-src="assets/river-opening.mp4" data-mobile-src="assets/river-opening-mobile.mp4"></video></div>
+    <div class="river-content">
   <section class="page-intro"><div><p class="eyebrow">INTELIGÊNCIA HIDROLÓGICA · AMAZÔNIA</p><h1>MPHI <span class="title-divider">/</span> Rio Negro</h1><p>Modelo Preditivo Hidrológico Uiara · Monitoramento, projeção e validação contínua.</p></div><a class="source-link" href="https://portodemanaus.com.br/nivel-do-rio-negro/" target="_blank" rel="noopener noreferrer">Consultar o Porto de Manaus <span aria-hidden="true">↗</span></a></section>
   <div id="loadError" class="load-error" role="alert" hidden><p id="loadErrorText"></p><button id="retryBtn" type="button">Tentar novamente</button></div>
   <div class="meta-bar" aria-label="Referência dos dados"><span>Medição <b id="topDate">—</b></span><span>Dados atualizados <b id="topUpdated">—</b></span><span id="topSource">Consultando integridade da fonte…</span></div>
@@ -43,6 +46,9 @@
     </article>
     <article class="outlook-panel"><div class="outlook-head"><p class="eyebrow">SCORE · MPHI v1.0</p><span id="statusBadge" class="status">—</span></div><div class="score-number"><span id="score">—</span><small>/ 12</small></div><div id="scoreMeter" class="score-meter" aria-label="Escala de atenção de zero a doze"></div><p id="outlookText">Aguardando os dados do modelo.</p><a href="#leitura">Entender a leitura <span aria-hidden="true">↓</span></a></article>
   </section>
+    <div class="river-caption"><span>Paisagem amazônica ilustrativa · <a href="https://www.pexels.com/video/amazonia-rainforest-7407334/" target="_blank" rel="noopener noreferrer">Rafael Artud / Pexels</a></span><button id="riverMotionToggle" type="button" aria-label="Pausar animação do rio" aria-pressed="false" hidden><span aria-hidden="true">Ⅱ</span> <span id="riverMotionLabel">Pausar rio</span></button></div>
+    </div>
+  </div>
   <section class="update-strip" aria-label="Atualização dos dados"><div><span class="update-dot" id="updateDot"></span><strong id="freshnessLabel">Consultando publicação</strong><span id="freshnessNote">A abertura da página não altera a data dos dados.</span></div><details class="update-details"><summary>Atualização e horários</summary><div class="update-popover"><p><b>Agenda:</b> todos os dias, vigília a partir das 07:43, horário de Manaus.</p><p id="updatedAt">Dados atualizados em —</p><p id="checkedAt">Última consulta ao Porto: —</p><p>Vigília com consultas a cada cinco minutos até 12:15, além de agendas redundantes até 14:49. O horário mostrado é o registro real da coleta; o Porto não informa a hora exata da publicação.</p><p>O serviço de agendamento pode atrasar. Sem nova medição, preservamos o último dado oficial, inclusive aos fins de semana.</p></div></details></section>
   <section class="facts-strip" aria-label="Contexto da medição"><article><span>Pico antecedente</span><b id="peak">—</b><small id="peakDate">—</small></article><article><span>Queda desde o pico</span><b id="drawdown">—</b><small>diferença até a última cota</small></article><article><span>Persistência do sinal</span><b><span id="persistDays">—</span> <small>dias consecutivos</small></b><small>gatilho: 7 dias · +2 pontos</small></article></section>
   <section class="historic-records" aria-labelledby="historicTitle">
@@ -73,6 +79,7 @@
 </main>
 <footer><a class="footer-brand" href="#panorama">MPHI <span>·</span> UIARA</a><p>Modelo Preditivo Hidrológico Uiara<br><span>Fonte operacional: Porto de Manaus · Referência histórica do projeto: Manaus 14990000 — ANA/SGB</span></p><a href="#metodo">Dados com contexto. Decisões com clareza.</a></footer>
 <script src="app.js?v=20260930-registros"></script>
+<script src="river-opening.js?v=20261002-rio" defer></script>
 <script src="forecast-archive.js?v=20260930-registros" defer></script>
 <script src="weather.js?v=20260929-live-access" defer></script>
 </body></html>
