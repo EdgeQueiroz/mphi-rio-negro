@@ -13,19 +13,19 @@
   },
   "current": {
     "data_type": "station_observation",
-    "observed_at": "2026-10-02T22:13:00+00:00",
-    "temperature_c": 32.0,
-    "dewpoint_c": 26.0,
+    "observed_at": "2026-10-03T01:11:00+00:00",
+    "temperature_c": 24.0,
+    "dewpoint_c": 23.0,
     "feels_like_c": null,
-    "humidity_pct": 71,
+    "humidity_pct": 94,
     "humidity_method": "Magnus, a partir do ponto de orvalho",
     "condition": "Trovoadas",
-    "wind_kmh": 11.1,
-    "wind_direction": "O",
-    "pressure_hpa": 1008.0,
+    "wind_kmh": 16.7,
+    "wind_direction": "L",
+    "pressure_hpa": 1011.0,
     "precipitation_accumulated_mm": null,
-    "raw_metar": "SPECI SBEG 022213Z 29006KT 250V330 9999 TS VCSH FEW020 FEW025CB BKN050 32/26 Q1008",
-    "collected_at": "2026-10-02T22:33:16+00:00"
+    "raw_metar": "SPECI SBEG 030111Z 11009KT 5000 TSRA SCT020 FEW025CB BKN040 24/23 Q1011 RERA",
+    "collected_at": "2026-10-03T01:26:16+00:00"
   },
-  "updated_at": "2026-10-02T22:33:16+00:00"
+  "updated_at": "2026-10-03T01:26:16+00:00"
 }

@@ -1,11 +1,11 @@
 {
   "schema": "mphi-weather-observation-v1",
   "source": "NOAA Aviation Weather Center · METAR",
-  "checked_at": "2026-10-02T23:00:19+00:00",
-  "state": "unavailable",
-  "errors": {
-    "collection": "ValueError"
-  },
+  "checked_at": "2026-10-03T01:26:16+00:00",
+  "state": "ok",
+  "errors": {},
   "stale_after_hours": 2,
-  "expected_interval_hours": 1
+  "expected_interval_hours": 1,
+  "observed_at": "2026-10-03T01:11:00+00:00",
+  "station_id": "SBEG"
 }
