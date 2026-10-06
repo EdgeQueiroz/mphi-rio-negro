@@ -24,9 +24,20 @@ on:
     - cron: '5,35 12-13 * * *'
     - cron: '5 14 * * *'
   workflow_dispatch:
+    inputs:
+      recover_stalled_queue:
+        description: "Recuperar fila travada substituindo a execução anterior"
+        required: false
+        type: boolean
+        default: false
   # Permite que agendas independentes reutilizem exatamente o mesmo fluxo.
   workflow_call:
     inputs:
+      recover_stalled_queue:
+        description: "Substituir execução travada somente em recuperação explícita"
+        required: false
+        type: boolean
+        default: false
       wait_for_today:
         description: "Manter a execução ativa até o Porto publicar a medição do dia"
         required: false
@@ -40,8 +51,9 @@ permissions:
 
 concurrency:
   group: "mphi-sync-${{ github.ref }}"
-  # Preserva a transação coleta -> commit -> publicação; nunca cancela no meio.
-  cancel-in-progress: false
+  # Agendas normais preservam coleta -> commit -> publicação. A recuperação
+  # explícita libera o mutex se um runner ficar preso antes de iniciar.
+  cancel-in-progress: ${{ inputs.recover_stalled_queue == true }}
 
 jobs:
   update-and-deploy:

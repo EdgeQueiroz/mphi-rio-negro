@@ -1,0 +1,21 @@
+name: MPHI - recuperar fila de publicação
+
+on:
+  workflow_dispatch:
+  # A alteração deste arquivo permite disparar a recuperação pelo repositório.
+  push:
+    branches: [fileOrganizer]
+    paths:
+      - .github/workflows/mphi-queue-recovery.yml
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  recover-and-publish:
+    uses: ./.github/workflows/update-and-deploy-mphi.yml
+    with:
+      recover_stalled_queue: true
+    secrets: inherit
