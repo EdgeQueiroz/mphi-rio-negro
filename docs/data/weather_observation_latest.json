@@ -13,7 +13,7 @@
   },
   "current": {
     "data_type": "station_observation",
-    "observed_at": "2026-10-07T08:00:00+00:00",
+    "observed_at": "2026-10-07T09:00:00+00:00",
     "temperature_c": 29.0,
     "dewpoint_c": 22.0,
     "feels_like_c": null,
@@ -24,8 +24,8 @@
     "wind_direction": "L",
     "pressure_hpa": 1008.0,
     "precipitation_accumulated_mm": null,
-    "raw_metar": "METAR SBMN 070800Z 07005KT CAVOK 29/22 Q1008",
-    "collected_at": "2026-10-07T08:44:27+00:00"
+    "raw_metar": "METAR SBMN 070900Z 08005KT CAVOK 29/22 Q1008",
+    "collected_at": "2026-10-07T09:15:04+00:00"
   },
-  "updated_at": "2026-10-07T08:44:27+00:00"
+  "updated_at": "2026-10-07T09:15:04+00:00"
 }
