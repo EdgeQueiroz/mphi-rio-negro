@@ -52,7 +52,7 @@ class ModelForecast(unittest.TestCase):
 
     def test_no_key_collects_and_labels_modeled_source(self):
         with patch.object(met.requests, 'Session', return_value=self.session):
-            state = collect_weather.collect(self.folder, env={})
+            state = collect_weather.collect(self.folder, env={}, now=NOW)
         self.assertEqual(state['state'], 'ok')
         latest = self.data('weather_latest.json')
         self.assertEqual(latest['source'], met.SOURCE)

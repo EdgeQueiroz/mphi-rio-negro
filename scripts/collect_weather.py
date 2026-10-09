@@ -7,9 +7,11 @@ from update_weather import update as climatempo
 from update_met import update as met_norway
 
 
-def collect(folder=None, env=None):
+def collect(folder=None, env=None, now=None):
     env = os.environ if env is None else env
     kwargs = {} if folder is None else {'folder': folder}
+    if now is not None:
+        kwargs['now'] = now
     if env.get('CLIMATEMPO_TOKEN', '').strip():
         result = climatempo(env=env, **kwargs)
         # A partial response can be used only when both existing sections

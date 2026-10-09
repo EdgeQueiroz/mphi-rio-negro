@@ -154,59 +154,38 @@ jobs:
           git commit -m "Atualiza MPHI e validacao $(date -u +%F)"
           git push origin HEAD:fileOrganizer
 
-      # Republicar também sem mudança de dados recupera falhas após o commit.
+      - name: Decidir se a publicação é necessária
+        id: publication
+        env:
+          # Alterações de código/interface e recuperação explícita publicam.
+          # Agendas de reserva verificam os dados públicos antes de decidir.
+          PUBLICATION_FORCE: ${{ github.event_name == 'push' || inputs.recover_stalled_queue == true }}
+        run: python scripts/pages_publication.py decide
+
+      # Mesmo sem alteração local, divergência no site recupera falha pós-commit.
       - name: Configurar GitHub Pages
+        if: steps.publication.outputs.publish == 'true'
         uses: actions/configure-pages@v5
 
       - name: Preparar site
+        if: steps.publication.outputs.publish == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './docs'
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Publicar GitHub Pages
+        if: steps.publication.outputs.publish == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Confirmar dados publicados
+        if: steps.publication.outputs.publish == 'true'
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-        run: |
-          python - <<'PY'
-          import json, os, time
-          from pathlib import Path
-          import requests
-          names = (
-              "latest.json", "forecast_ledger.json", "validation.json", "status.json",
-              "basin_signals.json", "hydrologic_latest.json", "hydrologic_ledger.json",
-          )
-          expected = {name: json.loads((Path("docs/data") / name).read_text()) for name in names}
-          base = os.environ["PAGE_URL"].rstrip("/") + "/data/"
-          for attempt in range(1, 9):
-              try:
-                  for name in names:
-                      response = requests.get(
-                          base + name,
-                          params={"verify": f'{os.environ["GITHUB_RUN_ID"]}-{os.environ["GITHUB_RUN_ATTEMPT"]}-{attempt}'},
-                          headers={"Cache-Control": "no-cache"}, timeout=10,
-                      )
-                      response.raise_for_status()
-                      if response.json() != expected[name]:
-                          raise ValueError(f"{name}: publicação ainda difere do artefato")
-                  current = expected["latest.json"]["current"]
-                  message = f'Publicação verificada: {current["date"]} = {current["level"]:.2f} m; ledger e validação conferidos.'
-                  print(message)
-                  with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
-                      summary.write(message + "\n")
-                  break
-              except (requests.RequestException, ValueError) as exc:
-                  if attempt == 8:
-                      raise SystemExit(f"Falha na verificação pública: {exc}")
-                  print(f"Aguardando propagação do Pages ({attempt}/8): {exc}")
-                  time.sleep(5)
-          PY
+        run: python scripts/pages_publication.py verify
 
       - name: Sinalizar falha de coleta após preservar a publicação
         if: steps.update.outcome == 'failure'
