@@ -1,7 +1,7 @@
 {
   "schema": "mphi-weather-observation-v1",
   "source": "NOAA Aviation Weather Center · METAR",
-  "checked_at": "2026-10-09T09:12:00+00:00",
+  "checked_at": "2026-10-09T09:37:19+00:00",
   "state": "ok",
   "errors": {},
   "stale_after_hours": 2,
