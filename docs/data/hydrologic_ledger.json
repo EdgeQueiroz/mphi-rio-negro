@@ -2853,6 +2853,169 @@
           "basin_weight": 0.35
         }
       }
+    },
+    {
+      "forecast_id": "2026-10-14|MPHI v2.0-hydrologic-alpha",
+      "forecast_date": "2026-10-14",
+      "created_at": "2026-10-14T11:57:36-04:00",
+      "model_version": "MPHI v2.0-hydrologic-alpha",
+      "model_status": "experimental",
+      "observed_level_at_issue": 17.52,
+      "base_model": "MPHI v1.1-shadow",
+      "method": "multivariate analogs from daily basin trends blended with the current MPHI baseline",
+      "uses_future_information": false,
+      "station_count": 5,
+      "stations": {
+        "14330000": {
+          "name": "Curicuriari",
+          "river": "Rio Negro",
+          "role": "alto curso",
+          "latest_timestamp": "2026-10-14T12:45",
+          "daily_records": 144,
+          "trend_7d_cm_per_day": -4.29,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 19,
+            "correlation": 0.499,
+            "sample_n": 124
+          }
+        },
+        "14420000": {
+          "name": "Serrinha",
+          "river": "Rio Negro",
+          "role": "médio curso",
+          "latest_timestamp": "2026-10-14T12:30",
+          "daily_records": 144,
+          "trend_7d_cm_per_day": -1.57,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 17,
+            "correlation": 0.587,
+            "sample_n": 126
+          }
+        },
+        "14480002": {
+          "name": "Barcelos",
+          "river": "Rio Negro",
+          "role": "médio curso",
+          "latest_timestamp": "2026-10-14T12:00",
+          "daily_records": 132,
+          "trend_7d_cm_per_day": 1.14,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 20,
+            "correlation": 0.776,
+            "sample_n": 110
+          }
+        },
+        "14840000": {
+          "name": "Moura",
+          "river": "Rio Negro",
+          "role": "baixo curso",
+          "latest_timestamp": "2026-10-14T12:00",
+          "daily_records": 144,
+          "trend_7d_cm_per_day": -0.14,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 7,
+            "correlation": 0.918,
+            "sample_n": 133
+          }
+        },
+        "14100000": {
+          "name": "Manacapuru",
+          "river": "Rio Solimões-Amazonas",
+          "role": "remanso",
+          "latest_timestamp": "2026-10-14T07:00",
+          "daily_records": 144,
+          "trend_7d_cm_per_day": -8.93,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 2,
+            "correlation": 0.977,
+            "sample_n": 133
+          }
+        }
+      },
+      "projections": {
+        "7": {
+          "target_date": "2026-10-21",
+          "central": 16.93,
+          "soft": 16.93,
+          "stress": 16.66,
+          "interval80": {
+            "low": 16.66,
+            "high": 16.93,
+            "status": "experimental"
+          },
+          "training_n": 101,
+          "neighbors_n": 10,
+          "neighbor_dates": [
+            "2026-07-13",
+            "2026-07-14",
+            "2026-07-18",
+            "2026-07-15",
+            "2026-07-16",
+            "2026-07-12",
+            "2026-07-17",
+            "2026-07-19",
+            "2026-07-11",
+            "2026-07-08"
+          ],
+          "basin_weight": 0.35
+        },
+        "15": {
+          "target_date": "2026-10-29",
+          "central": 16.11,
+          "soft": 16.11,
+          "stress": 15.54,
+          "interval80": {
+            "low": 15.54,
+            "high": 16.11,
+            "status": "experimental"
+          },
+          "training_n": 93,
+          "neighbors_n": 10,
+          "neighbor_dates": [
+            "2026-07-13",
+            "2026-07-14",
+            "2026-07-18",
+            "2026-07-15",
+            "2026-07-19",
+            "2026-07-12",
+            "2026-07-08",
+            "2026-07-07",
+            "2026-07-17",
+            "2026-07-16"
+          ],
+          "basin_weight": 0.35
+        },
+        "30": {
+          "target_date": "2026-11-13",
+          "central": 14.22,
+          "soft": 14.22,
+          "stress": 13.16,
+          "interval80": {
+            "low": 13.16,
+            "high": 14.22,
+            "status": "experimental"
+          },
+          "training_n": 78,
+          "neighbors_n": 9,
+          "neighbor_dates": [
+            "2026-07-18",
+            "2026-07-14",
+            "2026-07-13",
+            "2026-07-19",
+            "2026-07-15",
+            "2026-07-17",
+            "2026-07-07",
+            "2026-07-08",
+            "2026-07-12"
+          ],
+          "basin_weight": 0.35
+        }
+      }
     }
   ]
 }
