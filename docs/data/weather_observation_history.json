@@ -5054,6 +5054,37 @@
         "collected_at": "2026-10-21T15:21:00+00:00"
       },
       "snapshot_id": "18bc2d797f57c00eff8ba3314e8119a73530509eaa2b48a0a3d84192d539412d"
+    },
+    {
+      "timestamp": "2026-10-21T17:39:22+00:00",
+      "source": "NOAA Aviation Weather Center · METAR",
+      "location": {
+        "name": "Manaus",
+        "state": "AM",
+        "country": "BR",
+        "timezone": "America/Manaus",
+        "station_id": "SBMN",
+        "station_name": "Ponta Pelada",
+        "latitude": -3.146,
+        "longitude": -59.986
+      },
+      "current": {
+        "data_type": "station_observation",
+        "observed_at": "2026-10-21T17:00:00+00:00",
+        "temperature_c": 34.0,
+        "dewpoint_c": 24.0,
+        "feels_like_c": null,
+        "humidity_pct": 56,
+        "humidity_method": "Magnus, a partir do ponto de orvalho",
+        "condition": "Poucas nuvens",
+        "wind_kmh": 3.7,
+        "wind_direction": "S",
+        "pressure_hpa": 1009.0,
+        "precipitation_accumulated_mm": null,
+        "raw_metar": "METAR SBMN 211700Z 18002KT 9999 SCT025 FEW030TCU 34/24 Q1009",
+        "collected_at": "2026-10-21T17:39:22+00:00"
+      },
+      "snapshot_id": "abe1e030949ecc7b4999fc1c9fe3787e7aa70b26a7b4c04470e77f597025b940"
     }
   ]
 }

@@ -13,19 +13,19 @@
   },
   "current": {
     "data_type": "station_observation",
-    "observed_at": "2026-10-21T15:00:00+00:00",
-    "temperature_c": 31.0,
-    "dewpoint_c": 26.0,
+    "observed_at": "2026-10-21T17:00:00+00:00",
+    "temperature_c": 34.0,
+    "dewpoint_c": 24.0,
     "feels_like_c": null,
-    "humidity_pct": 75,
+    "humidity_pct": 56,
     "humidity_method": "Magnus, a partir do ponto de orvalho",
     "condition": "Poucas nuvens",
-    "wind_kmh": 5.6,
-    "wind_direction": "L",
-    "pressure_hpa": 1012.0,
+    "wind_kmh": 3.7,
+    "wind_direction": "S",
+    "pressure_hpa": 1009.0,
     "precipitation_accumulated_mm": null,
-    "raw_metar": "METAR SBMN 211500Z 11003KT 9999 FEW015 BKN025 FEW030TCU 31/26 Q1012",
-    "collected_at": "2026-10-21T15:21:00+00:00"
+    "raw_metar": "METAR SBMN 211700Z 18002KT 9999 SCT025 FEW030TCU 34/24 Q1009",
+    "collected_at": "2026-10-21T17:39:22+00:00"
   },
-  "updated_at": "2026-10-21T15:21:00+00:00"
+  "updated_at": "2026-10-21T17:39:22+00:00"
 }
