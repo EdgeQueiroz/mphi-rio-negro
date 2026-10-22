@@ -3,10 +3,10 @@
   "timezone": "America/Manaus",
   "scheduled_time": "08:00",
   "retry_interval_minutes": 15,
-  "checked_at": "2026-10-21T07:50:24-04:00",
+  "checked_at": "2026-10-22T07:51:13-04:00",
   "state": "current",
-  "observation_date": "2026-10-21",
-  "data_updated_at": "2026-10-21T07:50:22-04:00",
+  "observation_date": "2026-10-22",
+  "data_updated_at": "2026-10-22T07:51:12-04:00",
   "source_published_at": null,
   "source_time_note": "O Porto informa a data da medição, não a hora de publicação."
 }
