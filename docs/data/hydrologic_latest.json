@@ -1,173 +1,188 @@
 {
   "schema": "mphi-hydrologic-latest-v1",
-  "updated_at": "2026-10-26T07:52:58-04:00",
+  "updated_at": "2026-10-27T07:51:35-04:00",
   "status": "experimental",
   "forecast": {
-    "forecast_id": "2026-10-26|MPHI v2.0-hydrologic-alpha",
-    "forecast_date": "2026-10-26",
-    "created_at": "2026-10-26T07:52:58-04:00",
+    "forecast_id": "2026-10-27|MPHI v2.0-hydrologic-alpha",
+    "forecast_date": "2026-10-27",
+    "created_at": "2026-10-27T07:51:35-04:00",
     "model_version": "MPHI v2.0-hydrologic-alpha",
     "model_status": "experimental",
-    "observed_level_at_issue": 16.65,
+    "observed_level_at_issue": 16.59,
     "base_model": "MPHI v1.1-shadow",
     "method": "multivariate analogs from daily basin trends blended with the current MPHI baseline",
     "uses_future_information": false,
-    "station_count": 4,
+    "station_count": 5,
     "stations": {
       "14330000": {
         "name": "Curicuriari",
         "river": "Rio Negro",
         "role": "alto curso",
-        "latest_timestamp": "2026-10-26T07:45",
-        "daily_records": 156,
-        "trend_7d_cm_per_day": -9.57,
+        "latest_timestamp": "2026-10-27T08:45",
+        "daily_records": 157,
+        "trend_7d_cm_per_day": -10.64,
         "lead_lag": {
           "status": "usable",
           "best_lag_days": 19,
           "correlation": 0.498,
-          "sample_n": 136
+          "sample_n": 137
         }
       },
       "14420000": {
         "name": "Serrinha",
         "river": "Rio Negro",
         "role": "médio curso",
-        "latest_timestamp": "2026-10-26T07:30",
-        "daily_records": 156,
-        "trend_7d_cm_per_day": -2.57,
+        "latest_timestamp": "2026-10-27T08:30",
+        "daily_records": 157,
+        "trend_7d_cm_per_day": -4.0,
         "lead_lag": {
           "status": "usable",
           "best_lag_days": 15,
           "correlation": 0.58,
-          "sample_n": 140
+          "sample_n": 141
         }
       },
       "14480002": {
         "name": "Barcelos",
         "river": "Rio Negro",
         "role": "médio curso",
-        "latest_timestamp": "2026-10-26T08:00",
-        "daily_records": 144,
-        "trend_7d_cm_per_day": 0.29,
+        "latest_timestamp": "2026-10-27T08:00",
+        "daily_records": 145,
+        "trend_7d_cm_per_day": 0.14,
         "lead_lag": {
           "status": "usable",
           "best_lag_days": 20,
           "correlation": 0.773,
-          "sample_n": 122
+          "sample_n": 123
         }
       },
       "14840000": {
         "name": "Moura",
         "river": "Rio Negro",
         "role": "baixo curso",
-        "latest_timestamp": "2026-10-26T08:00",
-        "daily_records": 156,
+        "latest_timestamp": "2026-10-27T08:00",
+        "daily_records": 157,
         "trend_7d_cm_per_day": -1.29,
         "lead_lag": {
           "status": "usable",
           "best_lag_days": 7,
           "correlation": 0.904,
-          "sample_n": 145
+          "sample_n": 146
+        }
+      },
+      "14100000": {
+        "name": "Manacapuru",
+        "river": "Rio Solimões-Amazonas",
+        "role": "remanso",
+        "latest_timestamp": "2026-10-27T08:15",
+        "daily_records": 157,
+        "trend_7d_cm_per_day": -8.14,
+        "lead_lag": {
+          "status": "usable",
+          "best_lag_days": 2,
+          "correlation": 0.97,
+          "sample_n": 146
         }
       }
     },
     "projections": {
       "7": {
-        "target_date": "2026-11-02",
-        "central": 16.08,
-        "soft": 16.08,
-        "stress": 16.02,
+        "target_date": "2026-11-03",
+        "central": 16.04,
+        "soft": 16.04,
+        "stress": 15.99,
         "interval80": {
-          "low": 16.02,
-          "high": 16.08,
+          "low": 15.99,
+          "high": 16.04,
           "status": "experimental"
         },
-        "training_n": 113,
+        "training_n": 114,
         "neighbors_n": 11,
         "neighbor_dates": [
           "2026-10-13",
-          "2026-10-14",
           "2026-10-12",
           "2026-07-19",
-          "2026-07-17",
-          "2026-07-18",
-          "2026-07-16",
           "2026-10-15",
+          "2026-07-17",
+          "2026-10-11",
+          "2026-07-16",
+          "2026-07-18",
+          "2026-10-14",
           "2026-07-15",
-          "2026-07-14",
-          "2026-07-13"
+          "2026-07-14"
         ],
         "basin_weight": 0.35
       },
       "15": {
-        "target_date": "2026-11-10",
-        "central": 15.35,
-        "soft": 15.35,
-        "stress": 15.19,
+        "target_date": "2026-11-11",
+        "central": 15.29,
+        "soft": 15.29,
+        "stress": 15.16,
         "interval80": {
-          "low": 15.19,
-          "high": 15.35,
+          "low": 15.16,
+          "high": 15.29,
           "status": "experimental"
         },
-        "training_n": 105,
+        "training_n": 106,
         "neighbors_n": 10,
         "neighbor_dates": [
+          "2026-10-12",
           "2026-07-19",
           "2026-07-17",
-          "2026-07-18",
           "2026-07-16",
+          "2026-07-18",
+          "2026-10-11",
           "2026-07-15",
           "2026-07-14",
           "2026-07-13",
-          "2026-07-12",
-          "2026-07-11",
-          "2026-10-11"
+          "2026-07-11"
         ],
         "basin_weight": 0.35
       },
       "30": {
-        "target_date": "2026-11-25",
+        "target_date": "2026-11-26",
         "central": 14.11,
         "soft": 14.11,
-        "stress": 13.81,
+        "stress": 13.84,
         "interval80": {
-          "low": 13.81,
+          "low": 13.84,
           "high": 14.11,
           "status": "experimental"
         },
-        "training_n": 90,
-        "neighbors_n": 9,
+        "training_n": 91,
+        "neighbors_n": 10,
         "neighbor_dates": [
+          "2026-07-16",
+          "2026-07-17",
           "2026-07-19",
           "2026-07-18",
-          "2026-07-17",
-          "2026-07-16",
           "2026-07-15",
+          "2026-07-11",
+          "2026-07-10",
           "2026-07-14",
-          "2026-07-13",
           "2026-07-12",
-          "2026-07-11"
+          "2026-07-13"
         ],
         "basin_weight": 0.35
       }
     }
   },
-  "forecast_count": 25,
+  "forecast_count": 26,
   "validation": {
-    "forecast_count": 25,
-    "matured_records": 45,
-    "next_due": "2026-10-27",
+    "forecast_count": 26,
+    "matured_records": 46,
+    "next_due": "2026-10-28",
     "pending": {
       "7": 4,
-      "15": 8,
-      "30": 18
+      "15": 9,
+      "30": 19
     },
     "by_horizon": {
       "7": {
-        "n": 21,
-        "mae_m": 0.291,
-        "bias_m": 0.23,
-        "interval_coverage_pct": 23.8
+        "n": 22,
+        "mae_m": 0.278,
+        "bias_m": 0.219,
+        "interval_coverage_pct": 27.3
       },
       "15": {
         "n": 17,
@@ -676,6 +691,17 @@
         "observed_m": 16.65,
         "signed_error_m": -0.07,
         "absolute_error_m": 0.07,
+        "inside_interval": true
+      },
+      {
+        "forecast_id": "2026-10-20|MPHI v2.0-hydrologic-alpha",
+        "forecast_date": "2026-10-20",
+        "target_date": "2026-10-27",
+        "horizon_days": 7,
+        "forecast_central_m": 16.6,
+        "observed_m": 16.59,
+        "signed_error_m": -0.01,
+        "absolute_error_m": 0.01,
         "inside_interval": true
       }
     ]
