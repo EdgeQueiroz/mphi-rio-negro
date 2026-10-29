@@ -26,7 +26,7 @@ jobs:
           def pct(v, p):
               v=sorted(v);k=(len(v)-1)*p;lo=math.floor(k);hi=math.ceil(k)
               return v[lo]*(hi-k)+v[hi]*(k-lo) if lo!=hi else v[lo]
-          for start,end in [(1903,2014),(1903,2025),(1950,2025),(1981,2025),(1991,2020),(2000,2025)]:
+          for start,end in [(1902,2023),(1902,2024),(1902,2025),(1903,2024),(1903,2025)]:
               print('PERIOD:',start,end)
               for month in (8,9,10,11,12):
                   xs = [float(r['level'])/100 for r in data
