@@ -58,12 +58,18 @@ class SyncContracts(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             sync.sync_month(d, [{'date': '2026-09-04', 'level': 30}], NOW)
 
-    def run_isolated(self, rows=None, error=None, without_current_shadow=False):
+    def run_isolated(self, rows=None, error=None, without_current_shadow=False, extra_test_seasonal=None):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)
             paths = {name: folder / name for name in ('latest.json', 'forecast_ledger.json', 'validation.json', 'status.json')}
             for name in ('latest.json', 'forecast_ledger.json', 'validation.json'):
                 paths[name].write_bytes((core.DATA.parent / name).read_bytes())
+            # Referencias sinteticas APENAS no arquivo temporario do teste.
+            # Nunca adiciona quartis ficticios ao modelo operacional.
+            if extra_test_seasonal:
+                fixture = json.loads(paths['latest.json'].read_text(encoding='utf-8'))
+                fixture['seasonal'].update(extra_test_seasonal)
+                paths['latest.json'].write_text(json.dumps(fixture, ensure_ascii=False, indent=2), encoding='utf-8')
             if without_current_shadow:
                 ledger = json.loads(paths['forecast_ledger.json'].read_text())
                 shadow_id = f"{SEED['current']['date']}|{core.SHADOW_VERSION}"
@@ -118,7 +124,14 @@ class SyncContracts(unittest.TestCase):
         for days, drop, delta in [(1, .15, -15), (2, .30, -15), (3, .46, -16), (4, .63, -17)]:
             rows.append({'date': core.add_days(start, days), 'level': round(level-drop, 2),
                          'delta_cm': delta, 'source': 'Porto de Manaus'})
-        before, after = self.run_isolated(rows)
+        # O backfill pode cruzar o mes conforme a data real do repositorio.
+        # Somente o teste usa quartis sinteticos para exercitar essa logica.
+        crossed = {core.add_days(start, day)[5:7] for day in (1, 2, 3, 4)}
+        unknown = crossed - set(SEED['seasonal'])
+        fixture_seasonal = {
+            month: {'q1': 14.0, 'median': 18.0} for month in unknown
+        }
+        before, after = self.run_isolated(rows, extra_test_seasonal=fixture_seasonal)
         result = json.loads(after['latest.json'])
         change = result['meta']['change_since_previous_publication']
         self.assertEqual(change['change_cm'], -63)
