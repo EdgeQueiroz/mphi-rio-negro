@@ -188,6 +188,21 @@ class SyncContracts(unittest.TestCase):
         self.assertEqual(core.seasonal_score(d, '2026-10-01', 18.00, required=True), 1)
         self.assertEqual(core.seasonal_score(d, '2026-10-01', 17.00, required=True), 2)
 
+    def test_complete_seasonal_reference_calendar(self):
+        d = copy.deepcopy(SEED)
+        self.assertEqual(set(d['seasonal']), {f'{month:02d}' for month in range(1, 13)})
+        for month in range(1, 13):
+            q = d['seasonal'][f'{month:02d}']
+            self.assertLess(q['q1'], q['median'])
+            self.assertGreater(q['q1'], 0)
+        # Novembro previamente ausente: os dados agora sao auditaveis.
+        self.assertEqual(d['seasonal']['11'], {'q1': 17.36, 'median': 18.41})
+        self.assertEqual(core.seasonal_score(d, '2026-11-01', 18.50, required=True), 0)
+        self.assertEqual(core.seasonal_score(d, '2026-11-01', 18.00, required=True), 1)
+        self.assertEqual(core.seasonal_score(d, '2026-11-01', 16.50, required=True), 2)
+        # Proximo mes tambem tem referencias e nao depende da data do teste.
+        self.assertEqual(d['seasonal']['12'], {'q1': 18.64, 'median': 19.79})
+
     def test_missing_current_seasonal_reference_fails_closed(self):
         d = copy.deepcopy(SEED)
         d['seasonal'].pop(d['current']['date'][5:7], None)
