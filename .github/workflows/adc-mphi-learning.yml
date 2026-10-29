@@ -1,0 +1,39 @@
+name: ADC MPHI - Relatorio experimental diario (somente leitura)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 15:30 America/Manaus; apos a janela de vigilia do Porto no MPHI.
+    - cron: '30 19 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adc-mphi-readonly-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout do MPHI sem escrita
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Testar adaptador
+        run: python -m unittest discover -s tests -p 'test_adc_mphi.py' -v
+      - name: Gerar relatorio isolado (sem alterar docs/data)
+        run: python -m experimental.adc_mphi.runner --repo-root . --output-dir adc_mphi_report
+      - name: Publicar relatorio como artefato da execucao
+        uses: actions/upload-artifact@v4
+        with:
+          name: adc-mphi-report-${{ github.run_id }}
+          path: adc_mphi_report/
+          if-no-files-found: error
+          retention-days: 90
