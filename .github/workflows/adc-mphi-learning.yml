@@ -2,6 +2,11 @@ name: ADC MPHI - Relatorio experimental diario (somente leitura)
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'experimental/adc_mphi/**'
+      - 'tests/test_adc_mphi.py'
+      - '.github/workflows/adc-mphi-learning.yml'
   schedule:
     # 15:30 America/Manaus; apos a janela de vigilia do Porto no MPHI.
     - cron: '30 19 * * *'
