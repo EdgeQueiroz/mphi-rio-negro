@@ -1,0 +1,38 @@
+name: Auditoria temporaria da referencia sazonal Manaus 14990000
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/mphi-seasonal-audit.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Calcular quartis de fonte publica ANA com proveniencia
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, io, urllib.request, hashlib, statistics, math
+          source = 'https://raw.githubusercontent.com/Data4ThePeople/RiverLevels-public/main/data/processed/amazon-manaus.csv'
+          raw = urllib.request.urlopen(source, timeout=35).read()
+          print('SOURCE:', source)
+          print('SOURCE_SHA256:', hashlib.sha256(raw).hexdigest())
+          data = list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig'))))
+          print('HEADERS:', list(data[0]) if data else None, 'N:',len(data))
+          print('SAMPLE:',data[:2])
+          def pct(v, p):
+              v=sorted(v);k=(len(v)-1)*p;lo=math.floor(k);hi=math.ceil(k)
+              return v[lo]*(hi-k)+v[hi]*(k-lo) if lo!=hi else v[lo]
+          for start,end in [(1903,2014),(1903,2025),(1950,2025),(1981,2025),(1991,2020),(2000,2025)]:
+              print('PERIOD:',start,end)
+              for month in (8,9,10,11,12):
+                  xs = [float(r['level'])/100 for r in data
+                        if start<=int(r['date'][:4])<=end
+                        and int(r['date'][5:7])==month]
+                  if not xs: print(month,'NO_DATA');continue
+                  print('MONTH',month,'N',len(xs),'Q1',round(pct(xs,.25),3),'MEDIAN',round(pct(xs,.5),3),
+                        'MEAN',round(statistics.mean(xs),3))
+          PY
