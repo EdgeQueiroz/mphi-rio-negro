@@ -7689,6 +7689,37 @@
         "collected_at": "2026-10-31T17:47:01+00:00"
       },
       "snapshot_id": "c65e5f52c7e411d159fcfc99d0ce50e13fbb2ade15d657f53398b86cb26829d1"
+    },
+    {
+      "timestamp": "2026-10-31T18:45:15+00:00",
+      "source": "NOAA Aviation Weather Center · METAR",
+      "location": {
+        "name": "Manaus",
+        "state": "AM",
+        "country": "BR",
+        "timezone": "America/Manaus",
+        "station_id": "SBEG",
+        "station_name": "Eduardo Gomes",
+        "latitude": -3.039,
+        "longitude": -60.05
+      },
+      "current": {
+        "data_type": "station_observation",
+        "observed_at": "2026-10-31T18:03:00+00:00",
+        "temperature_c": 27.0,
+        "dewpoint_c": 26.0,
+        "feels_like_c": null,
+        "humidity_pct": 94,
+        "humidity_method": "Magnus, a partir do ponto de orvalho",
+        "condition": "Trovoadas",
+        "wind_kmh": 14.8,
+        "wind_direction": "O",
+        "pressure_hpa": 1009.0,
+        "precipitation_accumulated_mm": null,
+        "raw_metar": "SPECI SBEG 311803Z 25008KT 9999 3000W -TSRA SCT020 FEW025CB SCT070 27/26 Q1009 RESHRA",
+        "collected_at": "2026-10-31T18:45:15+00:00"
+      },
+      "snapshot_id": "0745e2a556fde1353dd0075d35cdbb45e9e3c78ec7d4b65b5ce22a750ae04838"
     }
   ]
 }
