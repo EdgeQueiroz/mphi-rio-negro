@@ -6553,6 +6553,90 @@
         "issue_time_note": "Emissão do modelo pelo MET Norway; agregações diárias calculadas pelo MPHI."
       },
       "snapshot_id": "ccb61fd75e8bcd43d50c049e4756aca339c07e6c0b89592116c6bd56c2c14ca9"
+    },
+    {
+      "timestamp": "2026-10-31T00:53:04+00:00",
+      "source": "MET Norway · Locationforecast",
+      "location": {
+        "name": "Manaus",
+        "state": "AM",
+        "country": "BR",
+        "timezone": "America/Manaus",
+        "latitude": -3.119,
+        "longitude": -60.0217
+      },
+      "current": {
+        "data_type": "model_forecast",
+        "collected_at": "2026-10-31T00:53:04+00:00",
+        "valid_at": "2026-10-31T00:00:00+00:00",
+        "observed_at": null,
+        "source_time": "2026-10-31T00:00:00+00:00",
+        "temperature_c": 28.4,
+        "feels_like_c": null,
+        "condition": "Parcialmente nublado",
+        "icon": "partlycloudy_night",
+        "humidity_pct": 83.6,
+        "wind_kmh": 4.3,
+        "wind_direction": "L",
+        "pressure_hpa": 1008.1,
+        "precipitation_accumulated_mm": null,
+        "precipitation_accumulation_period": null,
+        "accumulation_note": "Produto de previsão; não contém chuva observada."
+      },
+      "forecast": {
+        "data_type": "model_forecast",
+        "collected_at": "2026-10-31T00:53:04+00:00",
+        "issued_at": "2026-10-30T23:17:58+00:00",
+        "days": [
+          {
+            "date": "2026-10-30",
+            "min_c": 27.5,
+            "max_c": 28.4,
+            "precipitation_mm": 0.0,
+            "rain_probability_pct": null,
+            "condition": "Parcialmente nublado",
+            "precipitation_note": "Total estimado desde a coleta"
+          },
+          {
+            "date": "2026-10-31",
+            "min_c": 24.8,
+            "max_c": 30.3,
+            "precipitation_mm": 6.2,
+            "rain_probability_pct": null,
+            "condition": "Parcialmente nublado",
+            "precipitation_note": "Total modelado; períodos de seis horas repartidos no limite do dia"
+          },
+          {
+            "date": "2026-11-01",
+            "min_c": 26.7,
+            "max_c": 33.0,
+            "precipitation_mm": 0.2,
+            "rain_probability_pct": null,
+            "condition": "Poucas nuvens",
+            "precipitation_note": "Total modelado; períodos de seis horas repartidos no limite do dia"
+          },
+          {
+            "date": "2026-11-02",
+            "min_c": 26.8,
+            "max_c": 32.9,
+            "precipitation_mm": 2.0,
+            "rain_probability_pct": null,
+            "condition": "Parcialmente nublado",
+            "precipitation_note": "Total modelado; períodos de seis horas repartidos no limite do dia"
+          },
+          {
+            "date": "2026-11-03",
+            "min_c": 27.7,
+            "max_c": 29.7,
+            "precipitation_mm": 3.8,
+            "rain_probability_pct": null,
+            "condition": "Poucas nuvens",
+            "precipitation_note": "Total modelado; períodos de seis horas repartidos no limite do dia"
+          }
+        ],
+        "issue_time_note": "Emissão do modelo pelo MET Norway; agregações diárias calculadas pelo MPHI."
+      },
+      "snapshot_id": "17f26acd404881841142463d70bab4de002df5f503b91436e1b478a2fd117132"
     }
   ]
 }
