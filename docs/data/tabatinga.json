@@ -10,8 +10,8 @@
     "url": "https://telemetriaws1.ana.gov.br/serviceana.asmx/DadosHidrometeorologicos",
     "service": "legado"
   },
-  "source_status": "unavailable",
-  "checked_at": "2026-11-04T17:23:09-04:00",
+  "source_status": "received",
+  "checked_at": "2026-11-04T17:28:19-04:00",
   "latest": {
     "date": "2026-11-04",
     "level_m": 3.17,
@@ -98,5 +98,5 @@
       "samples": 1
     }
   ],
-  "error": "TimeoutError"
+  "error": null
 }
