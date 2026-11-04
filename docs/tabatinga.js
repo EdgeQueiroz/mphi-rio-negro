@@ -49,7 +49,7 @@
     set('tabatingaLevel', hasLatest ? levelFormat.format(latest.level_m) : '—');
     set('tabatingaDate', hasLatest ? formatDay(latest.date) : '—');
     set('tabatingaSamples', hasLatest && Number.isInteger(latest.samples) && latest.samples > 0
-      ? `${latest.samples} leituras disponíveis` : 'Aguardando leituras');
+      ? `${latest.samples} ${latest.samples === 1 ? 'leitura disponível' : 'leituras disponíveis'}` : 'Aguardando leituras');
     set('tabatingaChange3', showChange(data.changes_cm?.['3d']));
     set('tabatingaChange7', showChange(data.changes_cm?.['7d']));
     const status = byId('tabatingaStatus');
