@@ -133,8 +133,17 @@ def fetch_observations(today):
     query = urlencode({"codEstacao": STATION_CODE, "dataInicio": start.strftime("%d/%m/%Y"),
                        "dataFim": today.strftime("%d/%m/%Y")})
     request = Request(SOURCE_URL + "?" + query, headers={"User-Agent": "MPHI-Uiara/Tabatinga-observacao"})
-    with urlopen(request, timeout=30) as response:
-        raw = response.read(MAX_RESPONSE_BYTES + 1)
+    for attempt in range(3):
+        try:
+            with urlopen(request, timeout=20) as response:
+                raw = response.read(MAX_RESPONSE_BYTES + 1)
+            break
+        except (OSError, TimeoutError) as error:
+            if isinstance(error, HTTPError) and error.code not in (429, 500, 502, 503, 504):
+                raise
+            if attempt == 2:
+                raise
+            time.sleep(2 ** attempt)
     if len(raw) > MAX_RESPONSE_BYTES:
         raise ValueError("Resposta da fonte excede o limite de segurança")
     return parse_observations(raw, today)

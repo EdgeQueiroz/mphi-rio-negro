@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import collect_tabatinga as tab
@@ -100,6 +100,23 @@ class TabatingaContracts(unittest.TestCase):
             with self.assertRaises(ValueError):
                 tab.read_snapshot(output)
             self.assertEqual(output.read_text(encoding="utf-8"), '{"schema": "unknown"}')
+
+    def test_transient_timeout_is_retried_before_accepting_real_observations(self):
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = xml(row("2026-11-04", "-234"))
+        with patch.object(tab, "urlopen", side_effect=[TimeoutError(), response]) as request, \
+             patch.object(tab.time, "sleep") as wait:
+            rows = tab.fetch_observations(NOW.date())
+        self.assertEqual(rows[0]["level_m"], -2.34)
+        self.assertEqual(request.call_count, 2)
+        wait.assert_called_once_with(1)
+
+    def test_persistent_timeout_stops_after_three_attempts(self):
+        with patch.object(tab, "urlopen", side_effect=TimeoutError()) as request, \
+             patch.object(tab.time, "sleep"):
+            with self.assertRaises(TimeoutError):
+                tab.fetch_observations(NOW.date())
+        self.assertEqual(request.call_count, 3)
 
 
 if __name__ == "__main__":
