@@ -1,15 +1,102 @@
 {
   "schema": "mphi-tabatinga-observation-v1",
-  "station": {"code": "10100000", "name": "Tabatinga", "river": "Rio Solimões"},
+  "station": {
+    "code": "10100000",
+    "name": "Tabatinga",
+    "river": "Rio Solimões"
+  },
   "source": {
     "name": "ANA/SGB - telemetria",
     "url": "https://telemetriaws1.ana.gov.br/serviceana.asmx/DadosHidrometeorologicos",
     "service": "legado"
   },
-  "source_status": "awaiting_first_reading",
-  "checked_at": null,
-  "latest": null,
-  "changes_cm": {"3d": null, "7d": null},
-  "daily": [],
+  "source_status": "received",
+  "checked_at": "2026-11-04T17:20:34-04:00",
+  "latest": {
+    "date": "2026-11-04",
+    "level_m": 3.17,
+    "samples": 1
+  },
+  "changes_cm": {
+    "3d": 5.5,
+    "7d": 35.5
+  },
+  "daily": [
+    {
+      "date": "2026-10-21",
+      "level_m": 1.89,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-22",
+      "level_m": 2.015,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-23",
+      "level_m": 2.07,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-24",
+      "level_m": 2.225,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-25",
+      "level_m": 2.49,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-26",
+      "level_m": 2.655,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-27",
+      "level_m": 2.76,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-28",
+      "level_m": 2.815,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-29",
+      "level_m": 2.84,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-30",
+      "level_m": 2.885,
+      "samples": 2
+    },
+    {
+      "date": "2026-10-31",
+      "level_m": 3.01,
+      "samples": 2
+    },
+    {
+      "date": "2026-11-01",
+      "level_m": 3.115,
+      "samples": 2
+    },
+    {
+      "date": "2026-11-02",
+      "level_m": 3.175,
+      "samples": 2
+    },
+    {
+      "date": "2026-11-03",
+      "level_m": 3.195,
+      "samples": 2
+    },
+    {
+      "date": "2026-11-04",
+      "level_m": 3.17,
+      "samples": 1
+    }
+  ],
   "error": null
 }
