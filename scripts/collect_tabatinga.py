@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs" / "data" / "tabatinga.json"
 SOURCE_URL = "https://telemetriaws1.ana.gov.br/serviceana.asmx/DadosHidrometeorologicos"
+FALLBACK_SOURCE_URL = "https://www.ana.gov.br/telemetria1ws/ServiceANA.asmx/DadosHidrometeorologicos"
 PAGE_URL = "https://edgequeiroz.github.io/mphi-rio-negro/data/tabatinga.json"
 SCHEMA = "mphi-tabatinga-observation-v1"
 STATION_CODE = "10100000"
@@ -90,7 +91,7 @@ def aggregate(observations):
     return daily
 
 
-def build_success(previous, observations, now):
+def build_success(previous, observations, now, source_url=SOURCE_URL):
     daily = aggregate(observations)
     latest = daily[-1]
     previous_latest = previous.get("latest") or {}
@@ -104,6 +105,7 @@ def build_success(previous, observations, now):
         changes[f"{days}d"] = (round((latest["level_m"] - by_date[reference]) * 100, 1)
                                 if reference in by_date else None)
     result = empty_snapshot()
+    result["source"]["url"] = source_url
     result.update({
         "source_status": ("received" if (now.date() - latest_date).days <= MAX_OBSERVATION_AGE_DAYS
                           else "stale"),
@@ -132,21 +134,25 @@ def fetch_observations(today):
     start = today - timedelta(days=14)
     query = urlencode({"codEstacao": STATION_CODE, "dataInicio": start.strftime("%d/%m/%Y"),
                        "dataFim": today.strftime("%d/%m/%Y")})
-    request = Request(SOURCE_URL + "?" + query, headers={"User-Agent": "MPHI-Uiara/Tabatinga-observacao"})
-    for attempt in range(3):
-        try:
-            with urlopen(request, timeout=20) as response:
-                raw = response.read(MAX_RESPONSE_BYTES + 1)
-            break
-        except (OSError, TimeoutError) as error:
-            if isinstance(error, HTTPError) and error.code not in (429, 500, 502, 503, 504):
-                raise
-            if attempt == 2:
-                raise
-            time.sleep(2 ** attempt)
-    if len(raw) > MAX_RESPONSE_BYTES:
-        raise ValueError("Resposta da fonte excede o limite de segurança")
-    return parse_observations(raw, today)
+    last_error = None
+    for source_url in (SOURCE_URL, FALLBACK_SOURCE_URL):
+        request = Request(source_url + "?" + query,
+                          headers={"User-Agent": "MPHI-Uiara/Tabatinga-observacao"})
+        for attempt in range(2):
+            try:
+                with urlopen(request, timeout=15) as response:
+                    raw = response.read(MAX_RESPONSE_BYTES + 1)
+                if len(raw) > MAX_RESPONSE_BYTES:
+                    raise ValueError("Resposta da fonte excede o limite de segurança")
+                return parse_observations(raw, today), source_url
+            except (OSError, ValueError, ET.ParseError) as error:
+                last_error = error
+                print(f"Tabatinga: falha na consulta a {source_url}: {type(error).__name__}")
+                if isinstance(error, HTTPError) and error.code not in (429, 500, 502, 503, 504):
+                    break
+                if attempt == 0:
+                    time.sleep(1)
+    raise last_error
 
 
 def write_snapshot(path, data):
@@ -198,7 +204,8 @@ def main():
     previous = read_snapshot(args.output)
     now = datetime.now(TZ)
     try:
-        result = build_success(previous, fetch_observations(now.date()), now)
+        observations, source_url = fetch_observations(now.date())
+        result = build_success(previous, observations, now, source_url)
     except (OSError, ValueError, ET.ParseError) as error:
         result = build_failure(previous, now, error)
     write_snapshot(args.output, result)

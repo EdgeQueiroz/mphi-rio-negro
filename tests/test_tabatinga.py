@@ -106,17 +106,28 @@ class TabatingaContracts(unittest.TestCase):
         response.__enter__.return_value.read.return_value = xml(row("2026-11-04", "-234"))
         with patch.object(tab, "urlopen", side_effect=[TimeoutError(), response]) as request, \
              patch.object(tab.time, "sleep") as wait:
-            rows = tab.fetch_observations(NOW.date())
+            rows, used = tab.fetch_observations(NOW.date())
         self.assertEqual(rows[0]["level_m"], -2.34)
+        self.assertEqual(used, tab.SOURCE_URL)
         self.assertEqual(request.call_count, 2)
         wait.assert_called_once_with(1)
 
-    def test_persistent_timeout_stops_after_three_attempts(self):
+    def test_official_fallback_records_actual_source(self):
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = xml(row("2026-11-04", "317"))
+        with patch.object(tab, "urlopen", side_effect=[TimeoutError(), TimeoutError(), response]), \
+             patch.object(tab.time, "sleep"):
+            rows, used = tab.fetch_observations(NOW.date())
+        result = tab.build_success(tab.empty_snapshot(), rows, NOW, used)
+        self.assertEqual(result["source"]["url"], tab.FALLBACK_SOURCE_URL)
+        self.assertEqual(result["latest"]["level_m"], 3.17)
+
+    def test_persistent_timeout_stops_after_four_attempts_across_both_endpoints(self):
         with patch.object(tab, "urlopen", side_effect=TimeoutError()) as request, \
              patch.object(tab.time, "sleep"):
             with self.assertRaises(TimeoutError):
                 tab.fetch_observations(NOW.date())
-        self.assertEqual(request.call_count, 3)
+        self.assertEqual(request.call_count, 4)
 
 
 if __name__ == "__main__":
