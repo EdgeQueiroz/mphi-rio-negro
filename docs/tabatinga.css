@@ -1,0 +1,14 @@
+.tabatinga-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:24px 0 18px}
+.tabatinga-grid>div{border-left:1px solid var(--line);padding-left:18px;min-width:0}
+.tabatinga-grid>div:first-child{border-left:0;padding-left:0}
+.tabatinga-grid span,.tabatinga-grid small{display:block;color:var(--muted);font-size:11px;line-height:1.5}
+.tabatinga-grid strong{display:block;font-size:26px;font-weight:500;letter-spacing:-.03em;margin:5px 0;font-variant-numeric:tabular-nums}
+.tabatinga-status{font-size:12px;color:var(--river);margin:0}
+.tabatinga-status[data-state="warning"]{color:var(--amber)}
+.tabatinga-panel>a{display:inline-block;margin-top:14px}
+@media(max-width:700px){
+  .tabatinga-grid{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:22px}
+  .tabatinga-grid>div:nth-child(3){border-left:0;padding-left:0}
+  .tabatinga-grid strong{font-size:22px}
+  .tabatinga-panel .panel-head{flex-wrap:wrap}
+}

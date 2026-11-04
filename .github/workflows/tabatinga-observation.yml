@@ -1,0 +1,112 @@
+name: MPHI - observação experimental de Tabatinga
+
+on:
+  push:
+    branches: ["fileOrganizer"]
+    paths:
+      - "scripts/collect_tabatinga.py"
+      - "tests/test_tabatinga.py"
+      - "tests/test_tabatinga_frontend.cjs"
+      - "docs/tabatinga.js"
+      - "docs/tabatinga.css"
+      - "docs/index.html"
+      - ".github/workflows/tabatinga-observation.yml"
+  pull_request:
+    paths:
+      - "scripts/collect_tabatinga.py"
+      - "tests/test_tabatinga.py"
+      - "tests/test_tabatinga_frontend.cjs"
+      - "docs/tabatinga.js"
+      - "docs/tabatinga.css"
+      - "docs/index.html"
+      - ".github/workflows/tabatinga-observation.yml"
+  schedule:
+    # 09:23 em Manaus; agendamentos do GitHub podem atrasar.
+    - cron: "23 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Usa o mesmo grupo da publicação principal e meteorológica.
+concurrency:
+  group: "mphi-sync-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependências dos testes existentes
+        run: python -m pip install -r requirements.txt
+      - name: Testar coleta, modelos e preservação dos dados
+        run: python -m unittest discover -s tests -v
+      - name: Testar estados do painel
+        run: node --test tests/test_tabatinga_frontend.cjs tests_weather/test_frontend.cjs
+      - name: Verificar coleta real, sem alterar o repositório
+        if: github.event_name == 'pull_request'
+        run: python scripts/collect_tabatinga.py --probe --output "$RUNNER_TEMP/tabatinga-probe.json"
+
+  collect-and-publish:
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/fileOrganizer'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fileOrganizer
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependências de verificação do Pages
+        run: python -m pip install -r requirements.txt
+      - name: Consultar Tabatinga sem alterar os modelos
+        run: python scripts/collect_tabatinga.py
+      - name: Registrar apenas o arquivo observacional
+        run: |
+          git config user.name 'MPHI Bot'
+          git config user.email 'mphi-bot@users.noreply.github.com'
+          git add docs/data/tabatinga.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Atualiza observação experimental de Tabatinga'
+            git push origin HEAD:fileOrganizer
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+          name: tabatinga-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Publicar painel
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: tabatinga-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Verificar modelos e registros publicados
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: python scripts/pages_publication.py verify
+      - name: Verificar observação pública de Tabatinga
+        run: python scripts/collect_tabatinga.py --verify-publication
+      - name: Sinalizar fonte desatualizada ou indisponível
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("docs/data/tabatinga.json").read_text(encoding="utf-8"))
+          if data["source_status"] != "received":
+              raise SystemExit("Tabatinga: estado publicado, mas fonte sem leitura recente: " + data["source_status"])
+          print("Tabatinga: coleta recente confirmada.")
+          PY
