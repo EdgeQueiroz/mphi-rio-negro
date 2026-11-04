@@ -37,7 +37,10 @@ class TabatingaContracts(unittest.TestCase):
                                           row("2026-11-05", "200"),
                                           row("2026-11-04", "300", station="14100000"),
                                           row("2026-11-04", "-99999", hour="09:00:00"),
-                                          row("2026-11-04", "NaN", hour="10:00:00")), NOW.date())
+                                          row("2026-11-04", "NaN", hour="10:00:00"),
+                                          row("2026-11-04", "-999,1", hour="11:00:00"),
+                                          row("2026-11-04", "-999,2", hour="12:00:00"),
+                                          row("2026-11-04", "-999,3", hour="13:00:00")), NOW.date())
         self.assertEqual(rows, [{"date": "2026-11-04", "level_m": 1.23}])
 
     def test_no_matching_data_and_conflicting_timestamps_are_rejected(self):
@@ -78,6 +81,13 @@ class TabatingaContracts(unittest.TestCase):
         self.assertEqual(failed["daily"], previous["daily"])
         self.assertEqual(failed["source_status"], "unavailable")
         self.assertEqual(failed["error"], "TimeoutError")
+
+    def test_invalid_source_data_are_distinguished_from_a_connection_failure(self):
+        previous = tab.build_success(tab.empty_snapshot(),
+                                     [{"date": "2026-11-04", "level_m": -1.25}], NOW)
+        failed = tab.build_failure(previous, NOW, ValueError("sem dados válidos"))
+        self.assertEqual(failed["source_status"], "invalid")
+        self.assertEqual(failed["latest"], previous["latest"])
 
     def test_collection_failure_writes_only_the_requested_snapshot(self):
         with tempfile.TemporaryDirectory() as directory:

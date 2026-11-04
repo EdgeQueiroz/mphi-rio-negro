@@ -50,6 +50,13 @@ test('displays preserved observation but warns about an unavailable source', asy
   assert.equal(el.tabatingaStatus.dataset.state, 'warning');
 });
 
+test('identifies inconsistent source data while preserving the last reading', async () => {
+  const el = await show(snapshot({source_status: 'invalid', latest: {date: dayInManaus(), level_m: -1.2, samples: 1}}));
+  assert.equal(el.tabatingaLevel.textContent, '-1,20');
+  assert.equal(el.tabatingaSamples.textContent, '1 leitura disponível');
+  assert.match(el.tabatingaStatus.textContent, /dados inconsistentes.*preservada/);
+});
+
 test('detects stale observations even if the stored source state says received', async () => {
   const el = await show(snapshot({latest: {date: dayInManaus(8), level_m: 1.2, samples: 2}}));
   assert.match(el.tabatingaStatus.textContent, /medição desatualizada/);
