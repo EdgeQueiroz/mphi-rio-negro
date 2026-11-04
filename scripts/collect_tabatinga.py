@@ -64,10 +64,13 @@ def parse_observations(raw, today):
             continue
         try:
             when = datetime.fromisoformat(values["DataHora"].replace("Z", "+00:00"))
-            level_m = float(values["Nivel"].replace(",", ".")) / 100
+            raw_level_cm = float(values["Nivel"].replace(",", "."))
+            level_m = raw_level_cm / 100
         except (KeyError, TypeError, ValueError):
             continue
-        if when.date() > today or not math.isfinite(level_m) or not -10 <= level_m <= 40:
+        # ANA usa estes códigos para rio cortado, rio seco e ausência de régua.
+        if (raw_level_cm in (-999.1, -999.2, -999.3) or when.date() > today or
+                not math.isfinite(level_m) or not -10 <= level_m <= 40):
             continue
         key = when.isoformat()
         if key in observations and observations[key]["level_m"] != level_m:
@@ -125,7 +128,8 @@ def build_failure(previous, now, error):
         reason = f"URLError:{type(error.reason).__name__}"
     else:
         reason = type(error).__name__
-    result.update({"source_status": "unavailable", "checked_at": now.isoformat(timespec="seconds"),
+    state = "invalid" if isinstance(error, (ValueError, ET.ParseError)) else "unavailable"
+    result.update({"source_status": state, "checked_at": now.isoformat(timespec="seconds"),
                    "error": reason})
     return result
 

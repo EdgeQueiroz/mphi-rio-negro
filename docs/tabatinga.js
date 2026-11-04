@@ -64,6 +64,9 @@
     if (data.source_status === 'unavailable') {
       message = hasLatest ? 'Fonte indisponível na última consulta; última medição preservada.'
         : 'Fonte indisponível na última consulta; ainda não há medição válida.';
+    } else if (data.source_status === 'invalid') {
+      message = hasLatest ? 'A fonte retornou dados inconsistentes; última medição válida preservada.'
+        : 'A fonte não retornou uma medição válida.';
     } else if (!hasLatest) {
       message = 'Ainda não há medição válida disponível.';
     } else if (data.source_status === 'stale' || observationAge > 3 || observationAge < 0) {
