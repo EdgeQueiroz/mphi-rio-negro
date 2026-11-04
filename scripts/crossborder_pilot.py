@@ -171,6 +171,17 @@ def trend_for(track, today):
     return result
 
 
+def dedupe_conflicts(rows):
+    seen, result = set(), []
+    for conflict in rows:
+        fingerprint = (conflict["track"], conflict["date"],
+                       float(conflict["old_value"]), float(conflict["new_value"]))
+        if fingerprint not in seen:
+            seen.add(fingerprint)
+            result.append(conflict)
+    return result
+
+
 def write_json_atomic(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
@@ -206,7 +217,7 @@ def build(existing, ana_rows, peru_rows, today, checked_at, ana_error=None):
         },
         "stations_catalog": SOURCES,
         "tracks": tracks, "signals": states, "peru_tracks_total": len(peru_tracks),
-        "conflicts": (existing.get("conflicts", []) if existing else []) + conflicts,
+        "conflicts": dedupe_conflicts((existing.get("conflicts", []) if existing else []) + conflicts),
         "warning": "Nunca comparar cotas absolutas entre diferentes datums; apenas series homogêneas.",
     }
 
