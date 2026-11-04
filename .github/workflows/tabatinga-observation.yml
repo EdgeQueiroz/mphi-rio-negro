@@ -42,10 +42,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Testar coleta e preservação de dados
-        run: python -m unittest discover -s tests -p 'test_tabatinga.py' -v
+      - name: Instalar dependências dos testes existentes
+        run: python -m pip install -r requirements.txt
+      - name: Testar coleta, modelos e preservação dos dados
+        run: python -m unittest discover -s tests -v
       - name: Testar estados do painel
-        run: node --test tests/test_tabatinga_frontend.cjs
+        run: node --test tests/test_tabatinga_frontend.cjs tests_weather/test_frontend.cjs
       - name: Verificar coleta real, sem alterar o repositório
         if: github.event_name == 'pull_request'
         run: python scripts/collect_tabatinga.py --probe --output "$RUNNER_TEMP/tabatinga-probe.json"
