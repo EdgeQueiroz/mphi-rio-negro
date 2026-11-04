@@ -1,0 +1,15 @@
+{
+  "schema": "mphi-tabatinga-observation-v1",
+  "station": {"code": "10100000", "name": "Tabatinga", "river": "Rio Solimões"},
+  "source": {
+    "name": "ANA/SGB - telemetria",
+    "url": "https://telemetriaws1.ana.gov.br/serviceana.asmx/DadosHidrometeorologicos",
+    "service": "legado"
+  },
+  "source_status": "awaiting_first_reading",
+  "checked_at": null,
+  "latest": null,
+  "changes_cm": {"3d": null, "7d": null},
+  "daily": [],
+  "error": null
+}

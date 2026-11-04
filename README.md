@@ -69,7 +69,24 @@ Lead time, falsos alertas e alertas perdidos permanecem em coleta até existir c
 
 Porto de Manaus. O histórico de referência do projeto utiliza Manaus 14990000 — ANA/SGB.
 
+## Tabatinga — observação experimental
+
+A estação ANA/SGB 10100000, no Rio Solimões, é uma camada observacional independente.
+As cotas usam o zero da régua de Tabatinga e podem ser negativas. O painel apresenta
+a mediana das leituras disponíveis no dia, a quantidade de leituras e variações
+em 3 e 7 dias apenas quando existem medições nas datas exatas. A medição diária pode
+estar incompleta e cotas de réguas diferentes não devem ser comparadas diretamente.
+
+O workflow `.github/workflows/tabatinga-observation.yml` consulta o serviço público
+legado da ANA diariamente às 09:23 em Manaus, sujeito a atrasos ou interrupções.
+Se a fonte falhar, a última observação é preservada e a falha fica visível. A página
+também sinaliza observações com mais de três dias ou consultas com mais de 48 horas.
+O serviço é legado e sua continuidade não está garantida; a API atual da ANA exige
+cadastro. O arquivo `docs/data/tabatinga.json` é um retrato observacional, não um
+ledger de previsões, e não altera score, projeções ou históricos do MPHI.
+
 
 ## Meteorologia contextual — MET Norway e Climatempo
 
 Integração independente com [MET Norway Locationforecast](https://api.met.no/weatherapi/locationforecast/2.0/documentation), sem credencial, e com API oficial Climatempo Advisor quando o GitHub Secret `CLIMATEMPO_TOKEN` estiver configurado. O MET oferece previsão modelada para Manaus, **não observação de uma estação local**. O painel identifica modelo, fonte, horários e variáveis não fornecidas. Documentação, falhas, atribuição e testes em [documentation/METEOROLOGIA.md](documentation/METEOROLOGIA.md). Nenhuma fonte altera o MPHI v1.0.
+
