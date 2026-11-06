@@ -1,18 +1,20 @@
 {
   "schema": "mphi-basin-signals-v1",
-  "updated_at": "2026-11-04T08:00:56-04:00",
+  "updated_at": "2026-11-06T08:01:11-04:00",
   "source": "ANA/SGB - Serviço de dados hidrometeorológicos telemétricos",
   "source_url": "https://telemetriaws1.ana.gov.br/serviceana.asmx/DadosHidrometeorologicos",
-  "issue_date": "2026-11-04",
-  "usable_station_count": 5,
-  "failed_stations": {},
+  "issue_date": "2026-11-06",
+  "usable_station_count": 4,
+  "failed_stations": {
+    "14480002": "último dado diário em 2026-11-04"
+  },
   "stations": {
     "14330000": {
       "name": "Curicuriari",
       "river": "Rio Negro",
       "role": "alto curso",
       "code": "14330000",
-      "latest_timestamp": "2026-11-04T08:45",
+      "latest_timestamp": "2026-11-06T08:45",
       "daily": [
         {
           "date": "2026-05-24",
@@ -836,7 +838,17 @@
         },
         {
           "date": "2026-11-04",
-          "level_m": 7.79,
+          "level_m": 7.76,
+          "samples": 92
+        },
+        {
+          "date": "2026-11-05",
+          "level_m": 7.74,
+          "samples": 92
+        },
+        {
+          "date": "2026-11-06",
+          "level_m": 7.75,
           "samples": 36
         }
       ]
@@ -846,7 +858,7 @@
       "river": "Rio Negro",
       "role": "médio curso",
       "code": "14420000",
-      "latest_timestamp": "2026-11-04T08:30",
+      "latest_timestamp": "2026-11-06T08:30",
       "daily": [
         {
           "date": "2026-05-24",
@@ -1670,782 +1682,18 @@
         },
         {
           "date": "2026-11-04",
-          "level_m": 5.64,
+          "level_m": 5.59,
+          "samples": 96
+        },
+        {
+          "date": "2026-11-05",
+          "level_m": 5.48,
+          "samples": 96
+        },
+        {
+          "date": "2026-11-06",
+          "level_m": 5.41,
           "samples": 35
-        }
-      ]
-    },
-    "14480002": {
-      "name": "Barcelos",
-      "river": "Rio Negro",
-      "role": "médio curso",
-      "code": "14480002",
-      "latest_timestamp": "2026-11-04T08:00",
-      "daily": [
-        {
-          "date": "2026-05-24",
-          "level_m": 7.08,
-          "samples": 96
-        },
-        {
-          "date": "2026-05-25",
-          "level_m": 7.22,
-          "samples": 96
-        },
-        {
-          "date": "2026-05-26",
-          "level_m": 7.38,
-          "samples": 96
-        },
-        {
-          "date": "2026-05-27",
-          "level_m": 7.48,
-          "samples": 96
-        },
-        {
-          "date": "2026-05-28",
-          "level_m": 7.56,
-          "samples": 26
-        },
-        {
-          "date": "2026-05-29",
-          "level_m": 7.71,
-          "samples": 2
-        },
-        {
-          "date": "2026-05-30",
-          "level_m": 7.81,
-          "samples": 2
-        },
-        {
-          "date": "2026-05-31",
-          "level_m": 7.94,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-01",
-          "level_m": 8.07,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-02",
-          "level_m": 8.134,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-03",
-          "level_m": 8.238,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-04",
-          "level_m": 8.357,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-05",
-          "level_m": 8.471,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-06",
-          "level_m": 8.555,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-07",
-          "level_m": 8.639,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-08",
-          "level_m": 8.729,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-09",
-          "level_m": 8.828,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-10",
-          "level_m": 8.921,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-11",
-          "level_m": 8.986,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-12",
-          "level_m": 9.055,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-13",
-          "level_m": 9.114,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-14",
-          "level_m": 9.173,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-15",
-          "level_m": 9.227,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-16",
-          "level_m": 9.276,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-17",
-          "level_m": 9.31,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-18",
-          "level_m": 9.339,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-19",
-          "level_m": 9.368,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-20",
-          "level_m": 9.387,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-21",
-          "level_m": 9.401,
-          "samples": 2
-        },
-        {
-          "date": "2026-06-22",
-          "level_m": 9.4,
-          "samples": 50
-        },
-        {
-          "date": "2026-06-23",
-          "level_m": 9.4,
-          "samples": 96
-        },
-        {
-          "date": "2026-06-24",
-          "level_m": 9.4,
-          "samples": 96
-        },
-        {
-          "date": "2026-06-25",
-          "level_m": 9.39,
-          "samples": 96
-        },
-        {
-          "date": "2026-06-26",
-          "level_m": 9.39,
-          "samples": 96
-        },
-        {
-          "date": "2026-06-27",
-          "level_m": 9.38,
-          "samples": 96
-        },
-        {
-          "date": "2026-06-28",
-          "level_m": 9.4,
-          "samples": 96
-        },
-        {
-          "date": "2026-06-29",
-          "level_m": 9.39,
-          "samples": 96
-        },
-        {
-          "date": "2026-06-30",
-          "level_m": 9.4,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-01",
-          "level_m": 9.39,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-02",
-          "level_m": 9.37,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-03",
-          "level_m": 9.35,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-04",
-          "level_m": 9.35,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-05",
-          "level_m": 9.34,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-06",
-          "level_m": 9.32,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-07",
-          "level_m": 9.31,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-08",
-          "level_m": 9.29,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-09",
-          "level_m": 9.27,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-10",
-          "level_m": 9.26,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-11",
-          "level_m": 9.25,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-12",
-          "level_m": 9.23,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-13",
-          "level_m": 9.2,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-14",
-          "level_m": 9.18,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-15",
-          "level_m": 9.16,
-          "samples": 73
-        },
-        {
-          "date": "2026-07-16",
-          "level_m": 9.13,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-17",
-          "level_m": 9.09,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-18",
-          "level_m": 9.05,
-          "samples": 96
-        },
-        {
-          "date": "2026-07-19",
-          "level_m": 9.02,
-          "samples": 29
-        },
-        {
-          "date": "2026-08-01",
-          "level_m": 8.175,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-02",
-          "level_m": 8.075,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-03",
-          "level_m": 7.975,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-04",
-          "level_m": 7.875,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-05",
-          "level_m": 7.775,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-06",
-          "level_m": 7.675,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-07",
-          "level_m": 7.57,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-08",
-          "level_m": 7.45,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-09",
-          "level_m": 7.33,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-10",
-          "level_m": 7.21,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-11",
-          "level_m": 7.09,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-12",
-          "level_m": 6.95,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-13",
-          "level_m": 6.82,
-          "samples": 41
-        },
-        {
-          "date": "2026-08-14",
-          "level_m": 6.705,
-          "samples": 2
-        },
-        {
-          "date": "2026-08-15",
-          "level_m": 6.55,
-          "samples": 40
-        },
-        {
-          "date": "2026-08-16",
-          "level_m": 6.5,
-          "samples": 30
-        },
-        {
-          "date": "2026-08-17",
-          "level_m": 6.305,
-          "samples": 44
-        },
-        {
-          "date": "2026-08-18",
-          "level_m": 6.22,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-19",
-          "level_m": 6.085,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-20",
-          "level_m": 5.96,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-21",
-          "level_m": 5.83,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-22",
-          "level_m": 5.73,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-23",
-          "level_m": 5.64,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-24",
-          "level_m": 5.52,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-25",
-          "level_m": 5.4,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-26",
-          "level_m": 5.29,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-27",
-          "level_m": 5.2,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-28",
-          "level_m": 5.12,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-29",
-          "level_m": 5.05,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-30",
-          "level_m": 4.99,
-          "samples": 96
-        },
-        {
-          "date": "2026-08-31",
-          "level_m": 4.94,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-01",
-          "level_m": 4.9,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-02",
-          "level_m": 4.87,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-03",
-          "level_m": 4.85,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-04",
-          "level_m": 4.82,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-05",
-          "level_m": 4.8,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-06",
-          "level_m": 4.78,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-07",
-          "level_m": 4.75,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-08",
-          "level_m": 4.73,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-09",
-          "level_m": 4.7,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-10",
-          "level_m": 4.67,
-          "samples": 93
-        },
-        {
-          "date": "2026-09-11",
-          "level_m": 4.63,
-          "samples": 95
-        },
-        {
-          "date": "2026-09-12",
-          "level_m": 4.58,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-13",
-          "level_m": 4.51,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-14",
-          "level_m": 4.44,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-15",
-          "level_m": 4.36,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-16",
-          "level_m": 4.29,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-17",
-          "level_m": 4.22,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-18",
-          "level_m": 4.15,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-19",
-          "level_m": 4.09,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-20",
-          "level_m": 4.03,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-21",
-          "level_m": 3.98,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-22",
-          "level_m": 3.94,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-23",
-          "level_m": 3.91,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-24",
-          "level_m": 3.9,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-25",
-          "level_m": 3.89,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-26",
-          "level_m": 3.89,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-27",
-          "level_m": 3.88,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-28",
-          "level_m": 3.89,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-29",
-          "level_m": 3.89,
-          "samples": 96
-        },
-        {
-          "date": "2026-09-30",
-          "level_m": 3.88,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-01",
-          "level_m": 3.88,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-02",
-          "level_m": 3.9,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-03",
-          "level_m": 3.91,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-04",
-          "level_m": 3.92,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-05",
-          "level_m": 3.94,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-06",
-          "level_m": 3.96,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-07",
-          "level_m": 3.98,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-08",
-          "level_m": 4.0,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-09",
-          "level_m": 4.02,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-10",
-          "level_m": 4.03,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-11",
-          "level_m": 4.05,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-12",
-          "level_m": 4.06,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-13",
-          "level_m": 4.06,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-14",
-          "level_m": 4.06,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-15",
-          "level_m": 4.05,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-16",
-          "level_m": 4.04,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-17",
-          "level_m": 4.03,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-18",
-          "level_m": 4.02,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-19",
-          "level_m": 4.01,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-20",
-          "level_m": 4.01,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-21",
-          "level_m": 4.02,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-22",
-          "level_m": 4.04,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-23",
-          "level_m": 4.04,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-24",
-          "level_m": 4.04,
-          "samples": 92
-        },
-        {
-          "date": "2026-10-25",
-          "level_m": 4.03,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-26",
-          "level_m": 4.03,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-27",
-          "level_m": 4.01,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-28",
-          "level_m": 3.99,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-29",
-          "level_m": 3.95,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-30",
-          "level_m": 3.93,
-          "samples": 96
-        },
-        {
-          "date": "2026-10-31",
-          "level_m": 3.89,
-          "samples": 96
-        },
-        {
-          "date": "2026-11-01",
-          "level_m": 3.83,
-          "samples": 92
-        },
-        {
-          "date": "2026-11-02",
-          "level_m": 3.77,
-          "samples": 96
-        },
-        {
-          "date": "2026-11-03",
-          "level_m": 3.7,
-          "samples": 96
-        },
-        {
-          "date": "2026-11-04",
-          "level_m": 3.64,
-          "samples": 33
         }
       ]
     },
@@ -2454,7 +1702,7 @@
       "river": "Rio Negro",
       "role": "baixo curso",
       "code": "14840000",
-      "latest_timestamp": "2026-11-04T08:00",
+      "latest_timestamp": "2026-11-06T08:00",
       "daily": [
         {
           "date": "2026-05-24",
@@ -3278,7 +2526,17 @@
         },
         {
           "date": "2026-11-04",
-          "level_m": 4.65,
+          "level_m": 4.63,
+          "samples": 96
+        },
+        {
+          "date": "2026-11-05",
+          "level_m": 4.56,
+          "samples": 96
+        },
+        {
+          "date": "2026-11-06",
+          "level_m": 4.52,
           "samples": 33
         }
       ]
@@ -3288,7 +2546,7 @@
       "river": "Rio Solimões-Amazonas",
       "role": "remanso",
       "code": "14100000",
-      "latest_timestamp": "2026-11-04T08:15",
+      "latest_timestamp": "2026-11-06T08:15",
       "daily": [
         {
           "date": "2026-05-24",
@@ -4112,7 +3370,17 @@
         },
         {
           "date": "2026-11-04",
-          "level_m": 7.05,
+          "level_m": 7.06,
+          "samples": 96
+        },
+        {
+          "date": "2026-11-05",
+          "level_m": 7.06,
+          "samples": 96
+        },
+        {
+          "date": "2026-11-06",
+          "level_m": 7.07,
           "samples": 34
         }
       ]
