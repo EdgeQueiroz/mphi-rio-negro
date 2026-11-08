@@ -22,7 +22,6 @@
   <meta name="twitter:description" content="Cota do Rio Negro, projeções hidrológicas e validação contínua em Manaus.">
   <meta name="twitter:image" content="https://edgequeiroz.github.io/mphi-rio-negro/assets/mphi-rio-negro-social.jpg">
   <link rel="stylesheet" href="styles.css?v=20261002-rio">
-  <link rel="stylesheet" href="tabatinga.css?v=1">
 </head>
 <body>
 <a class="skip-link" href="#panorama">Ir para os dados do rio</a>
@@ -60,19 +59,6 @@
     </div>
     <p class="historic-note">Cotas da régua do Porto de Manaus, com observações desde 1902. A altura na régua não equivale à profundidade do rio; estas marcas não são limiares de alerta do MPHI.</p>
   </section>
-  <section id="tabatinga" class="panel tabatinga-panel" aria-labelledby="tabatingaTitle">
-    <div class="panel-head"><div><p class="eyebrow">ACOMPANHAMENTO DO SOLIMÕES</p><h2 id="tabatingaTitle">Tabatinga</h2></div><span class="quiet-tag">OBSERVAÇÃO EXPERIMENTAL</span></div>
-    <p class="panel-description">Estação 10100000 · Rio Solimões. Acompanhamento complementar, sem alterar as previsões ou o score do MPHI.</p>
-    <div class="tabatinga-grid">
-      <div><span>Mediana das leituras do dia</span><strong id="tabatingaLevel">—</strong><small>m · régua de Tabatinga</small></div>
-      <div><span>Data da medição</span><strong id="tabatingaDate">—</strong><small id="tabatingaSamples">Aguardando leituras</small></div>
-      <div><span>Variação em 3 dias</span><strong id="tabatingaChange3">—</strong><small>diferença entre medianas diárias</small></div>
-      <div><span>Variação em 7 dias</span><strong id="tabatingaChange7">—</strong><small>diferença entre medianas diárias</small></div>
-    </div>
-    <p id="tabatingaStatus" class="tabatinga-status" role="status" aria-live="polite">Aguardando a primeira coleta.</p>
-    <p class="footnote">A mediana usa as leituras disponíveis em cada dia, que pode estar incompleto. As cotas seguem o zero da régua local e não devem ser comparadas diretamente com a régua de Manaus.</p>
-    <a class="text-link" href="https://www.ana.gov.br/telemetria1ws/Dados.aspx" target="_blank" rel="noopener noreferrer">Fonte: ANA/SGB · estação 10100000 ↗</a>
-  </section>
   <section id="meteorologia" class="panel weather-panel" aria-labelledby="weatherTitle">
     <div class="panel-head"><div><p class="eyebrow">CONTEXTO ATMOSFÉRICO / MANAUS · AM</p><h2 id="weatherTitle">Condições meteorológicas</h2></div><span class="quiet-tag">CAMADA METEOROLÓGICA</span></div>
     <p id="weatherStatus" class="weather-status" role="status">Dados meteorológicos ainda não disponíveis.</p>
@@ -93,7 +79,6 @@
 </main>
 <footer><a class="footer-brand" href="#panorama">MPHI <span>·</span> UIARA</a><p>Modelo Preditivo Hidrológico Uiara<br><span>Fonte operacional: Porto de Manaus · Referência histórica do projeto: Manaus 14990000 — ANA/SGB</span></p><a href="#metodo">Dados com contexto. Decisões com clareza.</a></footer>
 <script src="app.js?v=20260930-registros"></script>
-<script src="tabatinga.js?v=2" defer></script>
 <script src="river-opening.js?v=20261002-rio" defer></script>
 <script src="forecast-archive.js?v=20260930-registros" defer></script>
 <script src="weather.js?v=20260929-live-access" defer></script>
