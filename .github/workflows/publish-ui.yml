@@ -1,0 +1,74 @@
+name: MPHI - Publicar interface consolidada
+
+on:
+  push:
+    branches: ["fileOrganizer"]
+    paths:
+      - "docs/index.html"
+      - ".github/workflows/publish-ui.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "mphi-sync-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/fileOrganizer'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Buscar a versao atual do repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: fileOrganizer
+      - name: Validar HTML antes de publicar
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path('docs/index.html').read_text(encoding='utf-8')
+          assert 'id="tabatinga"' not in html, 'Cartao de Tabatinga ainda no HTML'
+          assert 'tabatinga.js' not in html, 'Script visual de Tabatinga ainda no HTML'
+          assert 'tabatinga.css' not in html, 'Estilo visual de Tabatinga ainda no HTML'
+          assert 'id="projecoes"' in html, 'Projecoes do MPHI ausentes'
+          assert 'id="meteorologia"' in html, 'Bloco meteorologico ausente'
+          print('Interface aprovada, sem quadro de Tabatinga.')
+          PY
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar artefato estatico
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+      - name: Publicar pagina no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verificar HTML publico apos publicacao
+        run: |
+          python - <<'PY'
+          import time
+          from urllib.request import Request, urlopen
+          url = 'https://edgequeiroz.github.io/mphi-rio-negro/?mphi_check='
+          for attempt in range(1, 13):
+              try:
+                  req = Request(url + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
+                  with urlopen(req, timeout=15) as response:
+                      page = response.read().decode('utf-8')
+                  if 'id="tabatinga"' not in page and 'tabatinga.js' not in page and 'id="projecoes"' in page:
+                      print('CONFIRMADO: versao publica sem quadro de Tabatinga; projecoes preservadas.')
+                      break
+                  print(f'Tentativa {attempt}: HTML publico ainda antigo ou incompleto.')
+              except Exception as exc:
+                  print(f'Tentativa {attempt}: {type(exc).__name__} ao consultar o site.')
+              if attempt == 12:
+                  raise SystemExit('Falha: nao foi possivel confirmar HTML publico atualizado.')
+              time.sleep(5)
+          PY
