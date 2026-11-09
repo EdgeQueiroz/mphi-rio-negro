@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -55,6 +55,9 @@ jobs:
         run: |
           python - <<'PY'
           import time
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
           from urllib.request import Request, urlopen
           url = 'https://edgequeiroz.github.io/mphi-rio-negro/?mphi_check='
           for attempt in range(1, 13):
@@ -62,7 +65,7 @@ jobs:
                   req = Request(url + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
                   with urlopen(req, timeout=15) as response:
                       page = response.read().decode('utf-8')
-                  if 'id="tabatinga"' not in page and 'tabatinga.js' not in page and 'id="projecoes"' in page:
+                  if 'id="tabatinga"' not in page and 'tabatinga.js' not in page and 'id="projecoes"' in page and 'MPHI: interface consolidada' in page:
                       print('CONFIRMADO: versao publica sem quadro de Tabatinga; projecoes preservadas.')
                       break
                   print(f'Tentativa {attempt}: HTML publico ainda antigo ou incompleto.')
@@ -71,4 +74,21 @@ jobs:
               if attempt == 12:
                   raise SystemExit('Falha: nao foi possivel confirmar HTML publico atualizado.')
               time.sleep(5)
+          Path('docs/data/ui_deploy_verification.json').write_text(json.dumps({
+              'schema': 'mphi-ui-deploy-verification-v1',
+              'verified_at_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+              'verified_url': 'https://edgequeiroz.github.io/mphi-rio-negro/',
+              'tabatinga_panel_absent': True,
+              'consolidated_marker_present': True,
+              'projection_panel_present': True,
+              'note': 'Verification made by workflow against public HTML after Pages deployment.'
+          }, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
           PY
+      - name: Registrar no repositorio a verificacao efetiva
+        run: |
+          git config user.name 'mphi-ui-deploy-bot'
+          git config user.email 'mphi-ui-deploy-bot@users.noreply.github.com'
+          git add docs/data/ui_deploy_verification.json
+          git commit -m 'chore(mphi): record verified UI deployment'
+          git pull --rebase origin fileOrganizer
+          git push origin HEAD:fileOrganizer
