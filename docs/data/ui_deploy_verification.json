@@ -1,0 +1,9 @@
+{
+  "schema": "mphi-ui-deploy-verification-v1",
+  "verified_at_utc": "2026-11-09T00:02:15+00:00",
+  "verified_url": "https://edgequeiroz.github.io/mphi-rio-negro/",
+  "tabatinga_panel_absent": true,
+  "consolidated_marker_present": true,
+  "projection_panel_present": true,
+  "note": "Verification made by workflow against public HTML after Pages deployment."
+}\n
