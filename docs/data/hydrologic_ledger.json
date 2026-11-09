@@ -5086,6 +5086,161 @@
           "basin_weight": 0.35
         }
       }
+    },
+    {
+      "forecast_id": "2026-11-09|MPHI v2.0-hydrologic-alpha",
+      "forecast_date": "2026-11-09",
+      "created_at": "2026-11-09T07:51:52-04:00",
+      "model_version": "MPHI v2.0-hydrologic-alpha",
+      "model_status": "experimental",
+      "observed_level_at_issue": 16.43,
+      "base_model": "MPHI v1.1-shadow",
+      "method": "multivariate analogs from daily basin trends blended with the current MPHI baseline",
+      "uses_future_information": false,
+      "station_count": 4,
+      "stations": {
+        "14330000": {
+          "name": "Curicuriari",
+          "river": "Rio Negro",
+          "role": "alto curso",
+          "latest_timestamp": "2026-11-09T08:45",
+          "daily_records": 170,
+          "trend_7d_cm_per_day": -3.43,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 19,
+            "correlation": 0.467,
+            "sample_n": 150
+          }
+        },
+        "14420000": {
+          "name": "Serrinha",
+          "river": "Rio Negro",
+          "role": "médio curso",
+          "latest_timestamp": "2026-11-09T08:30",
+          "daily_records": 170,
+          "trend_7d_cm_per_day": -8.14,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 17,
+            "correlation": 0.565,
+            "sample_n": 152
+          }
+        },
+        "14840000": {
+          "name": "Moura",
+          "river": "Rio Negro",
+          "role": "baixo curso",
+          "latest_timestamp": "2026-11-09T08:00",
+          "daily_records": 170,
+          "trend_7d_cm_per_day": -7.0,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 8,
+            "correlation": 0.9,
+            "sample_n": 159
+          }
+        },
+        "14100000": {
+          "name": "Manacapuru",
+          "river": "Rio Solimões-Amazonas",
+          "role": "remanso",
+          "latest_timestamp": "2026-11-09T08:15",
+          "daily_records": 170,
+          "trend_7d_cm_per_day": 0.29,
+          "lead_lag": {
+            "status": "usable",
+            "best_lag_days": 1,
+            "correlation": 0.968,
+            "sample_n": 159
+          }
+        }
+      },
+      "projections": {
+        "7": {
+          "target_date": "2026-11-16",
+          "central": 16.24,
+          "soft": 16.24,
+          "stress": 16.11,
+          "interval80": {
+            "low": 16.11,
+            "high": 16.24,
+            "status": "experimental"
+          },
+          "training_n": 146,
+          "neighbors_n": 12,
+          "neighbor_dates": [
+            "2026-07-19",
+            "2026-07-23",
+            "2026-07-22",
+            "2026-07-20",
+            "2026-07-21",
+            "2026-07-18",
+            "2026-07-24",
+            "2026-07-15",
+            "2026-07-17",
+            "2026-07-16",
+            "2026-07-14",
+            "2026-07-13"
+          ],
+          "basin_weight": 0.35
+        },
+        "15": {
+          "target_date": "2026-11-24",
+          "central": 16.17,
+          "soft": 16.17,
+          "stress": 15.89,
+          "interval80": {
+            "low": 15.89,
+            "high": 16.17,
+            "status": "experimental"
+          },
+          "training_n": 138,
+          "neighbors_n": 12,
+          "neighbor_dates": [
+            "2026-07-19",
+            "2026-07-23",
+            "2026-07-22",
+            "2026-07-20",
+            "2026-07-18",
+            "2026-07-21",
+            "2026-07-15",
+            "2026-07-24",
+            "2026-07-17",
+            "2026-07-16",
+            "2026-07-14",
+            "2026-07-13"
+          ],
+          "basin_weight": 0.35
+        },
+        "30": {
+          "target_date": "2026-12-09",
+          "central": 15.79,
+          "soft": 15.79,
+          "stress": 15.24,
+          "interval80": {
+            "low": 15.24,
+            "high": 15.79,
+            "status": "experimental"
+          },
+          "training_n": 123,
+          "neighbors_n": 11,
+          "neighbor_dates": [
+            "2026-07-19",
+            "2026-07-23",
+            "2026-07-22",
+            "2026-07-20",
+            "2026-07-18",
+            "2026-07-21",
+            "2026-07-24",
+            "2026-07-15",
+            "2026-07-17",
+            "2026-07-16",
+            "2026-07-14"
+          ],
+          "basin_weight": 0.35
+        }
+      }
     }
   ]
 }
