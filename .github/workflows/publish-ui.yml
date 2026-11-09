@@ -82,7 +82,7 @@ jobs:
               'consolidated_marker_present': True,
               'projection_panel_present': True,
               'note': 'Verification made by workflow against public HTML after Pages deployment.'
-          }, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
+          }, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
       - name: Registrar no repositorio a verificacao efetiva
         run: |
