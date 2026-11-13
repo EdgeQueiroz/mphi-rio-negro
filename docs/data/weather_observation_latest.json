@@ -6,26 +6,26 @@
     "state": "AM",
     "country": "BR",
     "timezone": "America/Manaus",
-    "station_id": "SBEG",
-    "station_name": "Eduardo Gomes",
-    "latitude": -3.039,
-    "longitude": -60.05
+    "station_id": "SBMN",
+    "station_name": "Ponta Pelada",
+    "latitude": -3.146,
+    "longitude": -59.986
   },
   "current": {
     "data_type": "station_observation",
-    "observed_at": "2026-11-13T11:14:00+00:00",
-    "temperature_c": 25.0,
-    "dewpoint_c": 24.0,
+    "observed_at": "2026-11-13T16:00:00+00:00",
+    "temperature_c": 32.0,
+    "dewpoint_c": 25.0,
     "feels_like_c": null,
-    "humidity_pct": 94,
+    "humidity_pct": 67,
     "humidity_method": "Magnus, a partir do ponto de orvalho",
-    "condition": "Chuva",
-    "wind_kmh": 5.6,
-    "wind_direction": "N",
+    "condition": "Parcialmente nublado",
+    "wind_kmh": 3.7,
+    "wind_direction": "SO",
     "pressure_hpa": 1013.0,
     "precipitation_accumulated_mm": null,
-    "raw_metar": "SPECI SBEG 131114Z 36003KT 280V050 6000 -RA BKN030 FEW035TCU 25/24 Q1013 RESHRA",
-    "collected_at": "2026-11-13T11:32:14+00:00"
+    "raw_metar": "METAR SBMN 131600Z 22002KT 7000 SCT030 32/25 Q1013",
+    "collected_at": "2026-11-13T16:29:34+00:00"
   },
-  "updated_at": "2026-11-13T11:32:14+00:00"
+  "updated_at": "2026-11-13T16:29:34+00:00"
 }
