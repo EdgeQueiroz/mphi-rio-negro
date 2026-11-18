@@ -5,7 +5,7 @@ const fmtTime=s=>s?new Date(s).toLocaleString('pt-BR',{timeZone:'America/Manaus'
 const localDate=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const signed=(n,d=0)=>n==null?'—':(n>0?'+':'')+fmt(n,d);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let model=null,validationData=null,collectionStatus=null,hydrologicData=null,chartRange='all',loading=false;
+let model=null,validationData=null,collectionStatus=null,chartRange='all',loading=false;
 const $=id=>document.getElementById(id);
 async function fetchJSON(path,required=true){
   const r=await fetch(path+'?v='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(15000)});
@@ -15,9 +15,9 @@ async function fetchJSON(path,required=true){
 async function load(){
   if(loading)return;loading=true;
   try{
-    const [next,validation,status,hydrologic]=await Promise.all([fetchJSON('data/latest.json'),fetchJSON('data/validation.json',false).catch(()=>null),fetchJSON('data/status.json',false).catch(()=>null),fetchJSON('data/hydrologic_latest.json',false).catch(()=>null)]);
+    const [next,validation,status]=await Promise.all([fetchJSON('data/latest.json'),fetchJSON('data/validation.json',false).catch(()=>null),fetchJSON('data/status.json',false).catch(()=>null)]);
     if(!next?.current?.date||!Number.isFinite(next.current.level)||!Array.isArray(next.series))throw new Error('Dados inválidos');
-    model=next;validationData=validation;collectionStatus=status;hydrologicData=hydrologic;
+    model=next;validationData=validation;collectionStatus=status;
     $('loadError').hidden=true;render();
   }catch(e){
     $('loadError').hidden=false;
@@ -84,55 +84,18 @@ function render(){
   const sea=model.seasonal[c.date.slice(5,7)]||{},pk=model.june_peak_reference;
   const comps=[['Posição sazonal',sea.q1&&c.level<sea.q1?2:sea.median&&c.level<sea.median?1:0],['Ritmo recente · 7 leituras',c.avg7<=-12?2:c.avg7<=-8?1:0],['Aceleração · 7 × 15',c.accel_7_15<=-2?2:c.accel_7_15<=-.5?1:0],['Pico antecedente',c.peak<pk.q1?2:c.peak<pk.median?1:0],['Queda desde o pico',c.drawdown>=4?2:c.drawdown>=3?1:0],['Persistência',c.persistence_points??(c.persistence_days>=7?2:0)]];
   $('scoreComponents').innerHTML=comps.map(([n,p])=>`<div class="component"><span>${n}</span><span class="component-meter" aria-hidden="true"><i class="${p>=1?'active':''}"></i><i class="${p>=2?'active':''}"></i></span><b>${p}/2</b></div>`).join('');
-  $('projectionRows').innerHTML=Object.entries(model.projections).map(([days,p])=>{
+  // Public view displays only MPHI v1.0. Experimental challenger models remain in separate data ledgers.
+  $('projectionRows').innerHTML=['7','15','30'].map(days=>{
+    const p=model.projections?.[days];
+    if(!p||!Number.isFinite(p.central))return '';
     const date=new Date(c.date+'T12:00:00Z');date.setUTCDate(date.getUTCDate()+Number(days));
-    return `<article class="proj"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(date.toISOString().slice(0,10))}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cenário central</span><div class="scenario-pair"><div><span>Suave</span><b>${fmt(p.soft)} m</b></div><div><span>Estresse</span><b>${fmt(p.stress)} m</b></div></div><p class="confidence">Confiança indicativa: ${esc(p.confidence.toLowerCase())}</p></article>`;
+    const deltaCm=Math.round((p.central-c.level)*100);
+    const movement=deltaCm>0?'Subida estimada':deltaCm<0?'Descida estimada':'Estabilidade estimada';
+    const direction=deltaCm===0?'sem variação na cota central':`${signed(deltaCm)} cm em relação à medição base`;
+    const lower=Math.min(p.soft,p.stress),upper=Math.max(p.soft,p.stress);
+    const envelope=Number.isFinite(lower)&&Number.isFinite(upper)?`${fmt(lower)} a ${fmt(upper)} m`:'ainda não disponível';
+    return `<article class="proj forecast-card"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(date.toISOString().slice(0,10))}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cota central prevista · Rio Negro</span><p class="forecast-shift"><strong>${movement}</strong><span>${direction}</span></p><details class="forecast-envelope"><summary>Ver faixa de cenários</summary><p>${envelope}</p><small>Estimativas condicionais, não limites de confiança estatística.</small></details><p class="confidence">Confiança indicativa: ${esc(String(p.confidence||'em avaliação').toLowerCase())}</p></article>`;
   }).join('');
-  const hydrologicForecast=hydrologicData?.forecast?.forecast_date===c.date?hydrologicData.forecast:null;
-  const shadowForecast=validationData?.shadow_models?.[0]?.latest_forecast;
-  const experimentalForecast=hydrologicForecast||shadowForecast;
-  const shadowBlock=$('shadowProjectionBlock');
-  const shadowRows=$('shadowProjectionRows');
-  if(shadowBlock&&shadowRows){
-    const showShadow=experimentalForecast?.forecast_date===c.date&&experimentalForecast?.projections;
-    shadowBlock.hidden=!showShadow;
-    if(showShadow){
-      const description=shadowBlock.querySelector('.panel-description');
-      const note=shadowBlock.querySelector('.footnote');
-      const title=shadowBlock.querySelector('h3');
-      const badge=shadowBlock.querySelector('.quiet-tag');
-      if(hydrologicForecast){
-        title.textContent='Projeção hidrológica integrada';
-        badge.textContent='EM CALIBRAÇÃO';
-        const groups=new Map();
-        Object.values(hydrologicForecast.stations||{}).forEach(station=>{
-          if(!station.name||!station.river)return;
-          const river=station.river==='Rio Solimões-Amazonas'?'Rio Solimões':station.river;
-          if(!groups.has(river))groups.set(river,[]);
-          groups.get(river).push(station.name);
-        });
-        const stations=[...groups].sort(([a],[b])=>a==='Rio Negro'?-1:b==='Rio Negro'?1:0)
-          .map(([river,names])=>`${river}: ${new Intl.ListFormat('pt-BR',{type:'conjunction'}).format(names)}`);
-        description.textContent=stations.length
-          ?`Estações consideradas nesta projeção: ${stations.join(' · ')}.`
-          :'Combina a tendência de Manaus com medições da bacia.';
-        note.textContent='Mostrada em paralelo, sem substituir a projeção oficial. O modelo ainda está em calibração e será acompanhado diariamente.';
-      }else{
-        title.textContent='Projeção ajustada';
-        badge.textContent='EM AVALIAÇÃO';
-        description.textContent='Considera o comportamento observado nas projeções anteriores para reduzir desvios recorrentes.';
-        note.textContent='Mostrada em paralelo, sem substituir a projeção oficial. A faixa de 80% ainda é provisória; o horizonte de 30 dias permanece sem ajuste até haver histórico suficiente.';
-      }
-      shadowRows.innerHTML=Object.entries(experimentalForecast.projections).map(([days,p])=>{
-        const interval=p.interval80;
-        const hasInterval=Number.isFinite(interval?.low)&&Number.isFinite(interval?.high);
-        const range=hasInterval?`Faixa experimental de 80%: ${fmt(interval.low)}–${fmt(interval.high)} m`:'Faixa de 80%: em coleta';
-        return `<article class="proj shadow-proj"><div class="proj-head"><b>Em ${esc(days)} dias</b><small>${fmtDate(p.target_date)}</small></div><div class="central">${fmt(p.central)}<small>m</small></div><span class="proj-label">Cenário central corrigido</span><div class="scenario-pair"><div><span>Suave</span><b>${fmt(p.soft)} m</b></div><div><span>Estresse</span><b>${fmt(p.stress)} m</b></div></div><p class="confidence">${range}</p></article>`;
-      }).join('');
-    }else{
-      shadowRows.innerHTML='';
-    }
-  }
   $('seasonCards').innerHTML=Object.entries(model.seasonal).map(([m,s])=>`<div class="season-card ${m===c.date.slice(5,7)?'current':''}"><b>${new Date('2026-'+m+'-15T12:00:00Z').toLocaleDateString('pt-BR',{month:'long'})}</b>${m===c.date.slice(5,7)?'<small>MÊS DA ÚLTIMA MEDIÇÃO</small>':''}<p>1º quartil · ${fmt(s.q1)} m<br>Mediana · ${fmt(s.median)} m</p></div>`).join('');
   renderFreshness();renderValidation();drawChart();drawProjectionChart();
 }
@@ -151,10 +114,6 @@ function renderValidation(){
   const h7=validationData.by_horizon?.['7']||{n:0};
   const h15=validationData.by_horizon?.['15']||{n:0};
   const h30=validationData.by_horizon?.['30']||{n:0};
-  const shadow=validationData.shadow_models?.[0];
-  const hydroCurrent=hydrologicData?.forecast?.forecast_date===model.current.date;
-  const hydroValidation=hydrologicData?.validation;
-  const shadowCard=hydroCurrent?`<div><span>Projeção hidrológica integrada</span><b>Em calibração</b><small>${hydrologicData.forecast_count||0} previsões preservadas · ${hydrologicData.forecast.station_count||0} estações integradas · ${hydroValidation?.matured_records||0} comparações</small></div>`:shadow?`<div><span>Projeção ajustada</span><b>Em avaliação</b><small>${shadow.forecast_count||0} previsões preservadas · ${shadow.matured_records||0} comparações concluídas</small></div>`:'';
   const metric=h=>h.n?`${fmt(h.mae_m*100,1)} cm`:'em coleta';
   const coverage=h=>h.n?`${fmt(h.envelope_coverage_pct,1)}%`:'em coleta';
   const lead=validationData.alert_validation?.lead_time?.value_days;
@@ -163,7 +122,6 @@ function renderValidation(){
 
   projectionGrid.innerHTML=`
     <div><span>Previsões preservadas</span><b>${validationData.forecast_count??0}</b><small>projeção oficial</small></div>
-    ${shadowCard}
     <div><span>Aferições concluídas</span><b>${validationData.matured_records??0}</b><small>comparações de 7, 15 e 30 dias</small></div>
     <div><span>Próxima comparação</span><b>${fmtDate(validationData.next_due)}</b><small>primeira projeção pendente</small></div>
     <div><span>Erro médio · 7 dias</span><b>${metric(h7)}</b><small>erro absoluto médio · ${h7.n||0} comparações</small></div>
