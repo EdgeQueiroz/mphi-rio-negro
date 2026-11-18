@@ -415,3 +415,47 @@ body{background:radial-gradient(ellipse at 70% 0%,#112b403d,transparent 48%),var
 .archive-close{padding:12px 16px;margin:16px 0 4px;font:inherit;font-size:12px;color:var(--river);border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:pointer}
 #historico-afericoes{scroll-margin-top:24px}
 @media(max-width:780px){.forecast-archive>summary span{display:block;margin:6px 0 0}.archive-entry>summary span:last-child{float:none;display:block;margin:6px 0 0 16px}.archive-horizons{grid-template-columns:1fr;gap:10px}.archive-close{width:100%;text-align:center;line-height:1.5}}
+/* MPHI visual focus v2 — single public Rio Negro forecast */
+.forecast-focus{position:relative;overflow:hidden;border:1px solid #375669;background:linear-gradient(145deg,#112e3d 0%,#102431 62%,#0c1e2b 100%);box-shadow:0 18px 50px #00000020}
+.forecast-focus::before{content:"";position:absolute;pointer-events:none;inset:0 0 auto auto;width:240px;height:240px;background:radial-gradient(circle at 100% 0%,rgba(108,204,200,.1),transparent 70%)}
+.forecast-focus>.panel-head,.forecast-focus>.projection-lead,.forecast-focus>.projection-rows,.forecast-focus>.projection-visual-head,.forecast-focus>.projection-chart-wrap,.forecast-focus>.legend,.forecast-focus>.footnote,.forecast-focus>.basin-context{position:relative;z-index:1}
+.forecast-focus .panel-head h2{font-size:clamp(25px,3.2vw,38px);font-weight:500;letter-spacing:-.045em;line-height:1.1}
+.forecast-focus .panel-head .quiet-tag{color:#9ddbd8;border-color:#3b626a;background:#1a3741}
+.forecast-focus .panel-description{margin-top:10px;max-width:64ch}
+.projection-lead{font-size:13px;color:#bfced8;max-width:75ch;line-height:1.7;margin:18px 0 0}
+.forecast-focus .projection-rows{margin-top:26px;gap:15px}
+.forecast-focus .forecast-card{display:flex;flex-direction:column;align-items:stretch;gap:10px;min-height:265px;padding:24px;border:1px solid #335260;background:linear-gradient(160deg,#142e3b,#112531);border-radius:13px;box-shadow:0 8px 20px #00000012}
+.forecast-focus .forecast-card:first-child{border-top:2px solid #7ad4cc}
+.forecast-focus .forecast-card .proj-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.forecast-focus .forecast-card .proj-head b{font-size:15px;letter-spacing:-.02em}
+.forecast-focus .forecast-card .central{font-size:clamp(38px,3.5vw,47px);line-height:1.1;margin:8px 0 0;font-variant-numeric:tabular-nums}
+.forecast-focus .forecast-card .central small{font-size:15px}
+.forecast-focus .forecast-card .proj-label{font-size:10px;letter-spacing:.015em;grid-row:auto;grid-column:auto}
+.forecast-shift{display:flex;flex-wrap:wrap;gap:5px 9px;align-items:center;font-size:11px;color:#a8c7cd;margin:0}
+.forecast-shift strong{color:#daebed;font-size:12px;font-weight:600}
+.forecast-shift span{color:#91a9b7}
+.forecast-envelope{border-top:1px solid #33505e;padding-top:11px;margin-top:auto;font-size:11px}
+.forecast-envelope summary{cursor:pointer;color:#9ed8d7;font-weight:600;list-style-position:inside}
+.forecast-envelope summary:focus-visible{outline:2px solid #8ad7d3;outline-offset:4px;border-radius:3px}
+.forecast-envelope p{font-size:15px;font-weight:600;letter-spacing:-.02em;margin:10px 0 3px;color:#e2eded;font-variant-numeric:tabular-nums}
+.forecast-envelope small{color:#a9bdc9;font-size:10px;line-height:1.5;display:block}
+.forecast-focus .forecast-card .confidence{color:#9fb5bf;font-size:10px;margin:0}
+.projection-visual-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:32px 0 0;border-top:1px solid #2a4655;padding-top:25px}
+.projection-visual-head h3{font-weight:500;font-size:18px;letter-spacing:-.02em;margin:0}
+.projection-visual-head span{font-size:11px;color:#a6bdc9}
+.forecast-focus .projection-chart-wrap{margin-top:12px;height:200px}
+.basin-context{display:flex;gap:18px;align-items:flex-start;background:#0b1c28;border:1px solid #315061;padding:22px 24px;border-radius:12px;margin-top:30px}
+.basin-context-symbol{width:38px;height:38px;min-width:38px;display:grid;place-items:center;border-radius:50%;background:#163640;color:#9bdcd6;font-size:24px;line-height:1}
+.basin-context-label{font-size:10px;letter-spacing:.09em;font-weight:700;color:#8cd0cb;margin:0 0 7px}
+.basin-context p:last-child{font-size:12px;line-height:1.7;color:#b5cbd4;margin:0;max-width:80ch}
+.basin-context strong{color:#e0eef2;font-weight:600}
+@media(max-width:780px){
+  .forecast-focus .forecast-card{min-height:0;padding:20px;display:flex;gap:10px}
+  .forecast-focus .forecast-card .central{font-size:42px}
+  .forecast-focus .projection-rows{gap:12px;margin-top:18px}
+  .projection-visual-head{flex-direction:column;gap:4px}
+  .basin-context{padding:17px;gap:11px}
+  .basin-context-symbol{width:30px;height:30px;min-width:30px;font-size:19px}
+  .forecast-focus .projection-chart-wrap{height:178px}
+}
+@media(prefers-reduced-motion:reduce){.forecast-focus *{scroll-behavior:auto}}
