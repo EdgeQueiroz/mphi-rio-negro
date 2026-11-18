@@ -5,6 +5,9 @@ on:
     branches: ["fileOrganizer"]
     paths:
       - "docs/index.html"
+      - "docs/app.js"
+      - "docs/styles.css"
+      - "tests/test_public_view.cjs"
       - ".github/workflows/publish-ui.yml"
   workflow_dispatch:
 
@@ -40,8 +43,14 @@ jobs:
           assert 'tabatinga.css' not in html, 'Estilo visual de Tabatinga ainda no HTML'
           assert 'id="projecoes"' in html, 'Projecoes do MPHI ausentes'
           assert 'id="meteorologia"' in html, 'Bloco meteorologico ausente'
+          assert 'MPHI-PUBLIC-VIEW-V2' in html, 'Novo painel de previsao nao encontrado'
+          assert 'shadowProjectionBlock' not in html, 'Projecao paralela exposta no publico'
           print('Interface aprovada, sem quadro de Tabatinga.')
           PY
+      - name: Verificar sintaxe e integridade da previsão pública
+        run: |
+          node --check docs/app.js
+          node --test tests/test_public_view.cjs
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
       - name: Preparar artefato estatico
@@ -65,7 +74,7 @@ jobs:
                   req = Request(url + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
                   with urlopen(req, timeout=15) as response:
                       page = response.read().decode('utf-8')
-                  if 'id="tabatinga"' not in page and 'tabatinga.js' not in page and 'id="projecoes"' in page and 'MPHI: interface consolidada' in page:
+                  if 'id="tabatinga"' not in page and 'tabatinga.js' not in page and 'id="projecoes"' in page and 'MPHI-PUBLIC-VIEW-V2' in page and 'shadowProjectionBlock' not in page:
                       print('CONFIRMADO: versao publica sem quadro de Tabatinga; projecoes preservadas.')
                       break
                   print(f'Tentativa {attempt}: HTML publico ainda antigo ou incompleto.')
@@ -81,6 +90,8 @@ jobs:
               'tabatinga_panel_absent': True,
               'consolidated_marker_present': True,
               'projection_panel_present': True,
+              'single_public_rios_negro_forecast': True,
+              'experimental_forecast_panels_absent': True,
               'note': 'Verification made by workflow against public HTML after Pages deployment.'
           }, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
