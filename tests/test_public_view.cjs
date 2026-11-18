@@ -6,6 +6,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'docs/index.html'), 'utf8');
 const js = fs.readFileSync(path.join(root, 'docs/app.js'), 'utf8');
+const css = fs.readFileSync(path.join(root, 'docs/styles.css'), 'utf8');
 const latest = JSON.parse(fs.readFileSync(path.join(root, 'docs/data/latest.json'), 'utf8'));
 
 test('one public Rio Negro forecast, basin research only behind the scenes', () => {
@@ -70,4 +71,27 @@ test('dynamic rendering produces one forecast in three horizons without extra fe
   assert.equal(requests.length,3);
   assert.ok(requests.every(u=>!/hydrologic_latest|basin_signals|tabatinga/.test(u)));
   assert.equal(el('loadError').hidden,true);
+});
+
+test('water-blue theme and historical records directly after the current gauge', () => {
+  assert.match(html, /MPHI-LIGHT-BLUE-V3/);
+  assert.match(html, /styles\.css\?v=20261118-azul-aguas/);
+  assert.match(html, /name="theme-color" content="#eaf5fb"/);
+  assert.equal((html.match(/class="historic-records"/g)||[]).length, 1);
+  const anchors = [
+    'id="panorama"',
+    'class="update-strip"',
+    'class="historic-records"',
+    'class="facts-strip"',
+    'id="projecoes"'
+  ].map(needle => html.indexOf(needle));
+  assert.ok(anchors.every(n => n !== -1), 'Expected dashboard sections are present');
+  assert.ok(anchors.every((n,i) => i === 0 || n > anchors[i-1]), 'Historical records must be directly below the current measurement');
+  assert.match(css, /MPHI WATER-BLUE V3/);
+  assert.match(css, /--bg:#eaf5fb/);
+  assert.match(css, /color-scheme:light/);
+  assert.match(css, /\.river-opening::before/);
+  assert.match(css, /\.historic-records\{/);
+  assert.match(js, /ctx\.strokeStyle='#c0dce9'/);
+  assert.match(js, /ctx\.fillStyle='#547890'/);
 });

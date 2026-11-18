@@ -459,3 +459,205 @@ body{background:radial-gradient(ellipse at 70% 0%,#112b403d,transparent 48%),var
   .forecast-focus .projection-chart-wrap{height:178px}
 }
 @media(prefers-reduced-motion:reduce){.forecast-focus *{scroll-behavior:auto}}
+
+/* MPHI WATER-BLUE V3 · bright aquatic palette, readable at desktop and mobile.
+   Visual overrides only: no forecast logic, measurements or ledgers changed. */
+:root{
+  --bg:#eaf5fb;
+  --card:#f9fdff;
+  --text:#123c5b;
+  --muted:#55748a;
+  --river:#0d6f9e;
+  --deep:#d8edf8;
+  --amber:#a06b24;
+  --red:#ad4253;
+  --line:#c6deeb;
+  --soft:#e5f3fb;
+  color-scheme:light;
+  color:var(--text);
+  background:var(--bg);
+}
+body{
+  color:var(--text);
+  background:radial-gradient(ellipse at 70% 0%,rgba(90,177,221,.19),transparent 52%),linear-gradient(180deg,#e7f4fb 0%,#f5fbff 52%,#eaf6fc 100%);
+}
+.site-header{background:rgba(250,254,255,.65);border-bottom-color:var(--line);color:var(--text)}
+.skip-link{background:#115f89;color:#fff}
+.site-header nav a{color:#315d79}
+.site-header nav a:hover,.source-link:hover,.text-link:hover{color:#064f78}
+.brand-mark{background:#d6edf9;border-color:#afcfdf;color:#0d6693}
+.brand small,.location{color:#587c91}
+.page-intro h1,.panel h2,.historic-heading h2{color:#153d5c}
+.eyebrow,.panel .eyebrow{color:#126d9b}
+.title-divider{color:#64a9ca}
+.source-link,.text-link,.outlook-panel>a{color:#075d8c}
+.meta-bar{border-color:#c9e0ec;color:#52748b}
+.meta-bar b{color:#194765}
+.river-opening{border-color:#b7d9e9;background:#daedf8;box-shadow:0 14px 35px rgba(37,113,157,.13)}
+.river-backdrop{background-color:#bce0f1}
+.river-backdrop video{filter:saturate(.8) brightness(1.16)}
+.river-playing .river-backdrop video{opacity:.52}
+.river-opening::before{
+  background:linear-gradient(100deg,rgba(242,250,255,.96),rgba(231,245,252,.9) 58%,rgba(214,236,248,.77)),
+  linear-gradient(0deg,rgba(236,248,254,.88),transparent 65%);
+}
+.river-opening .page-intro h1{color:#124263;text-shadow:none}
+.river-opening .page-intro .eyebrow{color:#075e90}
+.river-opening .page-intro p:last-child{color:#3b637c}
+.river-opening .title-divider{color:#71adc9}
+.river-opening .source-link{color:#075b89}
+.river-opening .meta-bar{border-color:#bbd9e7;color:#416985}
+.river-opening .meta-bar b{color:#174865}
+.river-opening .level-panel{
+  background:linear-gradient(120deg,rgba(250,254,255,.95),rgba(222,242,252,.94));
+  border-color:#b7d8e7;
+  color:#153f5e;
+  box-shadow:0 10px 30px rgba(51,128,170,.12);
+}
+.level-panel .label{color:#305d78}
+.level-panel .big-number{color:#094b76}
+.level-panel .big-number small{color:#638ba1}
+.river-opening .station{color:#426b85}
+.river-opening .phase,.phase{color:#08769d}
+.river-opening .river-movement>span:last-child{color:#567e95}
+.river-opening .observation{color:#436c84}
+.river-opening .level-bottom{color:#58788f;border-color:#bad8e8}
+.interval-change{color:#285670;background:#e1f1f8;border-left-color:#559dc4}
+.river-opening .outlook-panel{
+  background:rgba(228,243,251,.96);
+  color:#173f5e;
+  border:1px solid #b7d6e6;
+  border-top:3px solid #53a8cd;
+  box-shadow:0 10px 30px rgba(55,122,164,.09);
+}
+.river-opening .outlook-panel>p{color:#486d86}
+.river-opening .outlook-panel>a{color:#076997}
+.river-opening .outlook-panel .score-number{color:#164566}
+.status{color:#35637c;background:#d3eafa}
+.status.normal{background:#c9ebed;color:#125b70}
+.status.attention{background:#faecd1;color:#85580e}
+.status.high{background:#fce2e4;color:#ab4253}
+.score-meter i{background:#b7d6e6}
+.score-meter i.active{background:#267da8}
+.river-caption{color:#54778d}
+.river-caption button{color:#16557b;background:#deeff9;border-color:#9cc6db}
+.river-caption button:hover{background:#c5e3f3}
+.update-strip{color:#234e6b}
+.update-strip #freshnessNote{color:var(--muted)}
+.update-details summary{color:#0a6894}
+.update-popover{background:#fafdff;border-color:#bed8e6;box-shadow:0 14px 32px rgba(36,103,143,.16)}
+.facts-strip{border-color:#c8dfeb}
+.facts-strip article{border-color:#c8dfeb}
+.facts-strip b{color:#194c6b}
+.panel{background:linear-gradient(150deg,#ffffff,#f4faff);border-color:#c7dfe9;box-shadow:0 8px 26px rgba(66,125,159,.08);color:var(--text)}
+.panel .eyebrow{color:#116d9a}
+.panel-description,.footnote{color:#5b758a}
+.quiet-tag{color:#3c6985;border:1px solid #bfd9e7;background:#e4f2f9}
+.chart-controls{background:#e8f3fa;border-color:#c2dce9}
+.chart-controls button{color:#3d6480}
+.chart-controls button[aria-pressed="true"]{background:#146f9f;color:#fff}
+.legend{color:#516f85}
+.legend .q1{background:#448fbd}
+.legend .median{background:#8bacc0}
+.legend .envelope{background:rgba(51,148,197,.15);border-color:#57a6cd}
+.rates-heading{border-color:var(--line)}
+.rate{border-color:var(--line)}
+.rate.negative b{color:#215b87}
+.component{border-color:var(--line)}
+.component-meter i{background:#c6dfeb}
+.season-card{border-color:#b8d5e6}
+.season-card.current{border-color:#1381b3}
+.season-card small{color:#0b6d9e}
+.validation-intro,.validation-alert-note{color:#56768c}
+.validation-history{background:#ebf6fc}
+.validation-row,.validation-grid>div{border-color:#c5dfeb}
+.validation-row .inside{color:#126d9d}
+.validation-row .outside{color:#996825}
+.criteria-grid>div,.criteria-table th,.criteria-table td{border-color:#c4deeb}
+.criteria-table thead{background:#e5f3fa}
+.load-error{background:#fff1f1;color:#a63e54;border-color:#e8b2b9}
+.footer-brand{color:#1c6085}
+.footer-brand span{color:#62a9c9}
+footer{color:#55758b}
+/* Historical records sit directly under the current gauge; both event accents are water blues. */
+.historic-records{
+  margin:16px 0 24px;
+  padding:24px 28px;
+  border:1px solid #bcdce9;
+  background:linear-gradient(120deg,#e1f1fa,#f1faff);
+  box-shadow:0 10px 28px rgba(61,132,173,.08);
+}
+.historic-heading h2{color:#184a6a}
+.historic-heading>p,.historic-note{color:#567b91}
+.historic-grid{gap:14px}
+.historic-record{
+  background:rgba(255,255,255,.87);
+  border:1px solid #c2ddea;
+  border-left:3px solid #288fbe;
+  box-shadow:0 3px 12px rgba(39,121,160,.05);
+}
+.historic-drought{border-left-color:#638fba}
+.historic-record h3{color:#315f7b}
+.historic-symbol{color:#137fae;background:#d3eef9}
+.historic-drought .historic-symbol{color:#467dab;background:#e0ecf8}
+.historic-value{color:#0d4e76}
+.historic-value small,.historic-date{color:#5f7f94}
+.historic-record a{color:#0a6c9b}
+/* One public forecast · same model, more airy and legible. */
+.forecast-focus{
+  border-color:#b6d9e9;
+  background:linear-gradient(145deg,#e4f4fc 0%,#f5fbff 60%,#dcedf9 100%);
+  box-shadow:0 14px 36px rgba(42,121,163,.13);
+}
+.forecast-focus::before{background:radial-gradient(circle at 100% 0%,rgba(84,173,213,.19),transparent 74%)}
+.forecast-focus .panel-head h2{color:#104d77}
+.forecast-focus .panel-head .quiet-tag{color:#17678f;border-color:#b2d5e5;background:#d9eff9}
+.projection-lead{color:#4d7189}
+.forecast-focus .forecast-card{
+  color:#1b4764;
+  border:1px solid #b8d9e8;
+  background:linear-gradient(160deg,#fdfefe,#eaf6fc);
+  box-shadow:0 8px 21px rgba(39,118,161,.09);
+}
+.forecast-focus .forecast-card:first-child{border-top-color:#2c95bd}
+.forecast-focus .forecast-card .central{color:#105986}
+.forecast-focus .forecast-card .central small{color:#66899e}
+.forecast-focus .forecast-card .proj-label{color:#52758a}
+.forecast-shift{color:#416b85}
+.forecast-shift strong{color:#17597c}
+.forecast-shift span{color:#5d8095}
+.forecast-envelope{border-color:#c9e1ec}
+.forecast-envelope summary{color:#0b699c}
+.forecast-envelope summary:focus-visible{outline-color:#197fae}
+.forecast-envelope p{color:#174f74}
+.forecast-envelope small,.forecast-focus .forecast-card .confidence{color:#57798e}
+.projection-visual-head{border-color:#c3dfeb;color:#214c68}
+.projection-visual-head span{color:#597b91}
+.basin-context{background:#e6f3fa;border-color:#bad9e8}
+.basin-context-symbol{background:#d1eaf6;color:#187da7}
+.basin-context-label{color:#126f9b}
+.basin-context p:last-child{color:#4c7288}
+.basin-context strong{color:#14537a}
+.weather-panel{border-top-color:#b0d5e8}
+.weather-icon{color:#2e8fbd}
+.weather-day svg{color:#399bc1}
+.weather-day p,.weather-details summary,.weather-separation{color:#5a7c91}
+.metrics-table caption{color:#4a7188}
+.metrics-table td:first-child{color:#0e709a}
+.archive-entry>summary{color:#204b68}
+.archive-horizons article{background:#ebf6fc;border-color:#c6dfeb}
+.archive-horizons h3{color:#0a6b9a}
+.archive-close{color:#0a6b9a;background:#e7f4fb;border-color:#bad8e7}
+.forecast-archive>summary,.method-toggle,.weather-details a{color:#0b6b97}
+@media(max-width:780px){
+  .historic-records{margin-top:13px;padding:20px 18px}
+  .river-opening::before{background:linear-gradient(110deg,rgba(242,250,255,.96),rgba(224,242,251,.87))}
+  .river-opening .level-panel{background:rgba(249,253,255,.96)}
+  .river-opening .outlook-panel{background:rgba(234,247,254,.97)}
+}
+@media print{
+  :root{--bg:#fff;--card:#fff}
+  body{background:#fff}
+  .river-opening::before{background:#fff}
+  .panel,.historic-records,.forecast-focus{box-shadow:none}
+}
