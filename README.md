@@ -28,6 +28,8 @@ O navegador consulta a publicação a cada minuto enquanto a página estiver vis
 
 ## Interface
 
+A interface pública apresenta **um único conjunto de projeções do Rio Negro (MPHI v1.0)** e sua validação, sem os cartões paralelos de v1.1-shadow ou v2-alpha. A projeção é exibida com cenários para 7/15/30 dias, faixa condicional sob demanda e contexto técnico discreto sobre a análise da bacia. O acompanhamento do Alto e Médio Rio Negro e do Solimões continua exclusivamente nos workflows e ledgers experimentais. Essa avaliação não altera os valores publicados de v1.0, o score nem os registros anteriores.
+
 Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e série completa; cenários de 7/15/30 dias; confiabilidade e critérios expansíveis. Azul-rio profundo, ciano discreto e sinalização âmbar/vermelha; layout responsivo, foco por teclado e preferência de movimento reduzido. A interface inclui contexto meteorológico isolado, gráfico de cenários e tabela de MAE/bias/RMSE/cobertura por horizonte. As médias são identificadas como últimas leituras disponíveis, não velocidade de corrente.
 
 ## Verificação
@@ -40,7 +42,7 @@ Panorama com medição e pontuação; gráfico com períodos de 30/60 dias e sé
 
 ### MPHI v1.1-shadow
 
-O v1.0 permanece como previsão pública e baseline. Na ativação, o v1.1-shadow emite uma primeira previsão para a medição oficial corrente; depois disso, emite uma previsão paralela a cada nova medição, sem alterar entradas anteriores. As duas versões são mostradas lado a lado no painel. A correção usa a mediana dos erros assinados de previsões v1.0 já maduras na data da emissão. Com pelo menos 10 aferições no horizonte, também registra um intervalo experimental de 80%, explicitamente marcado como provisório até acumular validação prospectiva própria. O horizonte de 30 dias permanece sem correção enquanto não houver amostras maduras.
+O v1.0 permanece como **única previsão pública** e baseline. Na ativação, o v1.1-shadow emite uma primeira previsão para a medição oficial corrente; depois disso, emite uma previsão paralela a cada nova medição, sem alterar entradas anteriores. Os resultados experimentais são mantidos nos registros e não são exibidos no painel. A correção usa a mediana dos erros assinados de previsões v1.0 já maduras na data da emissão. Com pelo menos 10 aferições no horizonte, também registra um intervalo experimental de 80%, explicitamente marcado como provisório até acumular validação prospectiva própria. O horizonte de 30 dias permanece sem correção enquanto não houver amostras maduras.
 
 ### MPHI v2 hidrológico — alpha
 
