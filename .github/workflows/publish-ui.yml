@@ -24,7 +24,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "mphi-sync-${{ github.ref }}"
+  group: "mphi-ui-pages-${{ github.ref }}"
   cancel-in-progress: false
 
 jobs:
