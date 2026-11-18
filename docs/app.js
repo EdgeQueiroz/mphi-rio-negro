@@ -162,16 +162,16 @@ function drawChart(){
   const min=Math.floor(Math.min(...values)-.5),max=Math.ceil(Math.max(...values)+.5);
   const first=Date.parse(pts[0].date),last=Date.parse(pts.at(-1).date),span=Math.max(last-first,86400000);
   const x=date=>pad.l+(Date.parse(date)-first)*(W-pad.l-pad.r)/span,y=v=>pad.t+(max-v)*(H-pad.t-pad.b)/(max-min);
-  ctx.clearRect(0,0,W,H);ctx.font='10px system-ui';ctx.fillStyle='#a8bdcc';ctx.strokeStyle='#294050';ctx.lineWidth=1;
+  ctx.clearRect(0,0,W,H);ctx.font='10px system-ui';ctx.fillStyle='#547890';ctx.strokeStyle='#c0dce9';ctx.lineWidth=1;
   const step=Math.max(1,Math.ceil((max-min)/5));
   for(let v=min;v<=max;v+=step){ctx.beginPath();ctx.moveTo(pad.l,y(v));ctx.lineTo(W-pad.r,y(v));ctx.stroke();ctx.fillText(v+' m',2,y(v)+3);}
-  if(sea){[['q1','#e8b669'],['median','#92a5b5']].forEach(([key,color])=>{ctx.setLineDash([4,5]);ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(pad.l,y(sea[key]));ctx.lineTo(W-pad.r,y(sea[key]));ctx.stroke();});ctx.setLineDash([]);}
-  ctx.beginPath();ctx.moveTo(x(pts[0].date),y(pts[0].level));pts.slice(1).forEach(p=>ctx.lineTo(x(p.date),y(p.level)));ctx.lineTo(x(pts.at(-1).date),H-pad.b);ctx.lineTo(x(pts[0].date),H-pad.b);ctx.closePath();ctx.fillStyle='rgba(108,204,200,.07)';ctx.fill();
-  ctx.lineWidth=2.5;ctx.strokeStyle='#6cccc8';
+  if(sea){[['q1','#3694c3'],['median','#8dafc7']].forEach(([key,color])=>{ctx.setLineDash([4,5]);ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(pad.l,y(sea[key]));ctx.lineTo(W-pad.r,y(sea[key]));ctx.stroke();});ctx.setLineDash([]);}
+  ctx.beginPath();ctx.moveTo(x(pts[0].date),y(pts[0].level));pts.slice(1).forEach(p=>ctx.lineTo(x(p.date),y(p.level)));ctx.lineTo(x(pts.at(-1).date),H-pad.b);ctx.lineTo(x(pts[0].date),H-pad.b);ctx.closePath();ctx.fillStyle='rgba(48,147,195,.13)';ctx.fill();
+  ctx.lineWidth=2.5;ctx.strokeStyle='#167eac';
   // Dashed segments indicate gaps; no synthetic observations are inserted.
   for(let i=1;i<pts.length;i++){ctx.setLineDash(Date.parse(pts[i].date)-Date.parse(pts[i-1].date)>86400000?[4,4]:[]);ctx.beginPath();ctx.moveTo(x(pts[i-1].date),y(pts[i-1].level));ctx.lineTo(x(pts[i].date),y(pts[i].level));ctx.stroke();}ctx.setLineDash([]);
-  const end=pts.at(-1);ctx.fillStyle='#6cccc8';ctx.beginPath();ctx.arc(x(end.date),y(end.level),4,0,Math.PI*2);ctx.fill();ctx.font='600 11px system-ui';ctx.fillStyle='#e6eef5';ctx.textAlign='right';ctx.fillText(fmt(end.level)+' m',x(end.date),y(end.level)-12);
-  const ticks=W<500?3:5;ctx.fillStyle='#a8bdcc';ctx.font='9px system-ui';ctx.textAlign='center';
+  const end=pts.at(-1);ctx.fillStyle='#167eac';ctx.beginPath();ctx.arc(x(end.date),y(end.level),4,0,Math.PI*2);ctx.fill();ctx.font='600 11px system-ui';ctx.fillStyle='#164d71';ctx.textAlign='right';ctx.fillText(fmt(end.level)+' m',x(end.date),y(end.level)-12);
+  const ticks=W<500?3:5;ctx.fillStyle='#547890';ctx.font='9px system-ui';ctx.textAlign='center';
   for(let i=0;i<ticks;i++){const p=pts[Math.round(i*(pts.length-1)/(ticks-1))];ctx.fillText(fmtDate(p.date).slice(0,5),x(p.date),H-5);}
   const summary=`${pts.length} medições de ${fmtDate(pts[0].date)} a ${fmtDate(end.date)}. Última cota: ${fmt(end.level)} m. Trechos pontilhados indicam intervalos sem medição.`;
   $('chartSummary').textContent=summary;canvas.setAttribute('aria-label',summary);
@@ -191,13 +191,13 @@ function drawProjectionChart(){
   const values=points.flatMap(p=>[p.central,p.soft,p.stress]).filter(Number.isFinite);
   const min=Math.floor(Math.min(...values)-.3),max=Math.ceil(Math.max(...values)+.3);
   const x=d=>pad.l+d/30*(W-pad.l-pad.r),y=v=>pad.t+(max-v)/(max-min)*(H-pad.t-pad.b);
-  ctx.clearRect(0,0,W,H);ctx.font='10px system-ui';ctx.strokeStyle='#294050';ctx.fillStyle='#a8bdcc';ctx.lineWidth=1;
+  ctx.clearRect(0,0,W,H);ctx.font='10px system-ui';ctx.strokeStyle='#c0dce9';ctx.fillStyle='#547890';ctx.lineWidth=1;
   for(let v=min;v<=max;v+=Math.max(1,Math.ceil((max-min)/4))){ctx.beginPath();ctx.moveTo(pad.l,y(v));ctx.lineTo(W-pad.r,y(v));ctx.stroke();ctx.fillText(v+' m',2,y(v)+3);}
   ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(x(p.day),y(Math.max(p.soft,p.stress))):ctx.moveTo(x(p.day),y(p.soft)));
-  [...points].reverse().forEach(p=>ctx.lineTo(x(p.day),y(Math.min(p.soft,p.stress))));ctx.closePath();ctx.fillStyle='#6cccc820';ctx.fill();
-  for(const key of ['soft','stress','central']){ctx.beginPath();ctx.lineWidth=key==='central'?2:1;ctx.strokeStyle=key==='central'?'#79d5d1':'#699aab';ctx.setLineDash(key==='central'?[5,4]:[2,4]);points.forEach((p,i)=>i?ctx.lineTo(x(p.day),y(p[key])):ctx.moveTo(x(p.day),y(p[key])));ctx.stroke();}
+  [...points].reverse().forEach(p=>ctx.lineTo(x(p.day),y(Math.min(p.soft,p.stress))));ctx.closePath();ctx.fillStyle='#167eac20';ctx.fill();
+  for(const key of ['soft','stress','central']){ctx.beginPath();ctx.lineWidth=key==='central'?2:1;ctx.strokeStyle=key==='central'?'#0c709e':'#63a4c4';ctx.setLineDash(key==='central'?[5,4]:[2,4]);points.forEach((p,i)=>i?ctx.lineTo(x(p.day),y(p[key])):ctx.moveTo(x(p.day),y(p[key])));ctx.stroke();}
   ctx.setLineDash([]);ctx.textAlign='center';ctx.font='10px system-ui';
-  points.forEach(p=>{ctx.fillStyle='#a8bdcc';ctx.fillText(p.day?'+'+p.day+' dias':'Base',x(p.day),H-6);ctx.fillStyle='#91ddd7';ctx.beginPath();ctx.arc(x(p.day),y(p.central),3,0,Math.PI*2);ctx.fill();});
+  points.forEach(p=>{ctx.fillStyle='#547890';ctx.fillText(p.day?'+'+p.day+' dias':'Base',x(p.day),H-6);ctx.fillStyle='#167fae';ctx.beginPath();ctx.arc(x(p.day),y(p.central),3,0,Math.PI*2);ctx.fill();});
   canvas.setAttribute('aria-label','Projeção condicional a partir de '+fmtDate(model.current.date)+'. '+points.slice(1).map(p=>'Em '+p.day+' dias: central '+fmt(p.central)+' m; envelope '+fmt(Math.min(p.soft,p.stress))+' a '+fmt(Math.max(p.soft,p.stress))+' m').join('. ')+'. As linhas apenas conectam os horizontes; não são previsões diárias.');
 }
 
