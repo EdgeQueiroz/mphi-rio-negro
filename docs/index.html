@@ -2,8 +2,9 @@
 <html lang="pt-BR">
 <head>
   <!-- MPHI: interface consolidada; sinais de estações auxiliares mantidos no backend. -->
+  <!-- MPHI-LIGHT-BLUE-V3: marcas historicas junto da medicao -->
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#081522">
+  <meta name="theme-color" content="#eaf5fb">
   <meta name="description" content="O Rio Negro em perspectiva: nível oficial, tendência, projeções e confiabilidade do Modelo Preditivo Hidrológico Uiara.">
   <title>MPHI — Rio Negro | Inteligência Hidrológica Uiara</title>
   <link rel="canonical" href="https://edgequeiroz.github.io/mphi-rio-negro/">
@@ -22,7 +23,7 @@
   <meta name="twitter:title" content="MPHI | Rio Negro — Manaus">
   <meta name="twitter:description" content="Cota do Rio Negro, projeções hidrológicas e validação contínua em Manaus.">
   <meta name="twitter:image" content="https://edgequeiroz.github.io/mphi-rio-negro/assets/mphi-rio-negro-social.jpg">
-  <link rel="stylesheet" href="styles.css?v=20261118-foco-rio-negro">
+  <link rel="stylesheet" href="styles.css?v=20261118-azul-aguas">
 </head>
 <body>
 <a class="skip-link" href="#panorama">Ir para os dados do rio</a>
@@ -51,6 +52,14 @@
     </div>
   </div>
   <section class="update-strip" aria-label="Atualização dos dados"><div><span class="update-dot" id="updateDot"></span><strong id="freshnessLabel">Consultando publicação</strong><span id="freshnessNote">A abertura da página não altera a data dos dados.</span></div><details class="update-details"><summary>Atualização e horários</summary><div class="update-popover"><p><b>Agenda:</b> todos os dias, vigília a partir das 07:43, horário de Manaus.</p><p id="updatedAt">Dados atualizados em —</p><p id="checkedAt">Última consulta ao Porto: —</p><p>Vigília com consultas a cada cinco minutos até 12:15, além de agendas redundantes até 14:49. O horário mostrado é o registro real da coleta; o Porto não informa a hora exata da publicação.</p><p>O serviço de agendamento pode atrasar. Sem nova medição, preservamos o último dado oficial, inclusive aos fins de semana.</p></div></details></section>
+  <section class="historic-records" aria-labelledby="historicTitle">
+    <div class="historic-heading"><div><p class="eyebrow">A ESCALA DO RIO · MANAUS</p><h2 id="historicTitle">Marcas históricas</h2></div><p>Os extremos registrados ajudam a colocar a cota de hoje em perspectiva.</p></div>
+    <div class="historic-grid">
+      <article class="historic-record historic-flood"><div><span class="historic-symbol" aria-hidden="true">↑</span><h3>Maior cheia registrada</h3></div><p class="historic-value">30,02 <small>m</small></p><p class="historic-date">16 jun 2021</p><a href="https://www.gov.br/cemaden/pt-br/assuntos/monitoramento/boletim-de-impactos-de-extremos-de-origem-hidro-geo-climatico-em-atividades-estrategicas-para-o-brasil/boletim-de-impactos-de-extremos-de-origem-hidro-geo-climatico-em-atividades-estrategicas-para-o-brasil-08-07-2021" target="_blank" rel="noopener noreferrer">Fonte: Cemaden / Porto de Manaus ↗</a></article>
+      <article class="historic-record historic-drought"><div><span class="historic-symbol" aria-hidden="true">↓</span><h3>Maior seca registrada</h3></div><p class="historic-value">12,11 <small>m</small></p><p class="historic-date">10 out 2024</p><a href="https://www.gov.br/cemaden/pt-br/assuntos/noticias-cemaden/cemaden-analisa-secas-recentes-no-brasil-e-apresenta-diagnostico-e-projecoes-como-subsidio-para-a-cop-16/NotaTcnicaHistricodeSecasnoBrasileProjecoes_2024_CEMADEN_202411.pdf" target="_blank" rel="noopener noreferrer">Fonte: Cemaden / Porto de Manaus ↗</a></article>
+    </div>
+    <p class="historic-note">Cotas da régua do Porto de Manaus, com observações desde 1902. A altura na régua não equivale à profundidade do rio; estas marcas não são limiares de alerta do MPHI.</p>
+  </section>
   <section class="facts-strip" aria-label="Contexto da medição"><article><span>Pico antecedente</span><b id="peak">—</b><small id="peakDate">—</small></article><article><span>Queda desde o pico</span><b id="drawdown">—</b><small>diferença até a última cota</small></article><article><span>Persistência do sinal</span><b><span id="persistDays">—</span> <small>dias consecutivos</small></b><small>gatilho: 7 dias · +2 pontos</small></article></section>
   <!-- MPHI-PUBLIC-VIEW-V2: uma única previsão pública do Rio Negro; modelos paralelos não exibidos -->
   <section id="projecoes" class="panel projection-panel forecast-focus" aria-labelledby="projectionTitle">
@@ -67,14 +76,6 @@
     </aside>
   </section>
   <section id="trajetoria" class="panel chart-panel" aria-labelledby="trajectoryTitle"><div class="panel-head"><div><p class="eyebrow">A DINÂMICA RECENTE</p><h2 id="trajectoryTitle">Trajetória do Rio Negro</h2></div><div class="chart-controls" role="group" aria-label="Período do gráfico"><button type="button" data-range="30" aria-pressed="false">30 dias</button><button type="button" data-range="60" aria-pressed="false">60 dias</button><button type="button" data-range="all" aria-pressed="true">Série completa</button></div></div><div class="legend"><span><i class="river"></i>Cota observada</span><span><i class="q1"></i>1º quartil sazonal</span><span><i class="median"></i>Mediana sazonal</span></div><div class="chart-wrap"><canvas id="riverChart" role="img" aria-label="Gráfico da cota observada ao longo do tempo"></canvas></div><p id="chartSummary" class="footnote"></p><div class="rates-heading"><b>Ritmo de variação do nível</b><span>cm/dia · não representa a velocidade da corrente</span></div><div id="ratesGrid" class="rates-grid"></div><p id="sourceNote" class="footnote"></p></section>
-  <section class="historic-records" aria-labelledby="historicTitle">
-    <div class="historic-heading"><div><p class="eyebrow">A ESCALA DO RIO · MANAUS</p><h2 id="historicTitle">Marcas históricas</h2></div><p>Os extremos registrados ajudam a colocar a cota de hoje em perspectiva.</p></div>
-    <div class="historic-grid">
-      <article class="historic-record historic-flood"><div><span class="historic-symbol" aria-hidden="true">↑</span><h3>Maior cheia registrada</h3></div><p class="historic-value">30,02 <small>m</small></p><p class="historic-date">16 jun 2021</p><a href="https://www.gov.br/cemaden/pt-br/assuntos/monitoramento/boletim-de-impactos-de-extremos-de-origem-hidro-geo-climatico-em-atividades-estrategicas-para-o-brasil/boletim-de-impactos-de-extremos-de-origem-hidro-geo-climatico-em-atividades-estrategicas-para-o-brasil-08-07-2021" target="_blank" rel="noopener noreferrer">Fonte: Cemaden / Porto de Manaus ↗</a></article>
-      <article class="historic-record historic-drought"><div><span class="historic-symbol" aria-hidden="true">↓</span><h3>Maior seca registrada</h3></div><p class="historic-value">12,11 <small>m</small></p><p class="historic-date">10 out 2024</p><a href="https://www.gov.br/cemaden/pt-br/assuntos/noticias-cemaden/cemaden-analisa-secas-recentes-no-brasil-e-apresenta-diagnostico-e-projecoes-como-subsidio-para-a-cop-16/NotaTcnicaHistricodeSecasnoBrasileProjecoes_2024_CEMADEN_202411.pdf" target="_blank" rel="noopener noreferrer">Fonte: Cemaden / Porto de Manaus ↗</a></article>
-    </div>
-    <p class="historic-note">Cotas da régua do Porto de Manaus, com observações desde 1902. A altura na régua não equivale à profundidade do rio; estas marcas não são limiares de alerta do MPHI.</p>
-  </section>
   <section id="meteorologia" class="panel weather-panel" aria-labelledby="weatherTitle">
     <div class="panel-head"><div><p class="eyebrow">CONTEXTO ATMOSFÉRICO / MANAUS · AM</p><h2 id="weatherTitle">Condições meteorológicas</h2></div><span class="quiet-tag">CAMADA METEOROLÓGICA</span></div>
     <p id="weatherStatus" class="weather-status" role="status">Dados meteorológicos ainda não disponíveis.</p>
