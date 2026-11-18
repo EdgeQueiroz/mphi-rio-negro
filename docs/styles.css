@@ -482,6 +482,7 @@ body{
   background:radial-gradient(ellipse at 70% 0%,rgba(90,177,221,.19),transparent 52%),linear-gradient(180deg,#e7f4fb 0%,#f5fbff 52%,#eaf6fc 100%);
 }
 .site-header{background:rgba(250,254,255,.65);border-bottom-color:var(--line);color:var(--text)}
+.skip-link{background:#115f89;color:#fff}
 .site-header nav a{color:#315d79}
 .site-header nav a:hover,.source-link:hover,.text-link:hover{color:#064f78}
 .brand-mark{background:#d6edf9;border-color:#afcfdf;color:#0d6693}
