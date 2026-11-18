@@ -1,14 +1,14 @@
 {
   "schema": "mphi-validation-v2",
-  "updated_at": "2026-11-17T07:51:00-04:00",
+  "updated_at": "2026-11-18T07:50:30-04:00",
   "current_model_version": "MPHI v1.0",
-  "forecast_count": 62,
+  "forecast_count": 63,
   "forecast_count_by_version": {
-    "MPHI v1.0": 62,
-    "MPHI v1.1-shadow": 42
+    "MPHI v1.0": 63,
+    "MPHI v1.1-shadow": 43
   },
-  "matured_records": 149,
-  "next_due": "2026-11-18",
+  "matured_records": 152,
+  "next_due": "2026-11-19",
   "pending": {
     "7": 5,
     "15": 11,
@@ -16,29 +16,29 @@
   },
   "by_horizon": {
     "7": {
-      "n": 57,
+      "n": 58,
       "mae_m": 0.222,
-      "bias_m": 0.06,
-      "rmse_m": 0.273,
-      "envelope_coverage_pct": 12.3,
+      "bias_m": 0.056,
+      "rmse_m": 0.272,
+      "envelope_coverage_pct": 13.8,
       "interval80_coverage_pct": null,
       "interval80_mean_width_m": null
     },
     "15": {
-      "n": 51,
-      "mae_m": 0.671,
-      "bias_m": 0.252,
-      "rmse_m": 0.756,
-      "envelope_coverage_pct": 2.0,
+      "n": 52,
+      "mae_m": 0.658,
+      "bias_m": 0.248,
+      "rmse_m": 0.748,
+      "envelope_coverage_pct": 1.9,
       "interval80_coverage_pct": null,
       "interval80_mean_width_m": null
     },
     "30": {
-      "n": 41,
-      "mae_m": 1.773,
-      "bias_m": 0.75,
-      "rmse_m": 2.002,
-      "envelope_coverage_pct": 12.2,
+      "n": 42,
+      "mae_m": 1.755,
+      "bias_m": 0.757,
+      "rmse_m": 1.985,
+      "envelope_coverage_pct": 11.9,
       "interval80_coverage_pct": null,
       "interval80_mean_width_m": null
     }
@@ -46,60 +46,60 @@
   "by_version": {
     "MPHI v1.0": {
       "7": {
-        "n": 57,
+        "n": 58,
         "mae_m": 0.222,
-        "bias_m": 0.06,
-        "rmse_m": 0.273,
-        "envelope_coverage_pct": 12.3,
+        "bias_m": 0.056,
+        "rmse_m": 0.272,
+        "envelope_coverage_pct": 13.8,
         "interval80_coverage_pct": null,
         "interval80_mean_width_m": null
       },
       "15": {
-        "n": 51,
-        "mae_m": 0.671,
-        "bias_m": 0.252,
-        "rmse_m": 0.756,
-        "envelope_coverage_pct": 2.0,
+        "n": 52,
+        "mae_m": 0.658,
+        "bias_m": 0.248,
+        "rmse_m": 0.748,
+        "envelope_coverage_pct": 1.9,
         "interval80_coverage_pct": null,
         "interval80_mean_width_m": null
       },
       "30": {
-        "n": 41,
-        "mae_m": 1.773,
-        "bias_m": 0.75,
-        "rmse_m": 2.002,
-        "envelope_coverage_pct": 12.2,
+        "n": 42,
+        "mae_m": 1.755,
+        "bias_m": 0.757,
+        "rmse_m": 1.985,
+        "envelope_coverage_pct": 11.9,
         "interval80_coverage_pct": null,
         "interval80_mean_width_m": null
       }
     },
     "MPHI v1.1-shadow": {
       "7": {
-        "n": 37,
-        "mae_m": 0.346,
-        "bias_m": 0.32,
-        "rmse_m": 0.418,
-        "envelope_coverage_pct": 16.2,
-        "interval80_coverage_pct": 59.5,
-        "interval80_mean_width_m": 0.746
+        "n": 38,
+        "mae_m": 0.342,
+        "bias_m": 0.306,
+        "rmse_m": 0.414,
+        "envelope_coverage_pct": 18.4,
+        "interval80_coverage_pct": 60.5,
+        "interval80_mean_width_m": 0.748
       },
       "15": {
-        "n": 31,
-        "mae_m": 1.219,
-        "bias_m": 1.219,
-        "rmse_m": 1.308,
-        "envelope_coverage_pct": 6.5,
-        "interval80_coverage_pct": 51.6,
-        "interval80_mean_width_m": 1.699
+        "n": 32,
+        "mae_m": 1.189,
+        "bias_m": 1.189,
+        "rmse_m": 1.288,
+        "envelope_coverage_pct": 6.2,
+        "interval80_coverage_pct": 53.1,
+        "interval80_mean_width_m": 1.729
       },
       "30": {
-        "n": 21,
-        "mae_m": 3.562,
-        "bias_m": 3.562,
-        "rmse_m": 3.784,
+        "n": 22,
+        "mae_m": 3.505,
+        "bias_m": 3.505,
+        "rmse_m": 3.73,
         "envelope_coverage_pct": 0.0,
         "interval80_coverage_pct": 0.0,
-        "interval80_mean_width_m": 2.324
+        "interval80_mean_width_m": 2.443
       }
     }
   },
@@ -107,9 +107,9 @@
     {
       "model_version": "MPHI v1.1-shadow",
       "status": "shadow",
-      "forecast_count": 42,
-      "matured_records": 89,
-      "next_due": "2026-11-18",
+      "forecast_count": 43,
+      "matured_records": 92,
+      "next_due": "2026-11-19",
       "pending": {
         "7": 5,
         "15": 11,
@@ -117,94 +117,94 @@
       },
       "by_horizon": {
         "7": {
-          "n": 37,
-          "mae_m": 0.346,
-          "bias_m": 0.32,
-          "rmse_m": 0.418,
-          "envelope_coverage_pct": 16.2,
-          "interval80_coverage_pct": 59.5,
-          "interval80_mean_width_m": 0.746
+          "n": 38,
+          "mae_m": 0.342,
+          "bias_m": 0.306,
+          "rmse_m": 0.414,
+          "envelope_coverage_pct": 18.4,
+          "interval80_coverage_pct": 60.5,
+          "interval80_mean_width_m": 0.748
         },
         "15": {
-          "n": 31,
-          "mae_m": 1.219,
-          "bias_m": 1.219,
-          "rmse_m": 1.308,
-          "envelope_coverage_pct": 6.5,
-          "interval80_coverage_pct": 51.6,
-          "interval80_mean_width_m": 1.699
+          "n": 32,
+          "mae_m": 1.189,
+          "bias_m": 1.189,
+          "rmse_m": 1.288,
+          "envelope_coverage_pct": 6.2,
+          "interval80_coverage_pct": 53.1,
+          "interval80_mean_width_m": 1.729
         },
         "30": {
-          "n": 21,
-          "mae_m": 3.562,
-          "bias_m": 3.562,
-          "rmse_m": 3.784,
+          "n": 22,
+          "mae_m": 3.505,
+          "bias_m": 3.505,
+          "rmse_m": 3.73,
           "envelope_coverage_pct": 0.0,
           "interval80_coverage_pct": 0.0,
-          "interval80_mean_width_m": 2.324
+          "interval80_mean_width_m": 2.443
         }
       },
       "latest_forecast": {
-        "forecast_date": "2026-11-17",
-        "created_at": "2026-11-17T07:51:00-04:00",
-        "observed_level_at_issue": 16.12,
+        "forecast_date": "2026-11-18",
+        "created_at": "2026-11-18T07:50:30-04:00",
+        "observed_level_at_issue": 16.08,
         "calibration": {
           "source_model": "MPHI v1.0",
           "method": "rolling median of matured signed errors by horizon",
-          "as_of": "2026-11-17",
+          "as_of": "2026-11-18",
           "uses_future_information": false
         },
         "projections": {
           "7": {
-            "soft": 15.84,
-            "central": 15.88,
+            "soft": 15.8,
+            "central": 15.81,
             "stress": 15.71,
             "confidence": "Experimental",
-            "bias_correction_m": -0.01,
-            "calibration_n": 57,
+            "bias_correction_m": -0.015,
+            "calibration_n": 58,
             "calibration_source": "MPHI v1.0",
             "interval80": {
-              "low": 15.45,
-              "high": 16.31,
+              "low": 15.38,
+              "high": 16.24,
               "target_coverage_pct": 80,
               "status": "provisional",
               "method": "conformal_residual_with_scenario_floor"
             },
-            "target_date": "2026-11-24"
+            "target_date": "2026-11-25"
           },
           "15": {
-            "soft": 15.83,
-            "central": 15.91,
-            "stress": 15.56,
+            "soft": 15.8,
+            "central": 15.84,
+            "stress": 15.62,
             "confidence": "Experimental",
             "bias_correction_m": 0.29,
-            "calibration_n": 51,
+            "calibration_n": 52,
             "calibration_source": "MPHI v1.0",
             "interval80": {
-              "low": 15.05,
-              "high": 16.77,
+              "low": 14.98,
+              "high": 16.7,
               "target_coverage_pct": 80,
               "status": "provisional",
               "method": "conformal_residual_with_scenario_floor"
             },
-            "target_date": "2026-12-02"
+            "target_date": "2026-12-03"
           },
           "30": {
-            "soft": 16.04,
-            "central": 16.21,
-            "stress": 15.51,
+            "soft": 16.02,
+            "central": 16.09,
+            "stress": 15.65,
             "confidence": "Experimental",
-            "bias_correction_m": 1.09,
-            "calibration_n": 41,
+            "bias_correction_m": 1.07,
+            "calibration_n": 42,
             "calibration_source": "MPHI v1.0",
             "interval80": {
-              "low": 13.57,
-              "high": 18.85,
+              "low": 13.47,
+              "high": 18.71,
               "target_coverage_pct": 80,
               "status": "provisional",
               "method": "conformal_residual_with_scenario_floor"
             },
-            "target_date": "2026-12-17"
+            "target_date": "2026-12-18"
           }
         }
       }
@@ -4042,9 +4042,153 @@
       "forecast_interval80_low_m": 15.87,
       "forecast_interval80_high_m": 16.73,
       "inside_interval80": true
+    },
+    {
+      "validation_id": "2026-10-19|MPHI v1.0|30",
+      "forecast_id": "2026-10-19|MPHI v1.0",
+      "forecast_date": "2026-10-19",
+      "target_date": "2026-11-18",
+      "horizon_days": 30,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 15.03,
+      "forecast_soft_m": 13.36,
+      "forecast_stress_m": 14.95,
+      "observed_m": 16.08,
+      "signed_error_m": 1.05,
+      "absolute_error_m": 1.05,
+      "inside_envelope": false
+    },
+    {
+      "validation_id": "2026-10-19|MPHI v1.1-shadow|30",
+      "forecast_id": "2026-10-19|MPHI v1.1-shadow",
+      "forecast_date": "2026-10-19",
+      "target_date": "2026-11-18",
+      "horizon_days": 30,
+      "model_version": "MPHI v1.1-shadow",
+      "forecast_central_m": 13.77,
+      "forecast_soft_m": 12.11,
+      "forecast_stress_m": 13.7,
+      "observed_m": 16.08,
+      "signed_error_m": 2.31,
+      "absolute_error_m": 2.31,
+      "inside_envelope": false,
+      "forecast_interval80_low_m": 11.89,
+      "forecast_interval80_high_m": 15.65,
+      "inside_interval80": false
+    },
+    {
+      "validation_id": "2026-11-03|MPHI v1.0|15",
+      "forecast_id": "2026-11-03|MPHI v1.0",
+      "forecast_date": "2026-11-03",
+      "target_date": "2026-11-18",
+      "horizon_days": 15,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 16.05,
+      "forecast_soft_m": 15.58,
+      "forecast_stress_m": 15.79,
+      "observed_m": 16.08,
+      "signed_error_m": 0.03,
+      "absolute_error_m": 0.03,
+      "inside_envelope": false
+    },
+    {
+      "validation_id": "2026-11-03|MPHI v1.1-shadow|15",
+      "forecast_id": "2026-11-03|MPHI v1.1-shadow",
+      "forecast_date": "2026-11-03",
+      "target_date": "2026-11-18",
+      "horizon_days": 15,
+      "model_version": "MPHI v1.1-shadow",
+      "forecast_central_m": 15.82,
+      "forecast_soft_m": 15.35,
+      "forecast_stress_m": 15.56,
+      "observed_m": 16.08,
+      "signed_error_m": 0.26,
+      "absolute_error_m": 0.26,
+      "inside_envelope": false,
+      "forecast_interval80_low_m": 14.49,
+      "forecast_interval80_high_m": 17.15,
+      "inside_interval80": true
+    },
+    {
+      "validation_id": "2026-11-11|MPHI v1.0|7",
+      "forecast_id": "2026-11-11|MPHI v1.0",
+      "forecast_date": "2026-11-11",
+      "target_date": "2026-11-18",
+      "horizon_days": 7,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 16.28,
+      "forecast_soft_m": 16.07,
+      "forecast_stress_m": 16.22,
+      "observed_m": 16.08,
+      "signed_error_m": -0.2,
+      "absolute_error_m": 0.2,
+      "inside_envelope": true
+    },
+    {
+      "validation_id": "2026-11-11|MPHI v1.1-shadow|7",
+      "forecast_id": "2026-11-11|MPHI v1.1-shadow",
+      "forecast_date": "2026-11-11",
+      "target_date": "2026-11-18",
+      "horizon_days": 7,
+      "model_version": "MPHI v1.1-shadow",
+      "forecast_central_m": 16.29,
+      "forecast_soft_m": 16.08,
+      "forecast_stress_m": 16.23,
+      "observed_m": 16.08,
+      "signed_error_m": -0.21,
+      "absolute_error_m": 0.21,
+      "inside_envelope": true,
+      "forecast_interval80_low_m": 15.87,
+      "forecast_interval80_high_m": 16.71,
+      "inside_interval80": true
     }
   ],
   "latest_records": [
+    {
+      "validation_id": "2026-11-11|MPHI v1.0|7",
+      "forecast_id": "2026-11-11|MPHI v1.0",
+      "forecast_date": "2026-11-11",
+      "target_date": "2026-11-18",
+      "horizon_days": 7,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 16.28,
+      "forecast_soft_m": 16.07,
+      "forecast_stress_m": 16.22,
+      "observed_m": 16.08,
+      "signed_error_m": -0.2,
+      "absolute_error_m": 0.2,
+      "inside_envelope": true
+    },
+    {
+      "validation_id": "2026-11-03|MPHI v1.0|15",
+      "forecast_id": "2026-11-03|MPHI v1.0",
+      "forecast_date": "2026-11-03",
+      "target_date": "2026-11-18",
+      "horizon_days": 15,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 16.05,
+      "forecast_soft_m": 15.58,
+      "forecast_stress_m": 15.79,
+      "observed_m": 16.08,
+      "signed_error_m": 0.03,
+      "absolute_error_m": 0.03,
+      "inside_envelope": false
+    },
+    {
+      "validation_id": "2026-10-19|MPHI v1.0|30",
+      "forecast_id": "2026-10-19|MPHI v1.0",
+      "forecast_date": "2026-10-19",
+      "target_date": "2026-11-18",
+      "horizon_days": 30,
+      "model_version": "MPHI v1.0",
+      "forecast_central_m": 15.03,
+      "forecast_soft_m": 13.36,
+      "forecast_stress_m": 14.95,
+      "observed_m": 16.08,
+      "signed_error_m": 1.05,
+      "absolute_error_m": 1.05,
+      "inside_envelope": false
+    },
     {
       "validation_id": "2026-11-10|MPHI v1.0|7",
       "forecast_id": "2026-11-10|MPHI v1.0",
@@ -4148,51 +4292,6 @@
       "observed_m": 16.33,
       "signed_error_m": 0.79,
       "absolute_error_m": 0.79,
-      "inside_envelope": false
-    },
-    {
-      "validation_id": "2026-10-14|MPHI v1.0|30",
-      "forecast_id": "2026-10-14|MPHI v1.0",
-      "forecast_date": "2026-10-14",
-      "target_date": "2026-11-13",
-      "horizon_days": 30,
-      "model_version": "MPHI v1.0",
-      "forecast_central_m": 14.86,
-      "forecast_soft_m": 13.04,
-      "forecast_stress_m": 14.48,
-      "observed_m": 16.33,
-      "signed_error_m": 1.47,
-      "absolute_error_m": 1.47,
-      "inside_envelope": false
-    },
-    {
-      "validation_id": "2026-11-05|MPHI v1.0|7",
-      "forecast_id": "2026-11-05|MPHI v1.0",
-      "forecast_date": "2026-11-05",
-      "target_date": "2026-11-12",
-      "horizon_days": 7,
-      "model_version": "MPHI v1.0",
-      "forecast_central_m": 16.33,
-      "forecast_soft_m": 16.09,
-      "forecast_stress_m": 16.22,
-      "observed_m": 16.36,
-      "signed_error_m": 0.03,
-      "absolute_error_m": 0.03,
-      "inside_envelope": false
-    },
-    {
-      "validation_id": "2026-10-28|MPHI v1.0|15",
-      "forecast_id": "2026-10-28|MPHI v1.0",
-      "forecast_date": "2026-10-28",
-      "target_date": "2026-11-12",
-      "horizon_days": 15,
-      "model_version": "MPHI v1.0",
-      "forecast_central_m": 15.49,
-      "forecast_soft_m": 15.22,
-      "forecast_stress_m": 15.48,
-      "observed_m": 16.36,
-      "signed_error_m": 0.87,
-      "absolute_error_m": 0.87,
       "inside_envelope": false
     }
   ]
