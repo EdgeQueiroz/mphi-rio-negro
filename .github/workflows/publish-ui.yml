@@ -9,6 +9,13 @@ on:
       - "docs/styles.css"
       - "tests/test_public_view.cjs"
       - ".github/workflows/publish-ui.yml"
+  pull_request:
+    paths:
+      - "docs/index.html"
+      - "docs/app.js"
+      - "docs/styles.css"
+      - "tests/test_public_view.cjs"
+      - ".github/workflows/publish-ui.yml"
   workflow_dispatch:
 
 permissions:
@@ -21,8 +28,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  verify-theme:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar JavaScript e organização da interface
+        run: |
+          node --check docs/app.js
+          node --test tests/test_public_view.cjs
+
   publish:
-    if: github.ref == 'refs/heads/fileOrganizer'
+    needs: verify-theme
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/fileOrganizer'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     environment:
@@ -45,6 +65,10 @@ jobs:
           assert 'id="meteorologia"' in html, 'Bloco meteorologico ausente'
           assert 'MPHI-PUBLIC-VIEW-V2' in html, 'Novo painel de previsao nao encontrado'
           assert 'shadowProjectionBlock' not in html, 'Projecao paralela exposta no publico'
+          assert 'MPHI-LIGHT-BLUE-V3' in html, 'Novo tema nao encontrado'
+          assert html.index('class="update-strip"') < html.index('class="historic-records"') < html.index('class="facts-strip"') < html.index('id="projecoes"'), 'Marcas historicas fora da posicao solicitada'
+          css = Path('docs/styles.css').read_text(encoding='utf-8')
+          assert 'MPHI WATER-BLUE V3' in css and 'color-scheme:light' in css, 'Paleta azul-clara nao encontrada'
           print('Interface aprovada, sem quadro de Tabatinga.')
           PY
       - name: Verificar sintaxe e integridade da previsão pública
@@ -74,8 +98,12 @@ jobs:
                   req = Request(url + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
                   with urlopen(req, timeout=15) as response:
                       page = response.read().decode('utf-8')
-                  if 'id="tabatinga"' not in page and 'tabatinga.js' not in page and 'id="projecoes"' in page and 'MPHI-PUBLIC-VIEW-V2' in page and 'shadowProjectionBlock' not in page:
-                      print('CONFIRMADO: versao publica sem quadro de Tabatinga; projecoes preservadas.')
+                  css_req = Request('https://edgequeiroz.github.io/mphi-rio-negro/styles.css?v=20261118-azul-aguas&verify=' + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
+                  with urlopen(css_req, timeout=15) as stylesheet:
+                      css = stylesheet.read().decode('utf-8')
+                  has_positions = page.index('class="update-strip"') < page.index('class="historic-records"') < page.index('class="facts-strip"') < page.index('id="projecoes"')
+                  if 'id="tabatinga"' not in page and 'tabatinga.js' not in page and 'id="projecoes"' in page and 'MPHI-PUBLIC-VIEW-V2' in page and 'shadowProjectionBlock' not in page and 'MPHI-LIGHT-BLUE-V3' in page and 'MPHI WATER-BLUE V3' in css and has_positions:
+                      print('CONFIRMADO: tema azul-claro, marcas historicas abaixo da medicao e previsao unica preservada.')
                       break
                   print(f'Tentativa {attempt}: HTML publico ainda antigo ou incompleto.')
               except Exception as exc:
@@ -92,6 +120,8 @@ jobs:
               'projection_panel_present': True,
               'single_public_rios_negro_forecast': True,
               'experimental_forecast_panels_absent': True,
+              'water_blue_theme_verified': True,
+              'historical_marks_below_current_verified': True,
               'note': 'Verification made by workflow against public HTML after Pages deployment.'
           }, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
