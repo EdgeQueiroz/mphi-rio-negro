@@ -2,19 +2,19 @@
   "meta": {
     "model": "MPHI v1.0",
     "title": "Painel Rio Negro — MPHI",
-    "updated_at": "2026-11-18T07:50:30-04:00",
+    "updated_at": "2026-11-19T07:50:21-04:00",
     "timezone": "America/Manaus",
     "source_status": "ok",
     "source_note": "Atualização automática concluída a partir do Porto de Manaus, com recuperação das medições disponíveis do mês atual e anterior.",
-    "last_score_date": "2026-11-18",
+    "last_score_date": "2026-11-19",
     "change_since_previous_publication": {
-      "from_date": "2026-11-17",
-      "to_date": "2026-11-18",
-      "from_level_m": 16.12,
-      "to_level_m": 16.08,
+      "from_date": "2026-11-18",
+      "to_date": "2026-11-19",
+      "from_level_m": 16.08,
+      "to_level_m": 16.02,
       "elapsed_days": 1,
-      "change_cm": -4.0,
-      "average_cm_per_day": -4.0,
+      "change_cm": -6.0,
+      "average_cm_per_day": -6.0,
       "note": "Diferença entre cotas publicadas; a média do intervalo não cria medições diárias."
     }
   },
@@ -73,41 +73,41 @@
     "median": 27.94
   },
   "current": {
-    "date": "2026-11-18",
-    "level": 16.08,
-    "delta_cm": -4.0,
+    "date": "2026-11-19",
+    "level": 16.02,
+    "delta_cm": -6.0,
     "phase": "Vazante",
     "peak": 28.51,
     "peak_date": "2026-06-21",
-    "drawdown": 12.43,
+    "drawdown": 12.49,
     "avg3": -5.0,
-    "avg7": -4.29,
-    "avg15": -2.8,
-    "avg30": -3.77,
-    "accel_7_15": -1.49,
+    "avg7": -4.86,
+    "avg15": -3.13,
+    "avg30": -3.67,
+    "accel_7_15": -1.73,
     "base_score": 5,
-    "persistence_days": 94,
+    "persistence_days": 95,
     "persistence_points": 2,
     "score": 7,
     "status": "ALTO"
   },
   "projections": {
     "7": {
-      "soft": 15.82,
-      "central": 15.83,
-      "stress": 15.73,
+      "soft": 15.76,
+      "central": 15.74,
+      "stress": 15.67,
       "confidence": "Média"
     },
     "15": {
-      "soft": 15.51,
-      "central": 15.55,
-      "stress": 15.33,
+      "soft": 15.47,
+      "central": 15.42,
+      "stress": 15.27,
       "confidence": "Média-baixa"
     },
     "30": {
-      "soft": 14.95,
-      "central": 15.02,
-      "stress": 14.58,
+      "soft": 14.92,
+      "central": 14.82,
+      "stress": 14.52,
       "confidence": "Baixa"
     }
   },
@@ -1136,6 +1136,12 @@
       "date": "2026-11-18",
       "level": 16.08,
       "delta_cm": -4.0,
+      "source": "Porto de Manaus"
+    },
+    {
+      "date": "2026-11-19",
+      "level": 16.02,
+      "delta_cm": -6.0,
       "source": "Porto de Manaus"
     }
   ],
