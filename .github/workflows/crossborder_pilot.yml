@@ -1,0 +1,60 @@
+name: MPHI - Cross-border observation pilot
+
+on:
+  schedule:
+    # 09:17 America/Manaus (UTC-4), no guarantee of punctuality.
+    - cron: "17 13 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/crossborder_pilot.py"
+      - "tests/test_crossborder_pilot.py"
+      - "data/crossborder/**"
+      - ".github/workflows/crossborder_pilot.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mphi-crossborder-pilot
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run offline contract tests
+        run: python -m unittest discover -s tests -p 'test_crossborder_pilot.py' -v
+
+  collect:
+    if: github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Fetch Tabatinga and import documented Peru observations
+        run: python scripts/crossborder_pilot.py
+      - name: Commit experimental data only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/crossborder_pilot.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data(mphi): cross-border observations and collection status"
+            git push
+          fi
