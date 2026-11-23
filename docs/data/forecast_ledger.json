@@ -5301,6 +5301,111 @@
           "target_date": "2026-12-19"
         }
       }
+    },
+    {
+      "forecast_id": "2026-11-23|MPHI v1.0",
+      "forecast_date": "2026-11-23",
+      "created_at": "2026-11-23T07:50:58-04:00",
+      "model_version": "MPHI v1.0",
+      "observed_level_at_issue": 15.9,
+      "score": 6,
+      "status": "ATENÇÃO",
+      "phase": "Vazante",
+      "persistence_days": 99,
+      "projections": {
+        "7": {
+          "target_date": "2026-11-30",
+          "soft": 15.69,
+          "central": 15.64,
+          "stress": 15.63,
+          "confidence": "Média"
+        },
+        "15": {
+          "target_date": "2026-12-08",
+          "soft": 15.45,
+          "central": 15.34,
+          "stress": 15.32,
+          "confidence": "Média-baixa"
+        },
+        "30": {
+          "target_date": "2026-12-23",
+          "soft": 14.99,
+          "central": 14.77,
+          "stress": 14.74,
+          "confidence": "Baixa"
+        }
+      }
+    },
+    {
+      "forecast_id": "2026-11-23|MPHI v1.1-shadow",
+      "forecast_date": "2026-11-23",
+      "created_at": "2026-11-23T07:50:58-04:00",
+      "model_version": "MPHI v1.1-shadow",
+      "model_status": "shadow",
+      "observed_level_at_issue": 15.9,
+      "score": 6,
+      "status": "ATENÇÃO",
+      "phase": "Vazante",
+      "persistence_days": 99,
+      "calibration": {
+        "source_model": "MPHI v1.0",
+        "method": "rolling median of matured signed errors by horizon",
+        "as_of": "2026-11-23",
+        "uses_future_information": false
+      },
+      "projections": {
+        "7": {
+          "soft": 15.64,
+          "central": 15.59,
+          "stress": 15.58,
+          "confidence": "Experimental",
+          "bias_correction_m": -0.05,
+          "calibration_n": 61,
+          "calibration_source": "MPHI v1.0",
+          "interval80": {
+            "low": 15.14,
+            "high": 16.04,
+            "target_coverage_pct": 80,
+            "status": "provisional",
+            "method": "conformal_residual_with_scenario_floor"
+          },
+          "target_date": "2026-11-30"
+        },
+        "15": {
+          "soft": 15.72,
+          "central": 15.61,
+          "stress": 15.59,
+          "confidence": "Experimental",
+          "bias_correction_m": 0.27,
+          "calibration_n": 55,
+          "calibration_source": "MPHI v1.0",
+          "interval80": {
+            "low": 14.77,
+            "high": 16.45,
+            "target_coverage_pct": 80,
+            "status": "provisional",
+            "method": "conformal_residual_with_scenario_floor"
+          },
+          "target_date": "2026-12-08"
+        },
+        "30": {
+          "soft": 16.08,
+          "central": 15.86,
+          "stress": 15.83,
+          "confidence": "Experimental",
+          "bias_correction_m": 1.09,
+          "calibration_n": 46,
+          "calibration_source": "MPHI v1.0",
+          "interval80": {
+            "low": 13.23,
+            "high": 18.49,
+            "target_coverage_pct": 80,
+            "status": "provisional",
+            "method": "conformal_residual_with_scenario_floor"
+          },
+          "target_date": "2026-12-23"
+        }
+      }
     }
   ]
 }
