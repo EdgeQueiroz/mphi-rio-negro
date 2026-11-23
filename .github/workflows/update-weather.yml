@@ -97,7 +97,7 @@ jobs:
         with:
           path: docs
           name: weather-pages-${{ github.run_id }}-${{ github.run_attempt }}
-      - uses: actions/deploy-pages@v4
+      - uses: ./.github/actions/deploy-pages-with-retry
         id: deployment
         with:
           artifact_name: weather-pages-${{ github.run_id }}-${{ github.run_attempt }}

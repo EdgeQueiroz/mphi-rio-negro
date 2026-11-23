@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import requests
 
@@ -110,7 +110,9 @@ class PagesContracts(unittest.TestCase):
 
     def test_verification_uses_unique_queries_and_no_cache(self):
         session = source(snapshot())
-        pages.check_published(snapshot(), session=session, now=NOW)
+        # Relogios de Windows podem repetir time_ns em chamadas consecutivas.
+        with patch.object(pages.time, 'time_ns', side_effect=range(len(pages.FILES))):
+            pages.check_published(snapshot(), session=session, now=NOW)
         calls = session.get.call_args_list
         self.assertEqual(len({c.kwargs['params']['verify'] for c in calls}), len(pages.FILES))
         self.assertTrue(all('no-store' in c.kwargs['headers']['Cache-Control'] for c in calls))

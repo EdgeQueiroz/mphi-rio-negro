@@ -35,3 +35,22 @@ O código não modifica essa preferência pessoal nem descarta alertas reais.
 
 Nenhum parâmetro ou limiar do MPHI v1.0, previsão histórica, registro de
 validação ou calendário de coleta foi alterado por esta correção.
+
+## Correção de falhas repetitivas em 23/11/2026
+
+A auditoria encontrou emails nativos de falha do Actions, sem envio de email
+pelos workflows. Os exemplos de publicação falharam com "No artifacts named"
+imediatamente após um upload bem-sucedido. Cada publicação agora admite uma
+única retentativa após 20 segundos, usando o mesmo artefato. Não repete coleta,
+cálculo, commit ou emissão de previsões. Se a segunda tentativa falhar, o
+workflow continua falhando e o alerta nativo é mantido. As verificações públicas
+posteriores ao deploy também continuam obrigatórias. A retentativa reduz o
+impacto de falhas transitórias; não garante disponibilidade do serviço GitHub.
+
+O workflow de Tabatinga foi removido por decisão do responsável pelo projeto;
+seus dados históricos foram preservados. Um teste de calibração foi corrigido
+para verificar o viés observado de cada horizonte, que pode ser positivo ou
+negativo, em vez de exigir previsão sempre inferior à baseline. O teste do
+cache usa relógio controlado para ser determinístico também no Windows.
+Nenhuma fórmula, parâmetro, ledger, agenda operacional ou alerta da conta foi
+alterado. Não foram criados filtros, exclusões ou descartes de email.

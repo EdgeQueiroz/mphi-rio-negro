@@ -71,13 +71,13 @@ Lead time, falsos alertas e alertas perdidos permanecem em coleta até existir c
 
 Porto de Manaus. O histórico de referência do projeto utiliza Manaus 14990000 — ANA/SGB.
 
-## Tabatinga — sinal de bastidor (não exibido no painel)
+## Tabatinga — automação retirada
 
-A estação ANA/SGB 10100000, no Rio Solimões, é monitorada como **observação experimental independente**. Seus registros são preservados em `docs/data/tabatinga.json` com data da medição, zero local da régua, tendência e status de disponibilidade. O workflow `.github/workflows/tabatinga-observation.yml` coleta essas informações sem alterar o modelo operacional.
-
-**Decisão de interface:** o MPHI não exibe mais a estação Tabatinga em quadro, lista ou gráfico próprio. O usuário acompanha a cota do Rio Negro em Manaus e os cenários consolidados; Tabatinga deve atuar exclusivamente como variável auxiliar de pesquisa hidrológica, à semelhança do uso de Manacapuru nas análises da bacia.
-
-**Estado efetivo do cálculo:** Tabatinga **ainda não integra** os vetores preditivos do v2-alpha, que permanecem com cinco estações (quatro no Negro e Manacapuru). A série observacional inicialmente coletada é curta e não comprova antecipação de cheia/vazante em Manaus. Sua entrada em uma versão experimental exige janela histórica adequada, validação por períodos separados, análise do remanso e ausência de vazamento temporal. Nenhuma promoção para v1.0 sem validação e aprovação humana.
+A coleta e a publicação automáticas de Tabatinga foram retiradas em 23/11/2026.
+A estação já não era exibida no painel nem integrava os vetores preditivos
+do MPHI. O último arquivo observacional `docs/data/tabatinga.json`, o coletor
+e seus testes ficam preservados como histórico experimental; não há mais
+workflow agendado, por push ou por pull request para essa estação.
 
 ## Meteorologia contextual — MET Norway e Climatempo
 

@@ -91,7 +91,7 @@ jobs:
         with:
           path: docs
           name: observation-pages-${{ github.run_id }}-${{ github.run_attempt }}
-      - uses: actions/deploy-pages@v4
+      - uses: ./.github/actions/deploy-pages-with-retry
         id: deployment
         with:
           artifact_name: observation-pages-${{ github.run_id }}-${{ github.run_attempt }}

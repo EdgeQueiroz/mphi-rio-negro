@@ -1,0 +1,33 @@
+name: Publicar Pages com uma retentativa
+description: Repete apenas o deploy do mesmo artefato se o GitHub falhar; preserva falhas persistentes.
+inputs:
+  artifact_name:
+    description: Nome do artefato enviado nesta execução
+    required: false
+    default: github-pages
+outputs:
+  page_url:
+    description: URL confirmada pelo deploy bem-sucedido
+    value: ${{ steps.retry.outputs.page_url || steps.first.outputs.page_url }}
+runs:
+  using: composite
+  steps:
+    - name: Publicar artefato
+      id: first
+      continue-on-error: true
+      uses: actions/deploy-pages@v4
+      with:
+        artifact_name: ${{ inputs.artifact_name }}
+    - name: Aguardar propagação antes de repetir o deploy
+      if: steps.first.outcome == 'failure'
+      shell: bash
+      run: |
+        echo "::warning::Deploy falhou; uma única retentativa do mesmo artefato em 20 segundos."
+        sleep 20
+    # Sem continue-on-error: falha persistente continua falhando o workflow.
+    - name: Repetir publicação do mesmo artefato
+      id: retry
+      if: steps.first.outcome == 'failure'
+      uses: actions/deploy-pages@v4
+      with:
+        artifact_name: ${{ inputs.artifact_name }}

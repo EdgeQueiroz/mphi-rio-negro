@@ -163,8 +163,21 @@ class SyncContracts(unittest.TestCase):
         shadow = ledger['entries'][-1]
         self.assertEqual(shadow['forecast_id'], shadow_id)
         self.assertEqual(shadow['model_status'], 'shadow')
-        self.assertLess(shadow['projections']['7']['central'], d['projections']['7']['central'])
-        self.assertLess(shadow['projections']['15']['central'], d['projections']['15']['central'])
+        # O sinal do vies pode mudar com novas medicoes; validar a calibracao,
+        # sem exigir que toda correcao reduza a previsao operacional.
+        records = core.build_validation(d, ledger)['records']
+        for horizon, projection in shadow['projections'].items():
+            errors = [
+                r['signed_error_m'] for r in records
+                if r['model_version'] == core.SHADOW_BASE_VERSION
+                and r['horizon_days'] == int(horizon)
+                and r['target_date'] <= d['current']['date']
+            ]
+            expected = round(float(median(errors)), 3) if len(errors) >= core.MIN_BIAS_RECORDS else 0.0
+            self.assertEqual(projection['bias_correction_m'], expected)
+            self.assertEqual(projection['calibration_n'], len(errors))
+            for scenario in ('soft', 'central', 'stress'):
+                self.assertEqual(projection[scenario], round(d['projections'][horizon][scenario] + expected, 2))
         matured_30 = [
             r['signed_error_m'] for r in core.build_validation(d, ledger)['records']
             if r['model_version'] == core.SHADOW_BASE_VERSION
@@ -180,6 +193,26 @@ class SyncContracts(unittest.TestCase):
         self.assertFalse(core.freeze_shadow_forecast(d, ledger))
         self.assertEqual(ledger, frozen)
 
+
+    def test_shadow_calibration_accepts_both_bias_signs_and_insufficient_history(self):
+        d = copy.deepcopy(SEED)
+        for bias, count in ((-0.4, core.MIN_INTERVAL_RECORDS),
+                            (0.4, core.MIN_INTERVAL_RECORDS), (0.4, core.MIN_BIAS_RECORDS - 1)):
+            with self.subTest(bias=bias, count=count):
+                records = [
+                    {'model_version': core.SHADOW_BASE_VERSION,
+                     'target_date': d['current']['date'], 'horizon_days': 7,
+                     'signed_error_m': bias}
+                    for _ in range(count)
+                ]
+                with patch.object(core, 'build_validation', return_value={'records': records}):
+                    projection = core.shadow_projections(d, {'entries': []})['7']
+                expected = bias if count >= core.MIN_BIAS_RECORDS else 0.0
+                self.assertEqual(projection['bias_correction_m'], expected)
+                self.assertEqual(projection['central'], round(d['projections']['7']['central'] + expected, 2))
+                self.assertEqual(projection['calibration_n'], count)
+                self.assertEqual(projection['interval80']['status'],
+                                 'provisional' if count >= core.MIN_INTERVAL_RECORDS else 'collecting')
 
     def test_october_seasonal_reference_is_applied(self):
         d = copy.deepcopy(SEED)

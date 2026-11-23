@@ -83,7 +83,7 @@ jobs:
           path: ./docs
       - name: Publicar pagina no GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: ./.github/actions/deploy-pages-with-retry
       - name: Verificar HTML publico apos publicacao
         run: |
           python - <<'PY'
